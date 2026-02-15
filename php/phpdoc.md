@@ -78,7 +78,7 @@ Short descriptions **MUST**:
 - Be a single sentence under 80 characters
 - Start with a capital letter and end with a period
 - Use imperative mood (e.g., "Calculate the total" not "This method calculates...")
-- Avoid restating the element name (e.g., avoid "Class UserManager" for `class UserManager`)
+- Avoid merely restating the element name (e.g., "Class UserManager" is an insufficient description for `class UserManager`)
 
 Long descriptions **MUST**:
 - Use complete sentences organized into logical paragraphs separated by blank lines
