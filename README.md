@@ -48,6 +48,7 @@ Project are grouped into directories by technology, where:
 * [other/python.md](Python)
 * [other/xml.md](XML)
 * [php/cookie.md](Cookie)
+* [php/phpdoc.md](PHPDoc)
 * [php/php.md](PHP)
 * [php/phpunit.md](PHPUnit)
 * [php/session.md](Session)
