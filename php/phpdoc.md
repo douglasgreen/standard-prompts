@@ -472,6 +472,7 @@ Critical **MUST** items for quick validation:
 - [ ] `@since` tags use semantic versioning for all public API elements
 - [ ] Deprecated APIs include `@deprecated` with version, replacement, and `@see` reference
 - [ ] No public API element lacks documentation (missing docblocks fail compliance)
+- [ ] File-level DocBlocks precede namespace declarations in standalone scripts and procedural files.
 - [ ] Security-sensitive methods document trust boundaries and input validation responsibilities
 - [ ] Generated Markdown includes YAML frontmatter and hierarchical headings for automated parsing
 
