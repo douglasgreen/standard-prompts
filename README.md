@@ -24,6 +24,7 @@ Project are grouped into directories by technology, where:
 * [general/datetime-handling.md](Datetime handling)
 * [general/design-pattern.md](Design pattern)
 * [general/dev-spec.md](Developer specification)
+* [general/e-learning.md](E-learning)
 * [general/error-handling.md](Error handling)
 * [general/i18n-and-l10n.md.md](Internationalization and localization)
 * [general/naming-glossary.md](Naming glossary)
