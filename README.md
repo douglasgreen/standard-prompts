@@ -45,6 +45,7 @@ Project are grouped into directories by technology, where:
 * [other/gitlab-ci-cd.md](GitLab CI/CD)
 * [other/go.md](Go)
 * [other/java.md](Java)
+* [other/mermaid.md](Mermaid)
 * [other/python.md](Python)
 * [other/xml.md](XML)
 * [php/cookie.md](Cookie)
@@ -71,7 +72,7 @@ Add standards for:
 
 Remove the "Document Conventions" section of each document.
 
-Remove redundant style config files from examples.
+Remove redundant style config files from examples and combine into one complete example.
 
 ### Guidelines
 
