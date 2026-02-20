@@ -409,70 +409,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Accessibility**: Semantic HTML (14.3.1); 4.5:1 contrast (14.3.2).
 - [ ] **Tooling**: Automated formatting/linting (14.6.1); CI scripts for lint/test/build (14.6.2).
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-**C.1 TypeScript/Node: `package.json` scripts**
-```json
-{
-  "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "lint": "eslint .",
-    "format": "prettier . --write",
-    "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
-  }
-}
-```
-
-**C.2 TypeScript: `eslint.config.js`**
-```js
-import tseslint from "typescript-eslint";
-import eslintPluginImport from "eslint-plugin-import";
-
-export default [
-  ...tseslint.configs.recommended,
-  {
-    plugins: { import: eslintPluginImport },
-    rules: {
-      "import/no-cycle": "error",
-      "import/order": ["warn", { "newlines-between": "always" }]
-    }
-  }
-];
-```
-
-**C.3 Python: `pyproject.toml` (Ruff + Black)**
-```toml
-[tool.black]
-line-length = 100
-target-version = ["py312"]
-
-[tool.ruff]
-target-version = "py312"
-line-length = 100
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP"]
-```
-
-**C.4 `.editorconfig`**
-```ini
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-indent_style = space
-indent_size = 2
-
-[*.py]
-indent_size = 4
-```
-
-### Appendix D: Examples
-
-**D.1 Layer violation (non-compliant) vs fixed (compliant)**
+**C.1 Layer violation (non-compliant) vs fixed (compliant)**
 
 *Non-compliant (controller contains business logic + direct DB access):*
 ```ts
@@ -499,7 +438,7 @@ export async function postUsers(req: any, res: any) {
 }
 ```
 
-**D.2 Retry without idempotency (non-compliant) vs idempotent (compliant)**
+**C.2 Retry without idempotency (non-compliant) vs idempotent (compliant)**
 
 *Non-compliant:* retries a payment charge without idempotency.
 ```ts
@@ -514,7 +453,7 @@ await retry(
 );
 ```
 
-**D.3 Accessibility (non-compliant) vs compliant**
+**C.3 Accessibility (non-compliant) vs compliant**
 
 *Non-compliant:* clickable `div`, no keyboard support.
 ```tsx
