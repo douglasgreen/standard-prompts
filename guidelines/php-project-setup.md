@@ -1,7 +1,11 @@
+---
+name: PHP Project Setup
+description: Guidelines document for PHP project setup
+version: 1.0.0
+modified: 2026-02-20
+---
 # PHP Project Setup Guide
 
-**Document version:** 1.0.0
-**Document date:** 2026-02-20
 **Target versions:** PHP 8.3+, Composer 2.6+, PHPUnit 10+, PHPStan 1.10+  
 **Reading time:** 25 minutes
 

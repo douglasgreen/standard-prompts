@@ -1,8 +1,11 @@
+---
+name: UI/UX
+description: Standards document for user interface and user experience design
+version: 1.0.0
+modified: 2026-02-20
+---
 # User experience engineering standards for web applications
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

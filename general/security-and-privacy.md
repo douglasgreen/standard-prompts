@@ -1,8 +1,11 @@
+---
+name: Security And Privacy
+description: Standards document for security and privacy
+version: 1.0.0
+modified: 2026-02-20
+---
 # Security and privacy engineering standards for LLM-assisted code generation and review
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

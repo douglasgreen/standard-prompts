@@ -1,8 +1,11 @@
+---
+name: Mermaid
+description: Standards document for Mermaid diagramming
+version: 1.0.0
+modified: 2026-02-20
+---
 # Mermaid diagramming engineering standards for consistent generation and review
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

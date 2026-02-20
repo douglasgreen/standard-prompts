@@ -1,8 +1,11 @@
+---
+name: Node.js
+description: Standards document for Node.js development
+version: 1.0.0
+modified: 2026-02-20
+---
 # Node.js engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

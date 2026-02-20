@@ -1,8 +1,11 @@
+---
+name: E-Learning
+description: Standards document for e-learning
+version: 1.0.0
+modified: 2026-02-20
+---
 # E-learning content and software engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

@@ -1,8 +1,11 @@
+---
+name: Java
+description: Standards document for Java programming
+version: 1.0.0
+modified: 2026-02-20
+---
 # Java engineering standards for consistent LLM code generation and review
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

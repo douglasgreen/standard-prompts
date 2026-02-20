@@ -1,8 +1,11 @@
+---
+name: Bootstrap
+description: Standards document for Bootstrap development
+version: 1.0.0
+modified: 2026-02-20
+---
 # Bootstrap development standards (v5.3+)
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

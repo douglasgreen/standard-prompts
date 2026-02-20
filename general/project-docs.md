@@ -1,8 +1,11 @@
+---
+name: Project Docs
+description: Standards document for software project documentation
+version: 1.0.0
+modified: 2026-02-20
+---
 # Software documentation standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

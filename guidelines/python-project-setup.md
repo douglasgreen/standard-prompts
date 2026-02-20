@@ -1,9 +1,13 @@
+---
+name: Python Project Setup
+description: Guidelines document for Python project setup
+version: 1.0.0
+modified: 2026-02-20
+---
 # Python project setup guide
 
 Complete setup instructions for Python 3.12+ projects following engineering best practices and documentation standards.
 
-**Document version:** 1.0.0
-**Document date:** 2026-02-20
 **Reading time:** 25 minutes
 
 ---

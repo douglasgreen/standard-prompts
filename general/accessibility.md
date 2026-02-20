@@ -1,8 +1,11 @@
+---
+name: Accessibility
+description: Standards document for accessibility
+version: 1.0.0
+modified: 2026-02-20
+---
 # Web accessibility engineering standards for consistent LLM code generation and review
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

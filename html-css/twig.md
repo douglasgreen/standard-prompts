@@ -1,8 +1,11 @@
+---
+name: Twig
+description: Standards document for Twig development
+version: 1.0.0
+modified: 2026-02-20
+---
 # Twig templating engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

@@ -1,8 +1,11 @@
+---
+name: Cookie
+description: Standards document for cookie development
+version: 1.0.0
+modified: 2026-02-20
+---
 # HTTP cookie management engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

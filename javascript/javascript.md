@@ -1,8 +1,11 @@
+---
+name: Javascript
+description: Standards document for Javascript development
+version: 1.0.0
+modified: 2026-02-20
+---
 # JavaScript standards system prompt
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

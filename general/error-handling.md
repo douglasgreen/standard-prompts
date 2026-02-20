@@ -1,8 +1,11 @@
+---
+name: Error Handling
+description: Standards document for error handling
+version: 1.0.0
+modified: 2026-02-20
+---
 # Engineering standards for data validation, sanitization, and error/exception handling
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

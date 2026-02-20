@@ -1,8 +1,11 @@
+---
+name: Upgrade
+description: Standards document for software upgrade management
+version: 1.0.0
+modified: 2026-02-20
+---
 # Software upgrade management and engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

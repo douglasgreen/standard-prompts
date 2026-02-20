@@ -1,8 +1,11 @@
+---
+name: SQL Query
+description: Standards document for SQL query development
+version: 1.0.0
+modified: 2026-02-20
+---
 # SQL query writing and administration standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

@@ -1,8 +1,11 @@
+---
+name: Technical Writing
+description: Standards document for technical writing
+version: 1.0.0
+modified: 2026-02-20
+---
 # Technical writing standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

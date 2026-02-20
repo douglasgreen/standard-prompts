@@ -1,8 +1,11 @@
+---
+name: PHPUnit
+description: Standards document for PHPUnit testing
+version: 1.0.0
+modified: 2026-02-20
+---
 # System prompt: Comprehensive PHPUnit testing standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

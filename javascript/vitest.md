@@ -1,8 +1,11 @@
+---
+name: Vitest
+description: Standards document for Vitest development
+version: 1.0.0
+modified: 2026-02-20
+---
 # Vitest engineering standards for consistent code generation and review
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

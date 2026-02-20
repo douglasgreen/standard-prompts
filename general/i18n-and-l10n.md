@@ -1,8 +1,11 @@
+---
+name: I18n And L10n
+description: Standards document for internationalization and localization
+version: 1.0.0
+modified: 2026-02-20
+---
 # Internationalization and localization engineering standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

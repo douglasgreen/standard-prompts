@@ -1,8 +1,11 @@
+---
+name: Dev Spec
+description: Standards document for developer specifications
+version: 1.0.0
+modified: 2026-02-20
+---
 # Standards for Developer Specifications and Software Architecture
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

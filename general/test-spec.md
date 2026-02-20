@@ -1,8 +1,11 @@
+---
+name: Test Spec
+description: Standards document for software testing specifications
+version: 1.0.0
+modified: 2026-02-20
+---
 # Standards for agile web test specifications
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 

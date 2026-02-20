@@ -1,8 +1,11 @@
+---
+name: SQL Schema
+description: Standards document for SQL schema development
+version: 1.0.0
+modified: 2026-02-20
+---
 # SQL schema design and migration standards
 
-**Document version:** 1.0.0
-
-**Document date:** 2026-02-20
 
 ## Role definition
 
