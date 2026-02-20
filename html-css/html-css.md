@@ -284,106 +284,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Security**: No inline event handlers; user content sanitized (6.1, 6.2).
 - [ ] **Review Output**: Includes prioritized checklist + diffs with rule references (8.2).
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### `package.json` (scripts and devDependencies)
-```json
-{
-  "name": "html-css-standards",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "format": "prettier . --write",
-    "lint:css": "stylelint \"**/*.{css,scss}\"",
-    "lint:html": "html-validate \"**/*.html\"",
-    "lint": "npm run lint:html && npm run lint:css",
-    "check": "npm run lint && prettier . --check"
-  },
-  "devDependencies": {
-    "prettier": "^3.0.0",
-    "stylelint": "^16.0.0",
-    "stylelint-config-standard": "^36.0.0",
-    "html-validate": "^8.0.0"
-  }
-}
-```
-
-#### `prettier.config.cjs`
-```js
-/** @type {import("prettier").Config} */
-module.exports = {
-  printWidth: 100,
-  tabWidth: 4,
-  useTabs: false,
-  singleQuote: false,
-  trailingComma: "es5",
-  semi: true,
-  htmlWhitespaceSensitivity: "css",
-  overrides: [
-    {
-      files: "*.css",
-      options: {
-        singleQuote: false,
-      },
-    },
-    {
-      files: ["*.html"],
-      options: {
-        tabWidth: 2,
-      },
-    },
-  ],
-};
-```
-
-#### `.stylelintrc.cjs`
-```js
-/** @type {import("stylelint").Config} */
-module.exports = {
-  extends: ["stylelint-config-standard"],
-  rules: {
-    "declaration-no-important": true,
-    "selector-max-specificity": "0,3,0",
-    "selector-max-compound-selectors": 3,
-    "no-descending-specificity": true,
-    "selector-max-id": 0,
-    "property-no-unknown": true,
-  }
-};
-```
-
-#### `.htmlvalidate.json`
-```json
-{
-  "extends": ["html-validate:recommended"],
-  "rules": {
-    "void-style": "error",
-    "no-dup-id": "error",
-    "wcag/h37": "error",
-    "wcag/h67": "error"
-  }
-}
-```
-
-#### `.editorconfig`
-```ini
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-indent_style = space
-indent_size = 4
-trim_trailing_whitespace = true
-
-[*.{html}]
-indent_size = 2
-```
-
-### Appendix D: Examples
-
-#### D.1 Buttons vs links (semantics)
+#### C.1 Buttons vs links (semantics)
 **Non-compliant**
 ```html
 <div class="btn" onclick="doThing()">Save</div>
@@ -394,7 +297,7 @@ indent_size = 2
 <button type="button" class="Button Button--primary">Save</button>
 ```
 
-#### D.2 Accessible form labeling
+#### C.2 Accessible form labeling
 **Non-compliant**
 ```html
 <input id="email" placeholder="Email" />
@@ -406,7 +309,7 @@ indent_size = 2
 <input id="email" name="email" type="email" autocomplete="email" />
 ```
 
-#### D.3 Reduced motion
+#### C.3 Reduced motion
 **Non-compliant**
 ```css
 .Toast {
@@ -427,7 +330,7 @@ indent_size = 2
 }
 ```
 
-#### D.4 External link safety
+#### C.4 External link safety
 **Non-compliant**
 ```html
 <a href="https://example.com" target="_blank">Docs</a>
@@ -440,7 +343,7 @@ indent_size = 2
 </a>
 ```
 
-#### D.5 Image accessibility and performance
+#### C.5 Image accessibility and performance
 **Non-compliant**
 ```html
 <img src="/icons/star.svg" alt="star icon" />

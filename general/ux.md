@@ -355,69 +355,9 @@ Critical **MUST** items for rapid validation:
 - [ ] **Motion**: Respects `prefers-reduced-motion` (§9.2.1).
 - [ ] **URLs**: Meaningful states have shareable URLs; focus management on route change (§8.2).
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-**ESLint configuration (`.eslintrc.json`)** for accessibility enforcement:
-
-```json
-{
-  "extends": [
-    "eslint:recommended",
-    "plugin:jsx-a11y/strict"
-  ],
-  "plugins": ["jsx-a11y"],
-  "rules": {
-    "jsx-a11y/alt-text": "error",
-    "jsx-a11y/anchor-has-content": "error",
-    "jsx-a11y/aria-props": "error",
-    "jsx-a11y/aria-role": "error",
-    "jsx-a11y/click-events-have-key-events": "error",
-    "jsx-a11y/heading-has-content": "error",
-    "jsx-a11y/label-has-associated-control": "error",
-    "jsx-a11y/no-autofocus": "warn",
-    "jsx-a11y/no-redundant-roles": "error",
-    "jsx-a11y/role-has-required-aria-props": "error"
-  }
-}
-```
-
-**Stylelint configuration (`.stylelintrc.json`)** for UX standards:
-
-```json
-{
-  "extends": ["stylelint-config-standard"],
-  "plugins": ["stylelint-a11y"],
-  "rules": {
-    "a11y/media-prefers-reduced-motion": true,
-    "a11y/no-outline-none": true,
-    "a11y/selector-pseudo-class-focus": true,
-    "unit-allowed-list": ["rem", "em", "%", "vw", "vh", "px", "deg", "ms", "s", "fr"],
-    "declaration-property-unit-allowed-list": {
-      "font-size": ["rem", "em", "%"],
-      "line-height": ["rem", "em", "%", "px"]
-    }
-  }
-}
-```
-
-**axe-core test example** (JavaScript/TypeScript):
-
-```javascript
-import { axe } from 'jest-axe';
-import { render } from '@testing-library/react';
-
-expect.extend(toHaveNoViolations);
-
-test('component has no accessibility violations', async () => {
-  const { container } = render(<MyComponent />);
-  const results = await axe(container);
-  expect(results).toHaveNoViolations();
-});
-```
-
-### Appendix D: Examples
-
-#### D1. Semantic buttons vs. div buttons
+#### C1. Semantic buttons vs. div buttons
 **Non-compliant**:
 ```html
 <div class="btn" onclick="submitForm()">Submit</div>
@@ -429,7 +369,7 @@ test('component has no accessibility violations', async () => {
 <button type="submit" onclick="submitForm()">Submit</button>
 ```
 
-#### D2. Form error handling
+#### C2. Form error handling
 **Non-compliant**:
 ```html
 <input type="email" style="border: 1px solid red;">
@@ -451,7 +391,7 @@ test('component has no accessibility violations', async () => {
 <p id="email-error" role="alert">Enter a valid email address, such as name@example.com</p>
 ```
 
-#### D3. Image optimization and accessibility
+#### C3. Image optimization and accessibility
 **Non-compliant**:
 ```html
 <img src="photo.jpg" alt="image">
@@ -471,7 +411,7 @@ test('component has no accessibility violations', async () => {
 >
 ```
 
-#### D4. Modal dialog focus management
+#### C4. Modal dialog focus management
 **Non-compliant**:
 ```javascript
 // Opens modal but focus remains on background
@@ -511,7 +451,7 @@ function closeModal() {
 }
 ```
 
-#### D5. Skeleton loading vs. layout shift
+#### C5. Skeleton loading vs. layout shift
 **Non-compliant**:
 ```html
 <div id="content"></div>

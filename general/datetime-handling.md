@@ -318,74 +318,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Testing**: Deterministic time tests; include DST/leap/end-of-month boundary coverage.
 - [ ] **LLM behavior**: Ask clarifying questions or state safe defaults explicitly; provide structured review outputs.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-**C.1 Python: `pyproject.toml` (Ruff + MyPy)**
-
-```toml
-[tool.ruff]
-target-version = "py312"
-line-length = 100
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_return_any = true
-disallow_untyped_defs = true
-
-# Enforce timezone-aware datetime usage
-[[tool.mypy.overrides]]
-module = "*.datetime"
-disallow_untyped_calls = true
-```
-
-Guidance:
-- Use `zoneinfo` (stdlib) for IANA zones.
-- Prefer `datetime.datetime` with `tzinfo` set; disallow naive datetimes in non-UI code.
-
-**C.2 JavaScript/TypeScript: `eslint.config.js`**
-
-```js
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    rules: {
-      "no-implicit-coercion": "error",
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    },
-  },
-];
-```
-
-Policy guidance (enforced by review):
-- Do not parse non-RFC3339 date strings.
-- Do not perform manual timezone arithmetic; use platform APIs or Temporal.
-
-**C.3 PostgreSQL: Schema guardrails**
-
-```sql
--- Unambiguous instant storage
--- Use timestamptz for instants.
-ALTER TABLE events
-  ADD COLUMN created_at timestamptz NOT NULL DEFAULT now();
-
--- For scheduling with user intent:
-ALTER TABLE schedules
-  ADD COLUMN local_time time NOT NULL,
-  ADD COLUMN time_zone text NOT NULL, -- IANA zone name validated in app layer
-  ADD COLUMN next_run_at timestamptz;  -- Derived UTC instant
-```
-
-### Appendix D: Examples
-
-**D.1 API timestamp parsing (Python)**
+**C.1 API timestamp parsing (Python)**
 
 **Non-compliant** (lenient/ambiguous):
 ```python
@@ -420,7 +355,7 @@ def parse_rfc3339_instant(value: str, *, field: str = "timestamp") -> datetime:
         raise ParseError(field, "RFC3339 timestamp, e.g., 2026-02-09T12:34:56Z") from e
 ```
 
-**D.2 Scheduling in user timezone (design pattern)**
+**C.2 Scheduling in user timezone (design pattern)**
 
 **Non-compliant** (stores only offset; breaks across DST):
 ```
@@ -434,7 +369,7 @@ time_zone      = "America/Los_Angeles"
 next_run_utc   = "2026-11-01T08:30:00Z"     // derived, can be recomputed
 ```
 
-**D.3 Measuring timeouts (monotonic vs wall clock)**
+**C.3 Measuring timeouts (monotonic vs wall clock)**
 
 **Non-compliant** (wall clock can jump):
 ```js
@@ -448,7 +383,7 @@ const start = performance.now(); // monotonic in browsers and Node
 while (performance.now() - start < 5000) { /* ... */ }
 ```
 
-**D.4 Database storage (SQL)**
+**C.4 Database storage (SQL)**
 
 **Non-compliant**:
 ```sql

@@ -330,166 +330,9 @@ Critical **MUST** items for quick validation:
 - [ ] PSR-3 logging used with no secrets in log context arrays
 - [ ] OPcache enabled in production configuration
 
-## Appendix C: Sample configuration
+## Appendix C: Examples
 
-<details>
-<summary><strong>C.1 composer.json</strong></summary>
-
-```json
-{
-  "require": {
-    "php": "^8.3",
-    "psr/log": "^3.0",
-    "psr/simple-cache": "^3.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10.0",
-    "squizlabs/php_codesniffer": "^3.9",
-    "friendsofphp/php-cs-fixer": "^3.50",
-    "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-strict-rules": "^1.5",
-    "vimeo/psalm": "^5.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "App\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "cs:check": "phpcs --standard=phpcs.xml",
-    "cs:fix": "php-cs-fixer fix --allow-risky=yes",
-    "stan": "phpstan analyse --configuration=phpstan.neon",
-    "test": "phpunit --configuration=phpunit.xml",
-    "qa": [
-      "@cs:check",
-      "@stan",
-      "@test"
-    ]
-  }
-}
-```
-
-</details>
-
-<details>
-<summary><strong>C.2 phpcs.xml</strong></summary>
-
-```xml
-<?xml version="1.0"?>
-<ruleset name="ProjectStandard">
-  <description>PSR-12 with PHP 8.3+ strict rules</description>
-  <arg name="basepath" value="."/>
-  <arg name="colors"/>
-  <arg name="extensions" value="php"/>
-  <arg value="sp"/>
-
-  <file>src</file>
-  <file>tests</file>
-  <exclude-pattern>vendor/</exclude-pattern>
-
-  <rule ref="PSR12"/>
-  <rule ref="Generic.PHP.NoSilencedErrors"/>
-  <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
-</ruleset>
-```
-
-</details>
-
-<details>
-<summary><strong>C.3 .php-cs-fixer.php</strong></summary>
-
-```php
-<?php
-
-$finder = PhpCsFixer\Finder::create()
-    ->in([__DIR__ . '/src', __DIR__ . '/tests'])
-    ->exclude('vendor');
-
-return (new PhpCsFixer\Config())
-    ->setRiskyAllowed(true)
-    ->setFinder($finder)
-    ->setRules([
-        '@PSR12' => true,
-        'declare_strict_types' => true,
-        'strict_param' => true,
-        'no_unused_imports' => true,
-        'ordered_imports' => ['sort_algorithm' => 'alpha'],
-        'array_syntax' => ['syntax' => 'short'],
-        'trailing_comma_in_multiline' => true,
-        'phpdoc_trim' => true,
-        'no_superfluous_phpdoc_tags' => true,
-    ]);
-```
-
-</details>
-
-<details>
-<summary><strong>C.4 phpstan.neon</strong></summary>
-
-```neon
-parameters:
-  level: 9
-  paths:
-    - src
-    - tests
-  excludePaths:
-    - vendor
-  checkMissingIterableValueType: true
-  checkGenericClassInNonGenericObjectType: true
-  reportUnmatchedIgnoredErrors: true
-  ignoreErrors:
-    - '#Call to an undefined method PHPUnit\\Framework\\TestCase::createMock\(\)#'
-```
-
-</details>
-
-<details>
-<summary><strong>C.5 phpunit.xml</strong></summary>
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         colors="true"
-         cacheDirectory=".phpunit.cache"
-         failOnWarning="true"
-         failOnRisky="true">
-  <testsuites>
-    <testsuite name="unit">
-      <directory>tests/Unit</directory>
-    </testsuite>
-    <testsuite name="integration">
-      <directory>tests/Integration</directory>
-    </testsuite>
-  </testsuites>
-
-  <coverage>
-    <include>
-      <directory>src</directory>
-    </include>
-    <exclude>
-      <directory>src/Migrations</directory>
-    </exclude>
-  </coverage>
-
-  <php>
-    <ini name="error_reporting" value="-1"/>
-    <ini name="display_errors" value="1"/>
-  </php>
-</phpunit>
-```
-
-</details>
-
-## Appendix D: Examples
-
-### D.1 Non-compliant vs compliant repository implementation
+### C.1 Non-compliant vs compliant repository implementation
 
 **Non-compliant (SQL injection, no types, global state):**
 ```php
@@ -541,7 +384,7 @@ final readonly class PdoUserRepository implements UserRepository
 }
 ```
 
-### D.2 Non-compliant vs compliant error handling
+### C.2 Non-compliant vs compliant error handling
 
 **Non-compliant (silent failures, error suppression):**
 ```php
@@ -579,7 +422,7 @@ function processPayment(float $amount): PaymentResult
 }
 ```
 
-### D.3 Review output format example
+### C.3 Review output format example
 
 When reviewing code, structure output as:
 

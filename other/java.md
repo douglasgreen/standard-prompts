@@ -265,115 +265,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Documentation**: Public APIs have Javadoc (8.1)
 - [ ] **Logging**: SLF4J with parameterized logging (9.1); no sensitive data logged (9.2)
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-**Maven (pom.xml) - Spotless + JUnit 5 + OWASP Dependency-Check:**
-```xml
-<properties>
-  <maven.compiler.release>21</maven.compiler.release>
-  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  <junit.jupiter.version>5.10.2</junit.jupiter.version>
-</properties>
-
-<dependencies>
-  <dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter</artifactId>
-    <version>${junit.jupiter.version}</version>
-    <scope>test</scope>
-  </dependency>
-  <dependency>
-    <groupId>org.mockito</groupId>
-    <artifactId>mockito-junit-jupiter</artifactId>
-    <version>5.11.0</version>
-    <scope>test</scope>
-  </dependency>
-</dependencies>
-
-<build>
-  <plugins>
-    <plugin>
-      <groupId>com.diffplug.spotless</groupId>
-      <artifactId>spotless-maven-plugin</artifactId>
-      <version>2.43.0</version>
-      <configuration>
-        <java>
-          <googleJavaFormat>
-            <version>1.22.0</version>
-            <style>GOOGLE</style>
-          </googleJavaFormat>
-          <removeUnusedImports/>
-          <importOrder/>
-        </java>
-      </configuration>
-      <executions>
-        <execution>
-          <goals>
-            <goal>check</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
-
-    <plugin>
-      <groupId>org.owasp</groupId>
-      <artifactId>dependency-check-maven</artifactId>
-      <version>10.0.4</version>
-      <executions>
-        <execution>
-          <goals>
-            <goal>check</goal>
-          </goals>
-        </execution>
-      </executions>
-      <configuration>
-        <failBuildOnCVSS>7</failBuildOnCVSS>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
-```
-
-**Gradle (build.gradle) equivalent:**
-```gradle
-plugins {
-  id 'java'
-  id 'com.diffplug.spotless' version '6.25.0'
-  id 'org.owasp.dependencycheck' version '9.0.10'
-}
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
-}
-
-dependencies {
-  testImplementation platform('org.junit:junit-bom:5.10.2')
-  testImplementation 'org.junit.jupiter:junit-jupiter'
-  testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
-}
-
-test {
-  useJUnitPlatform()
-}
-
-spotless {
-  java {
-    googleJavaFormat('1.22.0')
-    formatAnnotations()
-    removeUnusedImports()
-  }
-}
-
-dependencyCheck {
-  failBuildOnCVSS = 7.0
-}
-```
-
-### Appendix D: Examples
-
-**D.1 Dependency injection (Constructor vs Field)**
+**C.1 Dependency injection (Constructor vs Field)**
 
 Non-compliant:
 ```java
@@ -396,7 +290,7 @@ public class OrderService {
 }
 ```
 
-**D.2 Null safety and records**
+**C.2 Null safety and records**
 
 Non-compliant:
 ```java
@@ -420,7 +314,7 @@ public Optional<User> findUser(String id) {
 }
 ```
 
-**D.3 Exception handling with context**
+**C.3 Exception handling with context**
 
 Non-compliant:
 ```java
@@ -441,7 +335,7 @@ try {
 }
 ```
 
-**D.4 SQL injection prevention**
+**C.4 SQL injection prevention**
 
 Non-compliant:
 ```java
@@ -460,7 +354,7 @@ try (PreparedStatement ps = conn.prepareStatement(sql)) {
 }
 ```
 
-**D.5 Resource management**
+**C.5 Resource management**
 
 Non-compliant:
 ```java

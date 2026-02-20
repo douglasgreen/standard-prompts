@@ -309,97 +309,9 @@ Critical **MUST** items for quick validation:
   - [ ] Health endpoints (`/healthz`, `/readyz`) for services.
   - [ ] Configuration validated at startup; env vars supported.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-**`.editorconfig`** (cross-editor consistency):
-```code
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.go]
-indent_style = tab
-indent_size = 8
-
-[go.mod]
-indent_style = tab
-
-[*.md]
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = false
-```
-
-**`.golangci.yml`** (baseline linting):
-```yaml
-run:
-  timeout: 5m
-  tests: true
-
-output:
-  sort-results: true
-
-linters:
-  disable-all: true
-  enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - typecheck
-    - unused
-    - revive
-    - gosec
-
-linters-settings:
-  revive:
-    rules:
-      - name: exported
-      - name: error-strings
-      - name: error-naming
-      - name: var-naming
-      - name: early-return
-
-issues:
-  max-issues-per-linter: 0
-  max-same-issues: 0
-  exclude-use-default: false
-```
-
-**`Makefile`** (portable quality gates):
-```code
-GO ?= go
-
-.PHONY: fmt lint test race vuln tidy
-
-fmt:
-	$(GO) fmt ./...
-	goimports -w .
-
-tidy:
-	$(GO) mod tidy
-
-test:
-	$(GO) test ./...
-
-race:
-	$(GO) test -race ./...
-
-lint:
-	golangci-lint run
-
-vuln:
-	govulncheck ./...
-```
-
-### Appendix D: Examples
-
-**D.1 Error wrapping and inspection**
+**C.1 Error wrapping and inspection**
 Non-compliant:
 ```go
 if err != nil {
@@ -414,7 +326,7 @@ if err != nil {
 ```
 Rationale: `%w` preserves the error cause for inspection with `errors.Is/As`.
 
-**D.2 Panic/recover boundary (HTTP middleware)**
+**C.2 Panic/recover boundary (HTTP middleware)**
 Non-compliant:
 ```go
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -438,7 +350,7 @@ func RecoverMiddleware(next http.Handler, log *slog.Logger) http.Handler {
 }
 ```
 
-**D.3 Goroutine lifecycle with context**
+**C.3 Goroutine lifecycle with context**
 Non-compliant (leaks):
 ```go
 go func() {
@@ -461,7 +373,7 @@ go func() {
 }()
 ```
 
-**D.4 SQL injection avoidance**
+**C.4 SQL injection avoidance**
 Non-compliant:
 ```go
 q := "SELECT * FROM users WHERE email = '" + email + "'"

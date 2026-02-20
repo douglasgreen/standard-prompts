@@ -286,104 +286,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Logging**: No raw session IDs in logs; security events logged (5.2.1–5.2.2)
 - [ ] **Type Safety**: `declare(strict_types=1)` present in all session files (6.1.1)
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 PHPStan configuration for security `phpstan.neon`
-```yaml
-parameters:
-  level: 8
-  paths:
-    - src/Session
-  checkUninitializedProperties: true
-  checkExplicitMixed: true
-  reportMaybes: true
-```
-
-#### C.2 Production session security bootstrap `config/session_security.php`
-```php
-<?php
-declare(strict_types=1);
-
-// Apply this configuration before any output or session_start()
-
-ini_set('session.use_strict_mode', '1');
-ini_set('session.use_only_cookies', '1');
-ini_set('session.use_trans_sid', '0');
-ini_set('session.cookie_secure', '1');
-ini_set('session.cookie_httponly', '1');
-ini_set('session.cookie_samesite', 'Strict');
-ini_set('session.cookie_lifetime', '0');
-ini_set('session.gc_maxlifetime', '3600'); // 1 hour absolute
-ini_set('session.sid_length', '48');
-ini_set('session.sid_bits_per_character', '6');
-ini_set('session.name', '__Host-myapp_session');
-ini_set('session.serialize_handler', 'json'); // If using custom handler
-```
-
-#### C.3 Redis session handler implementation `src/Session/RedisSessionHandler.php`
-```php
-<?php
-declare(strict_types=1);
-
-namespace App\Session;
-
-use Predis\Client;
-use SessionHandlerInterface;
-
-final class RedisSessionHandler implements SessionHandlerInterface
-{
-    private Client $redis;
-    private int $ttl;
-    
-    public function __construct(Client $redis, int $ttl = 3600)
-    {
-        $this->redis = $redis;
-        $this->ttl = $ttl;
-    }
-    
-    public function open(string $savePath, string $sessionName): bool
-    {
-        return true;
-    }
-    
-    public function close(): bool
-    {
-        return true;
-    }
-    
-    public function read(string $id): string
-    {
-        // Validate ID format to prevent injection
-        if (!preg_match('/^[a-zA-Z0-9_-]{32,128}$/', $id)) {
-            return '';
-        }
-        return $this->redis->get("session:{$id}") ?: '';
-    }
-    
-    public function write(string $id, string $data): bool
-    {
-        if (!preg_match('/^[a-zA-Z0-9_-]{32,128}$/', $id)) {
-            return false;
-        }
-        return $this->redis->setex("session:{$id}", $this->ttl, $data) !== false;
-    }
-    
-    public function destroy(string $id): bool
-    {
-        return $this->redis->del("session:{$id}") >= 0;
-    }
-    
-    public function gc(int $maxlifetime): int
-    {
-        // Redis handles expiration via TTL; no manual GC needed
-        return 0;
-    }
-}
-```
-
-### Appendix D: Examples
-
-#### D.1 Compliant vs. Non-Compliant: Session Login Flow
+#### C.1 Compliant vs. Non-Compliant: Session Login Flow
 
 **Non-Compliant (Fixation vulnerable, type unsafe):**
 ```php
@@ -465,7 +370,7 @@ final class SessionManager
 }
 ```
 
-#### D.2 Compliant: Timeout validation middleware
+#### C.2 Compliant: Timeout validation middleware
 
 ```php
 <?php

@@ -383,137 +383,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Tracing**: Configured for CI failures (`on-first-retry`); no PII in artifacts.
 - [ ] **Accessibility**: Role-based locators preferred; axe-core integration for critical flows.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### `playwright.config.ts`
-```typescript
-import { defineConfig, devices } from '@playwright/test';
-
-const isCI = !!process.env.CI;
-
-export default defineConfig({
-  testDir: './tests',
-  timeout: 30_000,
-  expect: { timeout: 10_000 },
-
-  // Parallelism and isolation
-  fullyParallel: true,
-  forbidOnly: isCI,
-  retries: isCI ? 2 : 0,
-  workers: isCI ? 2 : undefined,
-
-  // Reporting
-  reporter: [
-    ['html', { open: 'never' }],
-    ['list'],
-    ...(isCI ? [['github' as const]] : []),
-  ],
-
-  use: {
-    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
-    headless: isCI,
-    
-    // Artifacts and debugging
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    
-    // Timeouts
-    actionTimeout: 10_000,
-    navigationTimeout: 20_000,
-  },
-
-  // Projects for cross-browser coverage
-  projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-      dependencies: ['setup'],
-    },
-    {
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 7'] },
-      dependencies: ['setup'],
-    },
-  ],
-
-  // Local dev server (optional)
-  webServer: isCI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
-});
-```
-
-#### `tests/fixtures/base.ts`
-```typescript
-import { test as base, expect } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-
-type MyFixtures = {
-  loginPage: LoginPage;
-};
-
-export const test = base.extend<MyFixtures>({
-  loginPage: async ({ page }, use) => {
-    await use(new LoginPage(page));
-  },
-});
-
-export { expect };
-```
-
-#### `eslint.config.mjs`
-```javascript
-import tseslint from "typescript-eslint";
-import playwright from "eslint-plugin-playwright";
-
-export default [
-  ...tseslint.configs.recommended,
-  {
-    files: ["tests/**/*.ts"],
-    ...playwright.configs["flat/recommended"],
-    rules: {
-      "@typescript-eslint/no-floating-promises": "error",
-      "playwright/no-wait-for-timeout": "error",
-      "playwright/prefer-web-first-assertions": "error",
-    }
-  }
-];
-```
-
-#### `.gitignore` (relevant excerpts)
-```gitignore
-# Playwright artifacts
-playwright-report/
-test-results/
-blob-report/
-
-# Auth state (MUST NOT commit)
-playwright/.auth/
-
-# Node
-node_modules/
-.env
-.env.local
-```
-
-### Appendix D: Examples
-
-#### D1. Locators: user-facing vs brittle CSS
+#### C1. Locators: user-facing vs brittle CSS
 
 **Non-compliant:**
 ```typescript
@@ -531,7 +403,7 @@ await page.getByLabel('Email address').fill('test@example.com');
 await page.getByRole('navigation').getByRole('link', { name: 'About' }).click();
 ```
 
-#### D2. Assertions: web-first auto-wait vs manual polling
+#### C2. Assertions: web-first auto-wait vs manual polling
 
 **Non-compliant:**
 ```typescript
@@ -551,7 +423,7 @@ await expect(page.getByRole('heading')).toHaveText('Welcome');
 await expect(page.getByRole('button', { name: 'Submit' })).toBeEnabled();
 ```
 
-#### D3. Synchronization: fixed sleep vs condition-based wait
+#### C3. Synchronization: fixed sleep vs condition-based wait
 
 **Non-compliant:**
 ```typescript
@@ -567,7 +439,7 @@ await page.getByRole('button', { name: 'Save' }).click();
 await expect(page.getByText('Saved')).toBeVisible();
 ```
 
-#### D4. Authentication: setup project vs repeated UI login
+#### C4. Authentication: setup project vs repeated UI login
 
 **Non-compliant:**
 ```typescript
@@ -614,7 +486,7 @@ test('user can view dashboard', async ({ page }) => {
 });
 ```
 
-#### D5. Test isolation: shared state vs independent tests
+#### C5. Test isolation: shared state vs independent tests
 
 **Non-compliant:**
 ```typescript

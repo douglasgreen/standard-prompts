@@ -309,33 +309,3 @@ UPDATE order SET status_code =
 /* Rollback: U004__add_order_status_code.sql */
 ALTER TABLE order DROP COLUMN status_code;
 ```
-
-### Appendix D: Sample configuration
-
-**SQLFluff configuration for DDL (`.sqlfluff`):**
-```ini
-[sqlfluff]
-dialect = ansi
-templater = jinja
-rules = all
-exclude_rules = L034,L054
-
-[sqlfluff:indentation]
-indent_unit = space
-tab_width = 4
-
-[sqlfluff:capitalisation:keywords]
-capitalisation_policy = upper
-
-[sqlfluff:capitalisation:identifiers]
-capitalisation_policy = lower
-extended_capitalisation_policy = snake
-
-[sqlfluff:capitalisation:functions]
-capitalisation_policy = upper
-
-[sqlfluff:capitalisation:types]
-capitalisation_policy = upper
-```
-
-**Note:** Adjust `dialect` to your specific database (postgres, mysql, tsql, oracle, etc.).

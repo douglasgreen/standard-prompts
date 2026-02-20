@@ -580,79 +580,10 @@ Critical **MUST** items for quick validation:
 - [ ] **Lazy Initialization**: Thread-safe check; not used for safety-critical deps
 - [ ] **Abstract Factory**: Consistent families; cohesive product interfaces
 
-### Appendix C: Sample configuration
-
-**C.1 ESLint configuration (TypeScript)**
-
-```javascript
-// eslint.config.js
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  {
-    languageOptions: {
-      parserOptions: { project: true },
-    },
-    rules: {
-      'no-console': 'warn',
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
-      '@typescript-eslint/prefer-readonly': 'error',
-      'class-methods-use-this': 'off', // Allow for interface implementations
-    },
-  },
-];
-```
-
-**C.2 Ruff configuration (Python)**
-
-```toml
-# ruff.toml
-line-length = 100
-target-version = "py312"
-
-[lint]
-select = ["E", "F", "I", "B", "UP", "C90", "N"]
-ignore = ["E501"] # Line length handled by formatter
-
-[lint.pydocstyle]
-convention = "google"
-
-[format]
-quote-style = "double"
-```
-
-**C.3 Checkstyle configuration (Java)**
-
-```xml
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-    "https://checkstyle.org/dtds/configuration_1_3.dtd">
-
-<module name="Checker">
-  <module name="TreeWalker">
-    <module name="CyclomaticComplexity">
-      <property name="max" value="10"/>
-    </module>
-    <module name="ClassFanOutComplexity">
-      <property name="max" value="30"/>
-    </module>
-    <module name="FinalClass"/>
-    <module name="HideUtilityClassConstructor"/>
-    <module name="InterfaceIsType"/>
-    <module name="VisibilityModifier"/>
-  </module>
-</module>
-```
-
-### Appendix D: Examples
+### Appendix C: Examples
 
 <details>
-<summary>D.1 Dependency injection - Non-compliant vs Compliant</summary>
+<summary>C.1 Dependency injection - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Service locator anti-pattern):
 ```typescript
@@ -688,7 +619,7 @@ class OrderService {
 </details>
 
 <details>
-<summary>D.2 Decorator - Non-compliant vs Compliant</summary>
+<summary>C.2 Decorator - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Breaks interface contract):
 ```typescript
@@ -727,7 +658,7 @@ class LoggingDataSource implements DataSource {
 </details>
 
 <details>
-<summary>D.3 Strategy - Non-compliant vs Compliant</summary>
+<summary>C.3 Strategy - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Conditional logic):
 ```typescript

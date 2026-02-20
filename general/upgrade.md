@@ -333,170 +333,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Versioning**: SemVer 2.0.0 with GPG signed tags for libraries (Section 9.2).
 - [ ] **Documentation**: `UPGRADE.md` with migration examples; Conventional Commits used (Section 10.2, 10.3).
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 Rector configuration (`rector.php`)
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
-use Rector\ValueObject\PhpVersion;
-
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([__DIR__ . '/src', __DIR__ . '/tests']);
-    $rectorConfig->cacheDirectory(__DIR__ . '/var/rector');
-
-    // Set minimum PHP version for backward compatibility
-    $rectorConfig->phpVersion(PhpVersion::PHP_83);
-
-    // Apply upgrade rules up to target version INDEPENDENTLY
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_84,
-        SetList::TYPE_DECLARATION,
-    ]);
-
-    // Import names and remove unused imports
-    $rectorConfig->importNames(importNames: true, importDocBlockNames: true);
-    $rectorConfig->removeUnusedImports(true);
-
-    // Exclude legacy maintenance-only code
-    $rectorConfig->skip([__DIR__ . '/src/Legacy']);
-};
-```
-
-#### C.2 PHP_CodeSniffer configuration (`phpcs.xml`)
-
-```xml
-<?xml version="1.0"?>
-<ruleset name="Organization PHP Standards">
-    <description>PHP coding standards for upgrade safety</description>
-
-    <arg name="cache" value="var/.phpcs-cache"/>
-    <arg name="colors"/>
-    <arg name="extensions" value="php"/>
-    <arg name="parallel" value="80"/>
-
-    <file>src/</file>
-    <file>tests/</file>
-
-    <exclude-pattern>*/var/*</exclude-pattern>
-    <exclude-pattern>*/vendor/*</exclude-pattern>
-
-    <!-- Coding standard -->
-    <rule ref="PSR12"/>
-
-    <!-- PHP version compatibility - CRITICAL for upgrades -->
-    <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="8.3-8.4"/>
-
-    <!-- Require strict types -->
-    <rule ref="Generic.PHP.RequireStrictTypes"/>
-</ruleset>
-```
-
-#### C.3 Renovate configuration (organizational preset)
-
-```json
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":semanticCommits",
-    "group:allNonMajor"
-  ],
-  "timezone": "America/New_York",
-  "schedule": ["before 4am on Monday"],
-
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["patch"],
-      "matchCurrentVersion": "!/^0/",
-      "automerge": true,
-      "automergeType": "pr"
-    },
-    {
-      "matchUpdateTypes": ["major"],
-      "automerge": false,
-      "labels": ["major-upgrade", "requires-review"]
-    },
-    {
-      "matchPackagePatterns": ["^symfony/"],
-      "groupName": "Symfony packages",
-      "schedule": ["monthly"]
-    }
-  ],
-
-  "vulnerabilityAlerts": {
-    "labels": ["security"],
-    "automerge": false,
-    "schedule": ["at any time"]
-  }
-}
-```
-
-#### C.4 GitLab CI/CD configuration (`.gitlab-ci.yml`)
-
-```yaml
-stages:
-  - validate
-  - security
-  - test
-  - build
-
-variables:
-  COMPOSER_CACHE_DIR: "$CI_PROJECT_DIR/.composer-cache"
-
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    - .composer-cache/
-    - vendor/
-
-composer-validate:
-  stage: validate
-  script:
-    - composer validate --strict
-    - composer audit --locked
-  only:
-    - merge_requests
-    - main
-
-phpcs:
-  stage: validate
-  script:
-    - vendor/bin/phpcs --report-junit=phpcs-report.xml
-  artifacts:
-    reports:
-      junit: phpcs-report.xml
-
-phpstan:
-  stage: validate
-  script:
-    - vendor/bin/phpstan analyse --error-format=gitlab > phpstan-report.json
-  artifacts:
-    reports:
-      codequality: phpstan-report.json
-
-sast:
-  stage: security
-  include:
-    - template: Jobs/SAST.gitlab-ci.yml
-
-phpunit:
-  stage: test
-  script:
-    - SYMFONY_DEPRECATIONS_HELPER=max[total]=0 vendor/bin/phpunit --coverage-text
-  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
-```
-
-### Appendix D: Examples
-
-#### D.1 Non-compliant vs. compliant PHP upgrade process
+#### C.1 Non-compliant vs. compliant PHP upgrade process
 
 **Non-compliant** (Skipping versions, no automation):
 ```php
@@ -541,7 +380,7 @@ final class DataProcessor
 }
 ```
 
-#### D.2 Dependency constraint compliance
+#### C.2 Dependency constraint compliance
 
 **Non-compliant** (Application using loose constraints):
 ```json
@@ -572,7 +411,7 @@ final class DataProcessor
 ```
 *Compliant with Section 5.1.1 (exact pinning) and 5.1.2 (platform config).*
 
-#### D.3 Incremental Rector application
+#### C.3 Incremental Rector application
 
 **Non-compliant** (Single commit with mixed concerns):
 ```bash

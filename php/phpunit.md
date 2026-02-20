@@ -422,73 +422,9 @@ Critical **MUST** items for quick validation:
 
 ---
 
-## Appendix C: Sample configuration
+## Appendix C: Examples
 
-### C.1 `phpunit.xml.dist`
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         colors="true"
-         cacheDirectory=".phpunit.cache"
-         executionOrder="random"
-         failOnRisky="true"
-         failOnWarning="true"
-         beStrictAboutOutputDuringTests="true"
-         requireCoverageMetadata="true"
-         beStrictAboutCoverageMetadata="true">
-
-    <testsuites>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>tests/Integration</directory>
-        </testsuite>
-        <testsuite name="Functional">
-            <directory>tests/Functional</directory>
-        </testsuite>
-    </testsuites>
-
-    <source>
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </source>
-
-    <coverage>
-        <report>
-            <html outputDirectory="build/coverage-html"/>
-            <clover outputFile="build/logs/clover.xml"/>
-        </report>
-    </coverage>
-</phpunit>
-```
-
-### C.2 `.editorconfig`
-
-```ini
-root = true
-
-[*.php]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-indent_style = space
-indent_size = 4
-
-[*.md]
-trim_trailing_whitespace = false
-```
-
----
-
-## Appendix D: Examples
-
-### D.1 Non-compliant (violates standards)
+### C.1 Non-compliant (violates standards)
 
 ```php
 <?php
@@ -523,7 +459,7 @@ class orderTest extends TestCase  // Violation: naming convention, not final
 }
 ```
 
-### D.2 Compliant (meets standards)
+### C.2 Compliant (meets standards)
 
 ```php
 <?php

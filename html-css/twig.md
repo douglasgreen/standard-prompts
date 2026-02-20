@@ -256,102 +256,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Naming**: snake_case variables, kebab-case filenames, descriptive block names
 - [ ] **Syntax**: One space inside delimiters `{{ }}`, no space around pipes `|`
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 Twig-CS-Fixer configuration (`.twig-cs-fixer.dist.php`)
-
-```php
-<?php
-
-declare(strict_types=1);
-
-use TwigCsFixer\Config\Config;
-use TwigCsFixer\File\Finder;
-use TwigCsFixer\Ruleset\Ruleset;
-use TwigCsFixer\Standard\TwigCsFixer;
-
-$ruleset = new Ruleset();
-$ruleset->addStandard(new TwigCsFixer());
-
-// Optional: Customize specific rules
-// $ruleset->overrideRule(new \TwigCsFixer\Rules\Delimiter\SpacingRule(1, 1));
-
-$config = new Config();
-$config->setRuleset($ruleset);
-$config->setFinder(
-    Finder::create()->in(__DIR__ . '/templates')
-);
-
-return $config;
-```
-
-#### C.2 Composer scripts (`composer.json`)
-
-```json
-{
-  "scripts": {
-    "lint:twig": "twig-cs-fixer lint templates/",
-    "fix:twig": "twig-cs-fixer fix templates/",
-    "test:twig": [
-      "@lint:twig",
-      "php bin/console lint:twig --show-deprecations"
-    ]
-  },
-  "require-dev": {
-    "vincentlanglet/twig-cs-fixer": "^3.0",
-    "friendsoftwig/twigcs": "^6.0"
-  }
-}
-```
-
-#### C.3 GitHub Actions workflow (`.github/workflows/twig-standards.yml`)
-
-```yaml
-name: Twig Standards
-
-on: [push, pull_request]
-
-jobs:
-  twig-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          
-      - name: Install dependencies
-        run: composer install --no-interaction
-        
-      - name: Run Twig-CS-Fixer
-        run: vendor/bin/twig-cs-fixer lint templates/ --report=github
-        
-      - name: Run Symfony Twig Lint (if applicable)
-        run: php bin/console lint:twig templates/
-        continue-on-error: false
-```
-
-#### C.4 Pre-commit hook (`.git/hooks/pre-commit`)
-
-```bash
-#!/bin/bash
-STAGED_TWIG=$(git diff --cached --name-only --diff-filter=ACM | grep '\.twig$' || true)
-
-if [ -n "$STAGED_TWIG" ]; then
-    echo "Linting Twig templates..."
-    if ! vendor/bin/twig-cs-fixer lint $STAGED_TWIG --report=text; then
-        echo "❌ Twig linting failed. Run 'composer fix:twig' to auto-fix."
-        exit 1
-    fi
-fi
-exit 0
-```
-
-### Appendix D: Examples
-
-#### D.1 Security: Escaping and `raw` usage
+#### C.1 Security: Escaping and `raw` usage
 
 **Non-compliant** (XSS vulnerability, no justification):
 ```twig
@@ -377,7 +284,7 @@ exit 0
 </script>
 ```
 
-#### D.2 Architecture: Separation of concerns
+#### C.2 Architecture: Separation of concerns
 
 **Non-compliant** (business logic in template, $N+1$ queries):
 ```twig
@@ -413,7 +320,7 @@ foreach ($categories as $cat) {
 {% endfor %}
 ```
 
-#### D.3 Syntax: Spacing and naming
+#### C.3 Syntax: Spacing and naming
 
 **Non-compliant**:
 ```twig
@@ -431,7 +338,7 @@ foreach ($categories as $cat) {
 {{ include('x.html.twig', {foo: 'bar'}) }}
 ```
 
-#### D.4 Accessibility: Forms and ARIA
+#### C.4 Accessibility: Forms and ARIA
 
 **Non-compliant**:
 ```twig

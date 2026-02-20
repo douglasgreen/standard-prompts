@@ -473,105 +473,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Performance**: CPU work offloaded to workers; streams for large files; connection pooling
 - [ ] **Testing**: Deterministic tests; $80\%+$ coverage target; CI integration
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### `package.json` (excerpt)
-```json
-{
-  "type": "module",
-  "engines": {
-    "node": ">=20.11.0"
-  },
-  "scripts": {
-    "dev": "node --watch src/index.js",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "lint": "eslint . --ext .ts,.js",
-    "format": "prettier --write .",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
-  }
-}
-```
-
-#### `eslint.config.js` (Flat config, ESM)
-```javascript
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import prettier from 'eslint-config-prettier';
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  {
-    languageOptions: {
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    rules: {
-      'no-console': 'off',
-      '@typescript-eslint/no-explicit-any': 'error',
-    },
-  },
-  prettier,
-];
-```
-
-#### `prettier.config.js`
-```javascript
-export default {
-  semi: true,
-  singleQuote: true,
-  trailingComma: 'all',
-  printWidth: 100,
-  tabWidth: 2,
-};
-```
-
-#### `tsconfig.json`
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "declaration": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
-}
-```
-
-#### `.env.example`
-```bash
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/myapp
-DATABASE_POOL_SIZE=20
-
-# Application
-PORT=3000
-NODE_ENV=development
-LOG_LEVEL=info
-
-# Security
-JWT_SECRET=REPLACE_ME_IN_PRODUCTION
-BCRYPT_ROUNDS=12
-```
-
-### Appendix D: Examples
-
-#### D.1 Error handling (Non-compliant vs. Compliant)
+#### C.1 Error handling (Non-compliant vs. Compliant)
 
 **Non-compliant** (callback, no error handling, swallows errors)
 ```javascript
@@ -713,7 +617,7 @@ async function shutdown() {
 }
 ```
 
-#### D.2 Configuration validation (Compliant)
+#### C.2 Configuration validation (Compliant)
 
 ```typescript
 // src/config/index.ts
@@ -741,7 +645,7 @@ const parseEnv = () => {
 export const config = parseEnv();
 ```
 
-#### D.3 Security headers and input validation (Compliant)
+#### C.3 Security headers and input validation (Compliant)
 
 ```typescript
 // app.ts

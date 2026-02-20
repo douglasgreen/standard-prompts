@@ -398,153 +398,9 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 - [ ] **Interoperability**: Explicit contract declared (SCORM/xAPI/LTI); xAPI privacy rules; LTI 1.3 OIDC/JWT validation if applicable
 - [ ] **Feedback**: Immediate corrective feedback for incorrect answers; reference to source material; remediation pathways defined
 
-### Appendix C: Sample configuration files
+### Appendix C: Examples (compliant vs. non-compliant)
 
-**C1. TypeScript + ESLint + Prettier (`package.json` snippets)**
-```json
-{
-  "engines": { "node": ">=20" },
-  "scripts": {
-    "format": "prettier . --write",
-    "lint": "eslint .",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "test:a11y": "node ./scripts/axe-smoke.js"
-  },
-  "devDependencies": {
-    "@eslint/js": "^8.57.0",
-    "typescript-eslint": "^7.0.0",
-    "prettier": "^3.2.0",
-    "vitest": "^1.2.0"
-  }
-}
-```
-
-**C2. `tsconfig.json` (strict)**
-```json
-{
-  "compilerOptions": {
-    "target": "ES2023",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  }
-}
-```
-
-**C3. `eslint.config.js` (flat config)**
-```javascript
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  {
-    languageOptions: {
-      parserOptions: { project: true }
-    },
-    rules": {
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/prefer-nullish-coalescing": "error"
-    }
-  }
-];
-```
-
-**C4. Prettier (`.prettierrc`)**
-```json
-{
-  "singleQuote": true,
-  "semi": true,
-  "printWidth": 100,
-  "trailingComma": "es5"
-}
-```
-
-**C5. Python: Ruff + Pytest (`pyproject.toml`)**
-```toml
-[project]
-requires-python = ">=3.12"
-
-[tool.ruff]
-line-length = 100
-target-version = "py312"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "SIM", "C4"]
-ignore = []
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = "test_*.py"
-addopts = "-q --tb=short"
-```
-
-**C6. JSON Schema for Question Validation**
-```json
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "required": ["questionId", "questionType", "stimulusText", "objectiveId", "bloomLevel"],
-  "properties": {
-    "questionId": { "type": "string" },
-    "questionType": { "enum": ["MCQ", "MSQ", "FIB", "Bool", "Flashcard"] },
-    "stimulusText": { "type": "string", "minLength": 1 },
-    "objectiveId": { "type": "string" },
-    "bloomLevel": { "enum": ["remember", "understand", "apply", "analyze", "evaluate", "create"] },
-    "difficulty": { "enum": ["easy", "medium", "hard"] },
-    "options": {
-      "type": "array",
-      "minItems": 4,
-      "items": {
-        "type": "object",
-        "required": ["text", "isCorrect", "feedback"],
-        "properties": {
-          "text": { "type": "string" },
-          "isCorrect": { "type": "boolean" },
-          "feedback": { "type": "string", "minLength": 1 },
-          "distractorRationale": { "type": "string" }
-        }
-      }
-    },
-    "gradingConfig": {
-      "type": "object",
-      "properties": {
-        "caseSensitive": { "type": "boolean" },
-        "acceptedSynonyms": { "type": "array", "items": { "type": "string" } },
-        "partialCreditFormula": { "type": "string" }
-      }
-    }
-  }
-}
-```
-
-**C7. EditorConfig (`.editorconfig`)**
-```ini
-root = true
-
-[*]
-end_of_line = lf
-insert_final_newline = true
-charset = utf-8
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
-
-[*.py]
-indent_size = 4
-```
-
-### Appendix D: Examples (compliant vs. non-compliant)
-
-**D1. Learning objectives**
+**C1. Learning objectives**
 *Non-compliant:*
 ```
 Objective: Understand APIs.
@@ -555,7 +411,7 @@ Objective 1: Given an OpenAPI specification snippet, identify required versus op
 Objective 2: Given a 400 Bad Request response, debug the error by interpreting the standardized error code (Evaluate).
 ```
 
-**D2. Multiple choice question**
+**C2. Multiple choice question**
 *Non-compliant:*
 ```html
 <p>What is the best way to save?</p>
@@ -598,7 +454,7 @@ Objective 2: Given a 400 Bad Request response, debug the error by interpreting t
 }
 ```
 
-**D3. Accessibility (semantic HTML)**
+**C3. Accessibility (semantic HTML)**
 *Non-compliant:*
 ```html
 <div class="button" onclick="submit()">Submit</div>
@@ -615,7 +471,7 @@ Objective 2: Given a 400 Bad Request response, debug the error by interpreting t
 </article>
 ```
 
-**D4. Fill-in-the-blank tolerance**
+**C4. Fill-in-the-blank tolerance**
 *Non-compliant:*
 ```javascript
 function grade(answer) {
@@ -636,7 +492,7 @@ function gradeFillBlank(userAnswer, config) {
 }
 ```
 
-**D5. API error contract**
+**C5. API error contract**
 *Non-compliant:*
 ```javascript
 res.status(500).send({ error: err.message });

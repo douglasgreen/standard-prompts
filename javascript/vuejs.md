@@ -435,108 +435,9 @@ Critical **MUST** items for quick validation:
 
 ---
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### `eslint.config.mjs`
-```javascript
-import pluginVue from 'eslint-plugin-vue'
-import globals from 'globals'
-import {
-  defineConfigWithVueTs,
-  vueTsConfigs,
-} from '@vue/eslint-config-typescript'
-
-export default defineConfigWithVueTs(
-  // Vue 3 SFC linting (flat config)
-  ...pluginVue.configs['flat/recommended'],
-
-  // TypeScript + type-aware linting applied to .ts and .vue
-  vueTsConfigs.recommendedTypeChecked,
-
-  {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-    },
-    rules: {
-      // Security baseline
-      'vue/no-v-html': 'error',
-
-      // Explicit component API
-      'vue/require-explicit-emits': 'error',
-
-      // Team convention: kebab-case custom events
-      'vue/custom-event-name-casing': ['error', 'kebab-case'],
-      
-      // TypeScript strictness
-      '@typescript-eslint/no-explicit-any': 'error',
-    },
-  },
-)
-```
-
-#### `.prettierrc.json`
-```json
-{
-  "singleQuote": true,
-  "semi": false,
-  "printWidth": 100,
-  "trailingComma": "all",
-  "arrowParens": "always"
-}
-```
-
-#### `tsconfig.json` (app baseline)
-```json
-{
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "jsx": "preserve",
-
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    "useDefineForClassFields": true,
-    "skipLibCheck": true,
-
-    "types": ["vite/client"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "env.d.ts"]
-}
-```
-
-#### `package.json` scripts (suggested)
-```json
-{
-  "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint .",
-    "format": "prettier . --check",
-    "format:fix": "prettier . --write",
-    "test": "vitest",
-    "test:ci": "vitest run --coverage"
-  }
-}
-```
-
----
-
-### Appendix D: Examples
-
-#### D1: Component structure and API
+#### C1: Component structure and API
 
 **Non-compliant** (Options API, implicit emits, loose types):
 ```vue
@@ -591,7 +492,7 @@ function handleClick() {
 </template>
 ```
 
-#### D2: State management (Pinia)
+#### C2: State management (Pinia)
 
 **Non-compliant** (Vuex-style, direct mutation, no error handling):
 ```typescript
@@ -639,7 +540,7 @@ export const useUserStore = defineStore('user', () => {
 })
 ```
 
-#### D3: Routing with lazy loading
+#### C3: Routing with lazy loading
 
 **Non-compliant** (Static imports, no meta typing):
 ```typescript
@@ -674,7 +575,7 @@ export const router = createRouter({
 })
 ```
 
-#### D4: Security and XSS prevention
+#### C4: Security and XSS prevention
 
 **Non-compliant** (Unsafe v-html):
 ```vue
@@ -700,7 +601,7 @@ const safeHtml = computed(() => DOMPurify.sanitize(props.html))
 </template>
 ```
 
-#### D5: Accessible form component
+#### C5: Accessible form component
 
 **Non-compliant** (Missing accessibility):
 ```vue

@@ -363,76 +363,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Tool pinning**: Reproducible tool versions in CI (11.1.3)
 - [ ] **Documentation**: Schema annotations and changelog maintained (10.1.1, 10.1.3)
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 `.editorconfig`
-
-```ini
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.{xml,xsd,xslt,sch}]
-indent_style = space
-indent_size = 2
-```
-
-#### C.2 Pre-commit configuration (`.pre-commit-config.yaml`)
-
-```yaml
-repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-      - id: detect-private-key
-
-  - repo: local
-    hooks:
-      - id: xmllint-wellformed
-        name: XML well-formedness check
-        entry: xmllint --noout
-        language: system
-        files: \.(xml|xsd|xslt|sch)$
-
-      - id: prettier-xml
-        name: Prettier XML formatting
-        entry: npx --yes prettier@3.3.3 --plugin=@prettier/plugin-xml@3.4.1 --check
-        language: system
-        files: \.(xml|xsd|xslt|sch)$
-```
-
-#### C.3 CI validation script (`scripts/validate-xml.sh`)
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-echo "Validating XML artifacts..."
-
-# 1. Well-formedness check
-find . -type f \( -name '*.xml' -o -name '*.xsd' -o -name '*.xslt' -o -name '*.sch' \) -print0 \
-  | xargs -0 -n 1 xmllint --noout
-
-# 2. Schema validation (adjust paths as needed)
-# for file in xml/*.xml; do
-#   xmllint --noout --schema xsd/main.xsd "$file"
-# done
-
-# 3. Schematron validation (example using schxslt-cli)
-# java -jar schxslt-cli.jar -s sch/rules.sch -d xml/instance.xml
-
-echo "✅ All XML validations passed"
-```
-
-### Appendix D: Examples
-
-#### D.1 Non-compliant vs. compliant: XXE vulnerability
+#### C.1 Non-compliant vs. compliant: XXE vulnerability
 
 **Non-compliant (insecure parser configuration):**
 ```java
@@ -455,7 +388,7 @@ DocumentBuilder db = dbf.newDocumentBuilder();
 Document doc = db.parse(untrustedInput);
 ```
 
-#### D.2 Non-compliant vs. compliant: Namespace and versioning
+#### C.2 Non-compliant vs. compliant: Namespace and versioning
 
 **Non-compliant (missing namespace, inconsistent naming):**
 ```xml
@@ -484,7 +417,7 @@ Document doc = db.parse(untrustedInput);
 </ord:order>
 ```
 
-#### D.3 Non-compliant vs. compliant: Schema documentation
+#### C.3 Non-compliant vs. compliant: Schema documentation
 
 **Non-compliant (undocumented, weak typing):**
 ```xml

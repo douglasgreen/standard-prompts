@@ -324,91 +324,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Testing**: Integration tests cover exit codes and stdout/stderr separation.
 - [ ] **Documentation**: `--help` complete; inline comments for non-obvious logic.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-Use the subset matching the project language(s). These are templates; adjust versions as needed.
-
-#### C.1 `.editorconfig` (general)
-```ini
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.{sh,bash}]
-indent_size = 2
-indent_style = space
-
-[*.py]
-indent_size = 4
-
-[*.go]
-indent_style = tab
-
-[Makefile]
-indent_style = tab
-```
-
-#### C.2 Shell scripting (POSIX `sh`)
-`.shellcheckrc`:
-```bash
-# Enforce POSIX compliance
-shell=sh
-# Disable specific checks only with justification
-disable=SC2039  # If targeting strict POSIX without local
-```
-
-CI workflow:
-```yaml
-- name: Lint shell scripts
-  run: |
-    find . -name "*.sh" -exec shellcheck -S warning {} +
-    shfmt -i 2 -ci -bn -sr -w .
-```
-
-#### C.3 Python (3.12+)
-`pyproject.toml` (excerpt):
-```toml
-[tool.ruff]
-line-length = 88
-target-version = "py312"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "C4", "SIM"]
-ignore = []
-
-[tool.ruff.format]
-quote-style = "double"
-
-[tool.pytest.ini_options]
-addopts = "-q --strict-markers"
-testpaths = ["tests"]
-```
-
-#### C.4 Go (1.22+)
-`.golangci.yml` (excerpt):
-```yaml
-run:
-  timeout: 5m
-
-linters:
-  enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - unused
-    - gofmt
-    - goimports
-```
-
-### Appendix D: Examples
-
-#### D.1 stdout vs stderr separation
+#### C.1 stdout vs stderr separation
 **Non-compliant** (breaks pipes):
 ```python
 # Error goes to stdout, corrupting data stream
@@ -428,7 +346,7 @@ print("error: unable to read config", file=sys.stderr)
 sys.exit(1)
 ```
 
-#### D.2 Exit codes and signal handling
+#### C.2 Exit codes and signal handling
 **Non-compliant** (returns 0 on error, no SIGINT handling):
 ```python
 if bad_args:
@@ -452,7 +370,7 @@ if bad_args:
     sys.exit(2)  # Usage error per convention
 ```
 
-#### D.3 Shell safety (POSIX `sh`)
+#### C.3 Shell safety (POSIX `sh`)
 **Non-compliant** (word-splitting, injection risk):
 ```sh
 rm -rf $TARGET  # Unquoted, unvalidated
@@ -472,7 +390,7 @@ esac
 rm -rf -- "$TARGET"
 ```
 
-#### D.4 Machine-readable mode stability
+#### C.4 Machine-readable mode stability
 **Non-compliant** (mixing human text with JSON):
 ```python
 print("Loading data...")  # Goes to stdout, breaks JSON parsing
@@ -492,7 +410,7 @@ json.dump(data, sys.stdout)
 print()  # Ensure trailing newline
 ```
 
-#### D.5 Secrets handling
+#### C.5 Secrets handling
 **Non-compliant** (exposure via ps):
 ```python
 parser.add_argument("--password", required=True)
@@ -512,7 +430,7 @@ if not api_key:
     api_key = getpass.getpass("API Key: ")
 ```
 
-#### D.6 Atomic file writes
+#### C.6 Atomic file writes
 **Non-compliant** (risk of corruption):
 ```python
 with open("config.json", "w") as f:

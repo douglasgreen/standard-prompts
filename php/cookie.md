@@ -316,76 +316,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Client-side**: No `localStorage` for tokens when cookie alternative exists; no `HttpOnly` read attempts (5.2.2, 6.1.2)
 - [ ] **Performance**: Static assets served cookie-less where possible (7.1.1)
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 PHP-CS-Fixer security-focused `.php-cs-fixer.php`
-```php
-<?php
-$finder = PhpCsFixer\Finder::create()
-  ->in(__DIR__ . '/src');
-
-return (new PhpCsFixer\Config())
-  ->setRiskyAllowed(true)
-  ->setRules([
-    '@PSR12' => true,
-    'strict_param' => true,
-    'declare_strict_types' => true,
-    'no_unused_imports' => true,
-    'phpdoc_trim' => true,
-  ])
-  ->setFinder($finder);
-```
-
-#### C.2 ESLint security configuration `eslint.config.js`
-```javascript
-import js from "@eslint/js";
-import security from "eslint-plugin-security";
-
-export default [
-  js.configs.recommended,
-  security.configs.recommended,
-  {
-    files: ["**/*.js", "**/*.ts"],
-    languageOptions: { 
-      ecmaVersion: 2023,
-      globals: {
-        document: "readonly",
-        window: "readonly"
-      }
-    },
-    rules: {
-      "no-eval": "error",
-      "no-implied-eval": "error",
-      "no-new-func": "error",
-      "security/detect-object-injection": "warn"
-    }
-  }
-];
-```
-
-#### C.3 Cookie policy configuration `config/cookies.php`
-```php
-<?php
-declare(strict_types=1);
-
-return [
-    'prefix' => '__Host-', // or '__Secure-' if subdomains needed
-    'secure_by_default' => true,
-    'httponly_by_default' => true,
-    'samesite_default' => 'Strict',
-    'classification' => [
-        '__Host-session' => ['purpose' => 'necessary', 'description' => 'Session management'],
-        '__Host-csrf' => ['purpose' => 'necessary', 'description' => 'CSRF protection'],
-        'preferences' => ['purpose' => 'functional', 'requires_consent' => true],
-        '_ga' => ['purpose' => 'analytics', 'requires_consent' => true],
-    ],
-    'consent_ttl' => 365 * 86400, // 1 year
-];
-```
-
-### Appendix D: Examples
-
-#### D.1 Compliant vs. Non-Compliant: Secure Cookie Setting (PHP)
+#### C.1 Compliant vs. Non-Compliant: Secure Cookie Setting (PHP)
 
 **Non-Compliant (Legacy syntax, missing attributes):**
 ```php
@@ -431,7 +364,7 @@ final class CookieManager
 }
 ```
 
-#### D.2 Compliant: Consent-gated analytics cookie
+#### C.2 Compliant: Consent-gated analytics cookie
 
 ```php
 <?php
@@ -470,7 +403,7 @@ final class ConsentManager
 }
 ```
 
-#### D.3 JavaScript: Proper fetch with credentials
+#### C.3 JavaScript: Proper fetch with credentials
 
 **Non-Compliant (Attempting to read HttpOnly cookie):**
 ```javascript
@@ -506,7 +439,7 @@ export async function apiRequest(path, options = {}) {
 }
 ```
 
-#### D.4 Compliant: Cookie deletion (zombie prevention)
+#### C.4 Compliant: Cookie deletion (zombie prevention)
 
 ```php
 <?php

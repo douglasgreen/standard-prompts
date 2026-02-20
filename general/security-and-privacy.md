@@ -376,163 +376,10 @@ Critical **MUST** items for quick validation:
   - [ ] Security decisions documented (12.1)
   - [ ] Security-critical configuration documented (12.2)
 
-### Appendix C: Sample configuration
+### Appendix C: Examples (compliant vs non-compliant)
 
 <details>
-<summary><strong>C.1 <code>.editorconfig</code></strong></summary>
-
-```ini
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-insert_final_newline = true
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
-
-[*.py]
-indent_size = 4
-
-[*.md]
-trim_trailing_whitespace = false
-```
-</details>
-
-<details>
-<summary><strong>C.2 JavaScript/TypeScript: <code>eslint.config.js</code> + <code>.prettierrc</code></strong></summary>
-
-```javascript
-// eslint.config.js (ESLint v9+ flat config)
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import security from "eslint-plugin-security";
-import unicorn from "eslint-plugin-unicorn";
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  {
-    files: ["**/*.{ts,tsx,js,jsx}"],
-    plugins: { security, unicorn },
-    rules: {
-      "security/detect-object-injection": "warn",
-      "security/detect-non-literal-regexp": "error",
-      "security/detect-unsafe-regex": "error",
-      "security/detect-no-csrf-before-method-override": "error",
-      "security/detect-eval-with-expression": "error",
-      "security/detect-pseudoRandomBytes": "error",
-      "unicorn/consistent-function-scoping": "warn"
-    }
-  }
-];
-```
-
-```json
-// .prettierrc
-{
-  "singleQuote": true,
-  "semi": true,
-  "printWidth": 100,
-  "trailingComma": "all"
-}
-```
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "target": "ES2023",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
-  }
-}
-```
-</details>
-
-<details>
-<summary><strong>C.3 Python: <code>pyproject.toml</code> (Ruff + MyPy)</strong></summary>
-
-```toml
-[tool.ruff]
-line-length = 100
-target-version = "py312"
-fix = true
-
-[tool.ruff.lint]
-select = [
-  "E", "F", "I",      # pycodestyle/pyflakes/isort
-  "B",                # flake8-bugbear
-  "S",                # flake8-bandit (security)
-  "UP",               # pyupgrade
-  "SIM",              # flake8-simplify
-  "RUF"               # ruff-specific
-]
-ignore = []
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101"]  # allow assert in tests
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_unused_ignores = true
-no_implicit_optional = true
-```
-</details>
-
-<details>
-<summary><strong>C.4 Secret scanning: <code>.gitleaks.toml</code> (minimal)</strong></summary>
-
-```toml
-title = "Secret scanning baseline"
-
-[extend]
-useDefault = true
-```
-</details>
-
-<details>
-<summary><strong>C.5 CI/CD: <code>.github/workflows/security.yml</code> (example)</strong></summary>
-
-```yaml
-name: Security Checks
-
-on: [push, pull_request]
-
-jobs:
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-      
-      - name: Run Semgrep
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: >-
-            p/security-audit
-            p/owasp-top-ten
-            p/cwe-top-25
-```
-</details>
-
-### Appendix D: Examples (compliant vs non-compliant)
-
-<details>
-<summary><strong>D.1 SQL injection: unsafe string concatenation vs parameterized query</strong></summary>
+<summary><strong>C.1 SQL injection: unsafe string concatenation vs parameterized query</strong></summary>
 
 **Non-compliant**
 ```typescript
@@ -560,7 +407,7 @@ const rows = await db.query(
 </details>
 
 <details>
-<summary><strong>D.2 BOLA/IDOR: missing ownership check vs explicit authorization</strong></summary>
+<summary><strong>C.2 BOLA/IDOR: missing ownership check vs explicit authorization</strong></summary>
 
 **Non-compliant**
 ```python
@@ -585,7 +432,7 @@ def get_order(order_id: str, user=Depends(current_user)):
 </details>
 
 <details>
-<summary><strong>D.3 Logging PII: raw payload logging vs redaction</strong></summary>
+<summary><strong>C.3 Logging PII: raw payload logging vs redaction</strong></summary>
 
 **Non-compliant**
 ```javascript
@@ -614,7 +461,7 @@ logger.info({
 </details>
 
 <details>
-<summary><strong>D.4 Web session cookie flags: insecure vs secure defaults</strong></summary>
+<summary><strong>C.4 Web session cookie flags: insecure vs secure defaults</strong></summary>
 
 **Non-compliant**
 ```javascript

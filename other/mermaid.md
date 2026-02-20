@@ -419,112 +419,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Interactivity**: No `click` links in public docs unless allowlisted.
 - [ ] **Storage**: Text stored as source of truth; validated in CI.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-#### C.1 Mermaid CLI configuration (`.mermaidrc`)
-
-```json
-{
-  "theme": "dark",
-  "themeVariables": {
-    "fontFamily": "ui-sans-serif, system-ui, -apple-system, sans-serif",
-    "primaryColor": "#4CAF50",
-    "primaryTextColor": "#fff",
-    "primaryBorderColor": "#2E7D32",
-    "lineColor": "#E0E0E0",
-    "secondaryColor": "#2196F3",
-    "tertiaryColor": "#FF9800",
-    "background": "#1E1E1E"
-  },
-  "flowchart": {
-    "curve": "basis",
-    "htmlLabels": true,
-    "nodeSpacing": 50,
-    "rankSpacing": 50
-  },
-  "sequence": {
-    "actorMargin": 50,
-    "boxMargin": 10,
-    "messageMargin": 35
-  }
-}
-```
-
-#### C.2 GitHub Actions workflow (`.github/workflows/mermaid.yml`)
-
-```yaml
-name: Mermaid Validation
-on:
-  pull_request:
-    paths:
-      - 'docs/**/*.md'
-      - 'docs/**/*.mmd'
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          
-      - name: Install Mermaid CLI
-        run: npm install -g @mermaid-js/mermaid-cli
-        
-      - name: Validate diagrams
-        run: |
-          EXIT_CODE=0
-          FILES=$(find docs -name "*.mmd" -o -name "*.md" | xargs grep -l '```mermaid' || true)
-          
-          for file in $FILES; do
-            echo "Validating: $file"
-            if ! mmdc -i "$file" -o /dev/null --quiet 2>/dev/null; then
-              echo "❌ Failed: $file"
-              EXIT_CODE=1
-            fi
-          done
-          
-          exit $EXIT_CODE
-          
-      - name: Generate exports (optional)
-        if: success()
-        run: |
-          mkdir -p docs/diagrams-exported
-          find docs -name "*.mmd" -exec mmdc -i {} -o docs/diagrams-exported/{}.svg -t dark -b transparent \;
-```
-
-#### C.3 Pre-commit hook (`.git/hooks/pre-commit`)
-
-```bash
-#!/bin/bash
-if ! command -v mmdc &> /dev/null; then
-    echo "Warning: mermaid-cli not installed. Skipping validation."
-    exit 0
-fi
-
-MODIFIED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(md|mmd)$' || true)
-
-if [ -z "$MODIFIED_FILES" ]; then exit 0; fi
-
-echo "Validating Mermaid diagrams..."
-for file in $MODIFIED_FILES; do
-    if grep -q '```mermaid' "$file" 2>/dev/null || [[ "$file" == *.mmd ]]; then
-        if ! mmdc -i "$file" -o /dev/null 2>/dev/null; then
-            echo "❌ Invalid syntax in $file"
-            exit 1
-        fi
-    fi
-done
-
-echo "✅ All diagrams valid"
-exit 0
-```
-
-### Appendix D: Examples
-
-#### D.1 Flowchart: User authentication flow
+#### C.1 Flowchart: User authentication flow
 
 **Non-compliant** (violations highlighted):
 ```mermaid
@@ -568,7 +465,7 @@ flowchart TD
     class authService process
 ```
 
-#### D.2 Sequence diagram: API interaction
+#### C.2 Sequence diagram: API interaction
 
 **Non-compliant**:
 ```mermaid
@@ -607,7 +504,7 @@ sequenceDiagram
     Note over App,Gateway: Authorization: Bearer <token>
 ```
 
-#### D.3 ER diagram: Database schema
+#### C.3 ER diagram: Database schema
 
 **Non-compliant**:
 ```mermaid
@@ -657,7 +554,7 @@ erDiagram
     }
 ```
 
-#### D.4 State diagram: Order lifecycle
+#### C.4 State diagram: Order lifecycle
 
 **Non-compliant**:
 ```mermaid

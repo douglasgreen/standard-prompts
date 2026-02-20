@@ -426,81 +426,9 @@ Suggested review structure:
 </details>
 
 <details>
-<summary><strong>Appendix C: Sample configuration (automation)</strong></summary>
+<summary><strong>Appendix C: Examples (non-compliant vs compliant)</strong></summary>
 
-### C1. `package.json` scripts (example)
-```json
-{
-  "scripts": {
-    "format": "prettier . --write",
-    "lint": "eslint .",
-    "lint:css": "stylelint \"**/*.{css,scss}\"",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
-    "test:e2e": "playwright test",
-    "a11y:e2e": "playwright test -g \"@a11y\""
-  }
-}
-```
-
-### C2. `eslint.config.js` (flat config example)
-```js
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import jsxA11y from "eslint-plugin-jsx-a11y";
-
-export default [
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    plugins: {
-      "jsx-a11y": jsxA11y
-    },
-    rules: {
-      // Accessibility: keep these enabled; do not blanket-disable.
-      "jsx-a11y/alt-text": "error",
-      "jsx-a11y/aria-props": "error",
-      "jsx-a11y/aria-proptypes": "error",
-      "jsx-a11y/aria-unsupported-elements": "error",
-      "jsx-a11y/click-events-have-key-events": "error",
-      "jsx-a11y/label-has-associated-control": "error",
-      "jsx-a11y/no-noninteractive-element-interactions": "error",
-      "jsx-a11y/no-static-element-interactions": "error",
-      "jsx-a11y/role-has-required-aria-props": "error",
-      "jsx-a11y/role-supports-aria-props": "error",
-      "jsx-a11y/tabindex-no-positive": "error"
-    }
-  }
-];
-```
-
-### C3. Playwright + axe example (`tests/a11y.spec.ts`)
-```ts
-import { test, expect } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
-
-test('@a11y home page has no critical axe violations', async ({ page }) => {
-  await page.goto('/');
-
-  const results = await new AxeBuilder({ page })
-    // Optional: include/exclude regions to reduce noise, but don't hide real issues.
-    .analyze();
-
-  // Fail on serious+ by default; tune to your org's policy.
-  const seriousOrWorse = results.violations.filter((v) =>
-    ['serious', 'critical'].includes(v.impact ?? ''),
-  );
-
-  expect(seriousOrWorse, JSON.stringify(seriousOrWorse, null, 2)).toEqual([]);
-});
-```
-
-</details>
-
-<details>
-<summary><strong>Appendix D: Examples (non-compliant vs compliant)</strong></summary>
-
-### D1. Clickable `div` vs real button
+### C1. Clickable `div` vs real button
 
 **Non-compliant**
 ```html
@@ -514,7 +442,7 @@ test('@a11y home page has no critical axe violations', async ({ page }) => {
 
 ---
 
-### D2. Placeholder-only label vs proper label
+### C2. Placeholder-only label vs proper label
 
 **Non-compliant**
 ```html
@@ -529,7 +457,7 @@ test('@a11y home page has no critical axe violations', async ({ page }) => {
 
 ---
 
-### D3. Validation message not associated vs associated + announced
+### C3. Validation message not associated vs associated + announced
 
 **Non-compliant**
 ```html
@@ -546,7 +474,7 @@ test('@a11y home page has no critical axe violations', async ({ page }) => {
 
 ---
 
-### D4. Modal dialog focus management (conceptual)
+### C4. Modal dialog focus management (conceptual)
 
 **Non-compliant**
 - Opens a modal visually, but focus stays behind it; Tab goes to background links.
@@ -571,7 +499,7 @@ Minimal HTML skeleton:
 
 ---
 
-### D5. Reduced motion handling (CSS)
+### C5. Reduced motion handling (CSS)
 
 **Non-compliant**
 ```css

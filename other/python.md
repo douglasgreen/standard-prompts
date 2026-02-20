@@ -338,98 +338,9 @@ Critical **MUST** items for quick validation:
 - [ ] **Documentation**: Google/NumPy style docstrings for public APIs; README includes setup/test commands.
 - [ ] **12-Factor**: Configuration externalized to environment variables; logs to stdout.
 
-### Appendix C: Sample configuration
+### Appendix C: Examples
 
-```toml
-# pyproject.toml
-[project]
-name = "your_project"
-version = "0.1.0"
-requires-python = ">=3.12"
-dependencies = [
-    "pydantic>=2.0.0",
-    "sqlalchemy>=2.0.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.4.0",
-    "pytest-cov>=4.1.0",
-    "black>=23.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.7.0",
-]
-
-[tool.black]
-line-length = 88
-target-version = ['py312']
-
-[tool.ruff]
-line-length = 88
-target-version = "py312"
-select = [
-    "E", "F", "W",        # pycodestyle/pyflakes
-    "I",                  # isort
-    "B",                  # bugbear
-    "UP",                 # pyupgrade
-    "SIM",                # simplify
-    "C4",                 # comprehensions
-    "S",                  # bandit (security)
-]
-ignore = [
-    # Documented exceptions only
-]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**.py" = ["S101"]  # allow assert in tests
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-check_untyped_defs = true
-strict_equality = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q --cov=src --cov-report=term-missing --cov-fail-under=80"
-
-[tool.coverage.run]
-branch = true
-source = ["src"]
-```
-
-```yaml
-# .pre-commit-config.yaml
-repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: check-yaml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-      - id: check-added-large-files
-
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.0
-    hooks:
-      - id: ruff
-        args: ["--fix"]
-      - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        additional_dependencies: [pydantic>=2.0.0]
-```
-
-### Appendix D: Examples
-
-#### D.1 Non-compliant vs. compliant: Dependency injection
+#### C.1 Non-compliant vs. compliant: Dependency injection
 
 **Non-compliant** (hidden global dependency):
 ```python
@@ -459,7 +370,7 @@ class UserService:
         return self.http.get_json(url, timeout_s=5.0)
 ```
 
-#### D.2 Non-compliant vs. compliant: Error handling
+#### C.2 Non-compliant vs. compliant: Error handling
 
 **Non-compliant** (bare except, no chaining):
 ```python
@@ -486,7 +397,7 @@ def parse_age(value: str) -> int:
     return age
 ```
 
-#### D.3 Non-compliant vs. compliant: Type safety and validation
+#### C.3 Non-compliant vs. compliant: Type safety and validation
 
 **Non-compliant** (raw dict, no validation):
 ```python

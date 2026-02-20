@@ -417,39 +417,3 @@ EXCEPTION
 END;
 $$;
 ```
-
-### Appendix D: Sample configuration
-
-**SQLFluff configuration for DML (`.sqlfluff`):**
-```ini
-[sqlfluff]
-dialect = ansi
-templater = jinja
-rules = all
-exclude_rules = L034,L054
-
-[sqlfluff:indentation]
-indent_unit = space
-tab_width = 4
-indented_joins = false
-indented_using_on = true
-indented_ctes = true
-
-[sqlfluff:layout:type:comma]
-line_position = leading
-
-[sqlfluff:capitalisation:keywords]
-capitalisation_policy = upper
-
-[sqlfluff:capitalisation:identifiers]
-capitalisation_policy = lower
-extended_capitalisation_policy = snake
-
-[sqlfluff:capitalisation:functions]
-capitalisation_policy = upper
-
-[sqlfluff:capitalisation:types]
-capitalisation_policy = upper
-```
-
-**Note:** Adjust `dialect` to your specific database (postgres, mysql, tsql, oracle, etc.).
