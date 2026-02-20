@@ -33,7 +33,7 @@ Project are grouped into directories by technology, where:
 * [general/technical-writing.md](Technical writing)
 * [general/test-spec.md](Test specification)
 * [general/upgrade.md](Upgrade)
-* [general/ux.md](UX)
+* [general/ui-ux.md](UX)
 * [html-css/bootstrap.md](Bootstrap)
 * [html-css/html-css.md](HTML/CSS)
 * [html-css/twig.md](Twig)
