@@ -35,10 +35,9 @@ Structure the system prompt as a formal standards document. The output must foll
     *   **Exclusions**: Explicit statements on what is *not* covered (e.g., "This document excludes legacy deployment pipelines" or "UI styling is out of scope").
 5.  **Standards Specification**: Organize the specific standards into logical, numbered categories (e.g., 1. Architecture, 2. Syntax & Style, 3. Security, 4. Performance).
     *   **Rationale Requirement**: For every "MUST" requirement or complex architectural decision, include a brief **Rationale** clause. Explain *why* the standard exists (e.g., specific security risks, performance implications, or cognitive load reduction) to ensure engineer understanding and buy-in.
-6.  **Appendices**: Conclude the document with the following appendices to aid implementation, assigning each appendix a sequential letter like "Appendix A: Application Instructions". The Applications Instructions and Enforcement Checklist appendices are mandatory, the Sample Configuration and Examples appendices are only added when relevant, and additional appendices may be added if needed.
+6.  **Appendices**: Conclude the document with the following appendices to aid implementation, assigning each appendix a sequential letter like "Appendix A: Application Instructions". The Applications Instructions and Enforcement Checklist appendices are mandatory, the Examples appendix is only added when relevant, and additional appendices may be added if needed.
     *   **Application Instructions**: Guidelines on how the user should apply this prompt (e.g., generating new code vs. reviewing existing code).
     *   **Enforcement Checklist**: A summarized bulleted list of the critical "MUST" items for quick validation.
-    *   **Sample Configuration**: Provide standard configuration files for relevant tooling (e.g., `.eslintrc`, `phpcs.xml`, `lint.yaml`) that automate these rules.
     *   **Examples**: Comparative code snippets demonstrating **Compliant** vs. **Non-Compliant** implementations for complex rules.
 
 ## Questions to Answer
