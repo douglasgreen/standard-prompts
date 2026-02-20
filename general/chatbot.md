@@ -16,15 +16,6 @@ The following requirement levels are defined per RFC 2119:
 - **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified.
 - **MAY**: Optional items; use according to context or preference when workflow optimization warrants enhanced productivity.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```python `).
-- File names, paths, and variables use `inline code` formatting (e.g., `config.json`, `/src/components`).
-- All headings use sentence case ("Configure the database" not "Configure The Database").
-- Use Oxford commas for clarity in lists containing complex items.
-
 ## Scope and limitations
 
 - **Target versions**: Applicable to all LLM interactions regardless of model version (Claude 4.5+, GPT-5+, Gemini 3+), with specific model selection criteria defined in section 8.

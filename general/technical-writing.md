@@ -16,13 +16,6 @@ The following requirement levels are defined per RFC 2119:
 - **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified.
 - **MAY**: Optional items; use according to context or preference when content strategy warrants enhanced engagement.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```python `).
-- File names, paths, and variables use `inline code` formatting (e.g., `config.json`, `/src/components`).
-
 ## Scope and limitations
 
 - **Target versions**: Applicable to all software documentation regardless of version, with specific versioning requirements defined in section 7.1.

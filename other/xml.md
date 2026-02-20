@@ -16,15 +16,6 @@ The following requirement levels are defined per RFC 2119:
 - **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified.
 - **MAY**: Optional items; use according to context or preference when architectural strategy warrants enhanced flexibility.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```xml `, ` ```xsd `, ` ```xslt `).
-- File names, paths, XML element/attribute names, and identifiers use `inline code` formatting.
-- All headings use sentence case.
-- Mathematical expressions use dollar-sign delimiters (e.g., $n \ge 1$).
-
 ## Scope and limitations
 
 ### Target versions

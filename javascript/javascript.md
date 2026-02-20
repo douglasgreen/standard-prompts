@@ -16,14 +16,6 @@ The following requirement levels are defined per RFC 2119:
 - **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified.
 - **MAY**: Optional items; use according to context or preference when technical constraints warrant alternative approaches.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```javascript `).
-- File names, paths, and variables use `inline code` formatting (e.g., `config.json`, `/src/components`).
-- Headings use sentence case ("Configure the database" not "Configure The Database").
-
 ## Scope and limitations
 
 - **Target versions**: ECMAScript® 2026 (ES2026) and later; ES Modules (ESM); Node.js 20+ and modern browsers (last two major versions).

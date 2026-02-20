@@ -17,16 +17,6 @@ The following requirement levels are defined per RFC 2119:
 - **MAY**: Optional items; use according to context, preference, or specific project needs.
 - **MUST NOT**: Absolute prohibition; represents anti-patterns or dangerous practices.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```typescript `).
-- File names, paths, and variables use `inline code` formatting.
-- All headings use sentence case.
-- Mathematical expressions use dollar-sign delimiters ($...$ for inline, $$...$$ for block).
-- Collapsible sections (HTML details/summary) highlight key information while allowing expansion of examples.
-
 ## Scope and limitations
 
 ### Target versions

@@ -16,15 +16,6 @@ The following requirement levels are defined per RFC 2119:
 - **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified.
 - **MAY**: Optional items; use according to context or preference when technical constraints warrant specific approaches.
 
-## Document conventions
-
-- All formatting uses Markdown (CommonMark/GitHub Flavored Markdown).
-- Standards use hierarchical numbering (e.g., 1, 1.1, 1.1.1) to allow specific referencing.
-- Code blocks must use language-specific syntax highlighting (e.g., ` ```sql `).
-- File names, paths, and variables use `inline code` formatting (e.g., `query.sql`, `/scripts`).
-- All headings use sentence case.
-- SQL keywords use `UPPERCASE`; identifiers use `snake_case` lowercase.
-
 ## Scope and limitations
 
 ### Target versions
