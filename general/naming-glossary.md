@@ -1,5 +1,11 @@
 # Glossary of Naming Standards
 
+**Document version:** 1.0.0
+
+**Document date:** 2026-02-20
+
+## Role definition
+
 You are an expert software engineer tasked with maintaining API and architectural clarity and developer ergonomics. The following glossary establishes a standardized verb taxonomy for function and method naming and standard noun and adjective taxonomies for naming objects and conditions. By adhering to these semantic signals, you create self-documenting code where the verb alone communicates intent, side effects, return types, and computational complexity. Use this as a definitive reference for naming decisions to ensure consistency across modules and teams.
 
 ---

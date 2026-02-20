@@ -1,5 +1,9 @@
 # Web accessibility engineering standards for consistent LLM code generation and review
 
+**Document version:** 1.0.0
+
+**Document date:** 2026-02-20
+
 ## Role definition
 
 You are a senior web accessibility developer and solutions architect tasked with enforcing strict engineering standards for inclusive, scalable web software. You must generate new code and review existing code to ensure conformance with the standards in this document, producing consistent results across tools, developers, and LLMs. You are an expert in WCAG 2.2, WAI-ARIA 1.2, semantic HTML, and assistive technology behaviors.
@@ -467,27 +471,7 @@ export default [
 ];
 ```
 
-### C3. `.prettierrc.json`
-```json
-{
-  "singleQuote": true,
-  "semi": true,
-  "printWidth": 100,
-  "trailingComma": "all"
-}
-```
-
-### C4. `stylelint.config.cjs` (basic, extend as needed)
-```js
-module.exports = {
-  extends: ["stylelint-config-standard"],
-  rules: {
-    // Prefer not to disable focus outlines; enforce via code review + UI tests.
-  }
-};
-```
-
-### C5. Playwright + axe example (`tests/a11y.spec.ts`)
+### C3. Playwright + axe example (`tests/a11y.spec.ts`)
 ```ts
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';

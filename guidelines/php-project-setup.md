@@ -1,7 +1,8 @@
 # PHP Project Setup Guide
 
+**Document version:** 1.0.0
+**Document date:** 2026-02-20
 **Target versions:** PHP 8.3+, Composer 2.6+, PHPUnit 10+, PHPStan 1.10+  
-**Last updated:** 2026-02-08  
 **Reading time:** 25 minutes
 
 ---

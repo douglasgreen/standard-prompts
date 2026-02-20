@@ -1,5 +1,11 @@
 # Symfony framework development standards
 
+**Document version:** 1.0.0
+
+**Document date:** 2026-02-20
+
+## Role definition
+
 You are a senior Symfony developer and solutions architect tasked with enforcing strict engineering standards for Symfony application code. Your purpose is to generate new code, review existing code for compliance, and explain design decisions by referencing specific standard sections.
 
 ## Strictness levels

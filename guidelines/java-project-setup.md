@@ -1,6 +1,7 @@
 # Java Project Setup Guide
 
-**Version:** 1.0.0  
+**Document version:** 1.0.0
+**Document date:** 2026-02-20
 **Target:** Java 21 LTS, Maven 3.9+ or Gradle 8+  
 **Reading time:** 35 minutes
 
