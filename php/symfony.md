@@ -1,8 +1,8 @@
 ---
 name: Symfony
 description: Standards document for Symfony development
-version: 1.0.0
-modified: 2026-02-20
+version: 1.0.1
+modified: 2026-02-22
 ---
 # Symfony framework development standards
 
@@ -51,7 +51,7 @@ This document excludes:
 
 1.2.1. All projects **MUST** configure and enforce the following via CI/CD. Manual style policing is unacceptable.
 - **Formatting**: `php-cs-fixer` with the `@Symfony` ruleset (or PER-CS 2.0)
-- **Static Analysis**: `phpstan` at level ≥ 6 (preferred) or `psalm`
+- **Static Analysis**: `phpstan` at level ≥ 8 (preferred) or `psalm`
 - **Security**: `composer audit` or `symfony security:check`
 - **Refactoring**: `rector` (optional but recommended) to automate upgrades to modern PHP idioms
 > **Rationale**: Automated enforcement eliminates human error in code reviews, ensures consistent application of standards across all contributors, and reduces cognitive load during development.

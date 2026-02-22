@@ -1,8 +1,8 @@
 ---
 name: PHP Project Setup
 description: Guidelines document for PHP project setup
-version: 1.0.0
-modified: 2026-02-20
+version: 1.0.1
+modified: 2026-02-22
 ---
 # PHP Project Setup Guide
 
@@ -860,7 +860,7 @@ includes:
   - vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-  level: 9
+  level: 8
   paths:
     - src
     - tests
@@ -925,7 +925,7 @@ includes:
   - vendor/phpstan/phpstan-doctrine/extension.neon
 
 parameters:
-  level: 9
+  level: 8
   paths:
     - src
     - tests
@@ -1098,7 +1098,7 @@ return (new Config())
 
 ```neon
 parameters:
-  level: 9
+  level: 8
   paths:
     - src
     - tests
@@ -1268,7 +1268,7 @@ Before committing any new PHP project, verify compliance with these **MUST** ite
 ### 10.3 Quality assurance
 
 - [ ] `composer qa` runs successfully (cs:check, stan, test)
-- [ ] PHPStan configured at level 8+ (9 preferred)
+- [ ] PHPStan configured at level 8+ (8 preferred)
 - [ ] PHP CS Fixer configured with PSR-12 + strict rules
 - [ ] PHPUnit 10+ with testsuites for Unit/Integration
 - [ ] `composer audit` shows no vulnerabilities
@@ -1339,7 +1339,7 @@ You now have complete setup instructions for:
 All templates enforce:
 - **PHP 8.3+** with `declare(strict_types=1);`
 - **PSR-4 autoloading** and **PSR-12 coding standards**
-- **PHPStan level 9** static analysis
+- **PHPStan level 8+** static analysis
 - **PHPUnit 10+** with attributes and strict configuration
 - **Automated QA** via Composer scripts
 - **Security best practices** (no committed secrets, input validation)

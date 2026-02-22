@@ -1,8 +1,8 @@
 ---
 name: Upgrade
 description: Standards document for software upgrade management
-version: 1.0.0
-modified: 2026-02-20
+version: 1.0.1
+modified: 2026-02-22
 ---
 # Software upgrade management and engineering standards
 
@@ -117,7 +117,7 @@ This document explicitly excludes:
 
 #### 2.3 Static analysis
 
-2.3.1. New code **MUST** pass PHPStan at Level 8.
+2.3.1. New code **MUST** pass PHPStan at Level 8+.
 
 > **Rationale**: Strict typing prevents runtime errors that are common after major version upgrades, where type coercion behavior may have changed.
 
@@ -323,7 +323,7 @@ Critical **MUST** items for quick validation:
 - [ ] **Architecture**: Dependency order followed (leaves first); no major version skipping (Section 1.1).
 - [ ] **Rollback**: Documented procedure with $<15$ min RTO exists (Section 1.3.1).
 - [ ] **PHP**: Rector used incrementally; no quality rules during upgrade (Section 2.2).
-- [ ] **Analysis**: PHPStan Level 8 (new code) / Level 6 minimum; PHPCompatibility configured (Section 2.3).
+- [ ] **Analysis**: PHPStan Level 8+ (new code) / Level 6 minimum (legacy code); PHPCompatibility configured (Section 2.3).
 - [ ] **Symfony**: Zero deprecations before deployment; LTS alignment (Section 3.3).
 - [ ] **Dependencies**: Lockfiles committed for apps; Renovate configured with security grouping (Section 5.1, 5.2).
 - [ ] **Security**: `composer audit` / `npm audit` in CI; CRITICAL patches within 24h for public apps (Section 6.1, 6.2).

@@ -1,8 +1,8 @@
 ---
 name: PHP
 description: Standards document for PHP programming
-version: 1.0.0
-modified: 2026-02-20
+version: 1.0.1
+modified: 2026-02-22
 ---
 # PHP engineering standards for consistent LLM code generation and review
 
@@ -239,7 +239,7 @@ This document explicitly excludes:
 
 > **Rationale**: Flaky tests destroy CI pipeline trust and hide real failures.
 
-7.3. Static analysis **MUST** run at maximum level (PHPStan level 9 or Psalm errorLevel 1) in continuous integration.
+7.3. Static analysis **MUST** run at a high level (PHPStan level 8+ or Psalm errorLevel 1) in continuous integration.
 
 > **Rationale**: Catches type errors, dead code, and null pointer exceptions before deployment.
 
@@ -326,7 +326,7 @@ Critical **MUST** items for quick validation:
 - [ ] HTML output escaped via `htmlspecialchars()` or framework auto-escaping
 - [ ] Input validation occurs at controller/CLI boundaries before domain logic
 - [ ] Dependencies injected via constructor; no service location or hidden globals
-- [ ] Static analysis passes at maximum strictness (PHPStan 9 / Psalm 1)
+- [ ] Static analysis passes at high strictness (PHPStan 8+ / Psalm 1)
 - [ ] PSR-3 logging used with no secrets in log context arrays
 - [ ] OPcache enabled in production configuration
 
