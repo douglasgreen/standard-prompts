@@ -4,6 +4,7 @@ description: Guidelines document for Java project setup
 version: 1.0.0
 modified: 2026-02-20
 ---
+
 # Java Project Setup Guide
 
 **Target:** Java 21 LTS, Maven 3.9+ or Gradle 8+  
@@ -29,13 +30,13 @@ modified: 2026-02-20
 
 Choose your project type and navigate to the relevant section:
 
-| Project type | Use case | Primary framework | Section |
-|:-------------|:---------|:------------------|:--------|
-| **Standalone application** | Batch jobs, data migration, desktop tools | None (vanilla Java) | [Standalone](#standalone-applications) |
-| **Library/SDK** | Reusable components, shared utilities | None | [Library](#library-projects) |
-| **Web application** | REST APIs, server-rendered UIs, monoliths | Spring Boot 3.x | [Web app](#web-applications) |
-| **Microservice** | Cloud-native services, independent deployment | Spring Boot 3.x or Quarkus 3.x | [Microservices](#microservices) |
-| **CLI tool** | DevOps scripts, admin tools, data processors | Picocli or Spring Shell | [CLI](#cli-applications) |
+| Project type               | Use case                                      | Primary framework              | Section                                |
+| :------------------------- | :-------------------------------------------- | :----------------------------- | :------------------------------------- |
+| **Standalone application** | Batch jobs, data migration, desktop tools     | None (vanilla Java)            | [Standalone](#standalone-applications) |
+| **Library/SDK**            | Reusable components, shared utilities         | None                           | [Library](#library-projects)           |
+| **Web application**        | REST APIs, server-rendered UIs, monoliths     | Spring Boot 3.x                | [Web app](#web-applications)           |
+| **Microservice**           | Cloud-native services, independent deployment | Spring Boot 3.x or Quarkus 3.x | [Microservices](#microservices)        |
+| **CLI tool**               | DevOps scripts, admin tools, data processors  | Picocli or Spring Shell        | [CLI](#cli-applications)               |
 
 > **IMPORTANT:** Regardless of project type, domain code **MUST NOT** depend on HTTP frameworks, database drivers, or external SDKs. Maintain strict separation of concerns between business logic and infrastructure.
 
@@ -169,7 +170,7 @@ Create `pom.xml`:
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0 "
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance "
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          https://maven.apache.org/xsd/maven-4.0.0.xsd ">
   <modelVersion>4.0.0</modelVersion>
 
@@ -182,7 +183,7 @@ Create `pom.xml`:
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    
+
     <!-- Tool versions -->
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
     <mockito.version>5.11.0</mockito.version>
@@ -385,7 +386,7 @@ repositories {
 
 dependencies {
   implementation 'org.slf4j:slf4j-api:2.0.13'
-  
+
   testImplementation platform('org.junit:junit-bom:5.10.2')
   testImplementation 'org.junit.jupiter:junit-jupiter'
   testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
@@ -443,7 +444,7 @@ Create `src/main/resources/logback.xml`:
 
 Create `README.md`:
 
-```markdown
+````markdown
 # Project Name
 
 Brief description of what this project does and why it exists.
@@ -465,6 +466,7 @@ mvn test
 # Format code
 mvn spotless:apply
 ```
+````
 
 ## Configuration
 
@@ -479,7 +481,8 @@ Copy `.env.example` to `.env` for local development. Do not commit `.env`.
 ## License
 
 [Specify license]
-```
+
+````
 
 Create `CHANGELOG.md`:
 
@@ -501,7 +504,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Project structure
 - Build configuration
-```
+````
 
 Create `.env.example`:
 
@@ -785,13 +788,13 @@ Update `pom.xml`:
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
   </dependency>
-  
+
   <!-- Validation -->
   <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-validation</artifactId>
   </dependency>
-  
+
   <!-- Actuator (health checks) -->
   <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -987,7 +990,7 @@ Update `pom.xml`:
 ```xml
 <dependencies>
   <!-- Existing web dependencies -->
-  
+
   <!-- Resilience4j for circuit breakers -->
   <dependency>
     <groupId>io.github.resilience4j</groupId>
@@ -1106,32 +1109,32 @@ spec:
         app: my-microservice
     spec:
       containers:
-      - name: app
-        image: my-microservice:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: JAVA_OPTS
-          value: "-Xmx512m"
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 8080
-          initialDelaySeconds: 20
-          periodSeconds: 5
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
+        - name: app
+          image: my-microservice:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JAVA_OPTS
+              value: '-Xmx512m'
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '250m'
+            limits:
+              memory: '1Gi'
+              cpu: '500m'
 ---
 apiVersion: v1
 kind: Service
@@ -1141,8 +1144,8 @@ spec:
   selector:
     app: my-microservice
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
 ```
 
 #### 4. Outbound HTTP client with timeouts
@@ -1308,14 +1311,14 @@ public class MyCommands {
 
 All projects **MUST** enable these quality gates in the build:
 
-| Tool | Purpose | Maven command | Phase |
-|:-----|:--------|:--------------|:------|
-| Spotless | Formatting enforcement | `mvn spotless:check` | verify |
-| SpotBugs | Bug pattern detection | `mvn spotbugs:check` | verify |
+| Tool                   | Purpose                | Maven command                | Phase  |
+| :--------------------- | :--------------------- | :--------------------------- | :----- |
+| Spotless               | Formatting enforcement | `mvn spotless:check`         | verify |
+| SpotBugs               | Bug pattern detection  | `mvn spotbugs:check`         | verify |
 | OWASP Dependency-Check | Vulnerability scanning | `mvn dependency-check:check` | verify |
-| JaCoCo | Test coverage | `mvn jacoco:report` | verify |
-| Surefire | Unit tests | `mvn test` | test |
-| Failsafe | Integration tests | `mvn verify` | verify |
+| JaCoCo                 | Test coverage          | `mvn jacoco:report`          | verify |
+| Surefire               | Unit tests             | `mvn test`                   | test   |
+| Failsafe               | Integration tests      | `mvn verify`                 | verify |
 
 ### Standard Maven commands
 

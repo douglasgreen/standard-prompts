@@ -4,8 +4,8 @@ description: Standards document for security and privacy
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Security and privacy engineering standards for LLM-assisted code generation and review
 
+# Security and privacy engineering standards for LLM-assisted code generation and review
 
 ## Role definition
 
@@ -22,6 +22,7 @@ The following requirement levels are defined per RFC 2119 to ensure consistent i
 ## Scope and limitations
 
 ### Target versions
+
 - **Backend runtimes**: Python **3.12+**, Node.js **20+** (TypeScript **5.4+**), Java **21 LTS+**, Go **1.22+**, PHP **8.3+**
 - **Web**: ECMAScript **2023+**, HTML Living Standard, CSS **2023+**
 - **Datastores**: PostgreSQL **15+**, MySQL **8.0+**, MongoDB **7+**, Redis **7+**
@@ -30,7 +31,9 @@ The following requirement levels are defined per RFC 2119 to ensure consistent i
 - **Mobile (if applicable)**: iOS **16+**, Android **13+**
 
 ### Context
+
 These standards apply to:
+
 - RESTful/GraphQL API development and microservices
 - Frontend web applications (React, Vue, Angular, vanilla JS)
 - Background workers and event-driven services
@@ -38,6 +41,7 @@ These standards apply to:
 - Infrastructure-as-code when it materially affects security/privacy (e.g., secrets management, network policy, IAM)
 
 ### Exclusions
+
 - Legacy systems with hard constraints (older runtimes, unsupported dependencies)
 - Full organizational governance programs (e.g., running audits, creating ISO certification packs)
 - Pure UI visual styling and branding (colors, spacing aesthetics) except where it affects accessibility or security messaging
@@ -89,6 +93,7 @@ These standards apply to:
 > **Rationale**: Password disclosure is catastrophic; adaptive hashing mitigates offline cracking via GPU/ASIC attacks.
 
 2.5 **MUST** secure sessions with:
+
 - Cookies: `HttpOnly`, `Secure`, `SameSite=Lax/Strict` as appropriate
 - Rotation on login/privilege change
 - Invalidation on logout and credential reset
@@ -107,6 +112,7 @@ These standards apply to:
 > **Rationale**: Strong validation blocks injection, deserialization attacks, and logic abuse early. Denylists are incomplete and bypassable.
 
 3.2 **MUST** protect against injection attacks:
+
 - **SQL**: Use parameterized queries/prepared statements or ORM safe APIs; never string-concatenate queries
 - **OS commands**: Avoid shell execution; use safe APIs with argument arrays
 - **SSRF**: Allowlist destinations; block link-local/metadata IP ranges; enforce timeouts
@@ -135,6 +141,7 @@ These standards apply to:
 > **Rationale**: Prevents interception and active MITM attacks. Legacy protocols have known vulnerabilities (POODLE, BEAST).
 
 4.3 **MUST** protect secrets and keys:
+
 - Store secrets in a secrets manager (HashiCorp Vault, AWS KMS, Azure Key Vault) or equivalent secure store
 - Do not hardcode in code, tests, images, or logs
 - Rotate on compromise and periodically for high-value secrets
@@ -256,6 +263,7 @@ These standards apply to:
 ### 11. Testing and verification
 
 11.1 **MUST** include tests for:
+
 - Authorization (including negative tests/failures)
 - Input validation boundaries
 - Security regression for known vulnerabilities (SQLi/XSS/CSRF where applicable)
@@ -284,6 +292,7 @@ These standards apply to:
 ### 13. Automation and formatting
 
 13.1 **MUST** rely on standard formatters/linters rather than hand-formatted style rules:
+
 - JS/TS: Prettier + ESLint with security plugins
 - Python: Ruff + Black + MyPy (strict mode for critical modules)
 - Java: Spotless + Checkstyle
@@ -300,19 +309,22 @@ These standards apply to:
 ### Appendix A: Application instructions
 
 **When generating new code**, you must:
-1. State *Assumptions* (data types, threat model notes, compliance scope).
+
+1. State _Assumptions_ (data types, threat model notes, compliance scope).
 2. Propose a minimal secure design (modules, boundaries, authz points).
 3. Produce code that follows the MUST requirements above.
 4. Include tests and any necessary configuration changes.
 5. Include a short "Security & Privacy Notes" section mapping key controls to standards (e.g., "OWASP ASVS: V2 auth, V5 validation, V6 stored cryptography").
 
 **When reviewing existing code**, you must:
+
 1. Identify the context (stack, entry points, data handled). If unknown, ask.
 2. Produce findings ranked by severity: **Critical / High / Medium / Low**.
 3. For each finding: cite the violated requirement(s) by section number (e.g., "Violates 2.2 MUST").
 4. Provide a concrete patch suggestion (prefer unified diffs) and verification steps (tests to add, commands to run).
 
 **Response format constraints**:
+
 - Prefer **checklists** for compliance status.
 - Prefer **unified diffs** for changes.
 - Keep prose concise; prioritize actionable items.
@@ -382,34 +394,35 @@ Critical **MUST** items for quick validation:
 <summary><strong>C.1 SQL injection: unsafe string concatenation vs parameterized query</strong></summary>
 
 **Non-compliant**
+
 ```typescript
 // Violates 3.2 MUST
 const rows = await db.query(
-  `SELECT * FROM users WHERE email = '${req.query.email}'`
+  `SELECT * FROM users WHERE email = '${req.query.email}'`,
 );
 ```
 
 **Compliant**
+
 ```typescript
 // Uses parameterized query + boundary validation (3.1, 3.2)
 import { z } from 'zod';
 
-const QuerySchema = z.object({ 
-  email: z.string().email().max(254) 
+const QuerySchema = z.object({
+  email: z.string().email().max(254),
 });
 const { email } = QuerySchema.parse(req.query);
 
-const rows = await db.query(
-  'SELECT * FROM users WHERE email = $1', 
-  [email]
-);
+const rows = await db.query('SELECT * FROM users WHERE email = $1', [email]);
 ```
+
 </details>
 
 <details>
 <summary><strong>C.2 BOLA/IDOR: missing ownership check vs explicit authorization</strong></summary>
 
 **Non-compliant**
+
 ```python
 # Violates 2.1 MUST, 2.2 MUST
 @app.get("/orders/{order_id}")
@@ -418,6 +431,7 @@ def get_order(order_id: str, user=Depends(current_user)):
 ```
 
 **Compliant**
+
 ```python
 # Explicit authorization check (2.2 MUST)
 @app.get("/orders/{order_id}")
@@ -429,57 +443,67 @@ def get_order(order_id: str, user=Depends(current_user)):
         raise HTTPException(status_code=403, detail="Forbidden")
     return order
 ```
+
 </details>
 
 <details>
 <summary><strong>C.3 Logging PII: raw payload logging vs redaction</strong></summary>
 
 **Non-compliant**
+
 ```javascript
 // Violates 5.5 MUST, 7.1 MUST
-logger.info({ body: req.body }, "signup request");
+logger.info({ body: req.body }, 'signup request');
 // Logs: { password: "secret123", ssn: "123-45-6789" }
 ```
 
 **Compliant**
+
 ```javascript
 const redacted = {
   ...req.body,
-  password: req.body?.password ? "[REDACTED]" : undefined,
-  ssn: req.body?.ssn ? "[REDACTED]" : undefined,
-  email: req.body?.email ? 
-    req.body.email.replace(/(?<=.{2}).(?=.*@)/g, '*') : 
-    undefined
+  password: req.body?.password ? '[REDACTED]' : undefined,
+  ssn: req.body?.ssn ? '[REDACTED]' : undefined,
+  email: req.body?.email
+    ? req.body.email.replace(/(?<=.{2}).(?=.*@)/g, '*')
+    : undefined,
 };
 
-logger.info({ 
-  body: redacted, 
-  requestId, 
-  userId: req.user?.id 
-}, "signup request");
+logger.info(
+  {
+    body: redacted,
+    requestId,
+    userId: req.user?.id,
+  },
+  'signup request',
+);
 ```
+
 </details>
 
 <details>
 <summary><strong>C.4 Web session cookie flags: insecure vs secure defaults</strong></summary>
 
 **Non-compliant**
+
 ```javascript
 // Violates 2.5 MUST
-res.cookie("session", token);
+res.cookie('session', token);
 // Defaults to: no HttpOnly, no Secure, no SameSite
 ```
 
 **Compliant**
+
 ```javascript
-res.cookie("session", token, {
+res.cookie('session', token, {
   httpOnly: true,
   secure: true,
-  sameSite: "strict",
-  path: "/",
-  maxAge: 8 * 60 * 60 * 1000  // 8 hours absolute timeout
+  sameSite: 'strict',
+  path: '/',
+  maxAge: 8 * 60 * 60 * 1000, // 8 hours absolute timeout
 });
 ```
+
 </details>
 
 ---

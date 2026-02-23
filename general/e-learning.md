@@ -4,8 +4,8 @@ description: Standards document for e-learning
 version: 1.0.0
 modified: 2026-02-20
 ---
-# E-learning content and software engineering standards
 
+# E-learning content and software engineering standards
 
 ## Role definition
 
@@ -15,39 +15,43 @@ You are a senior e-learning developer and solutions architect tasked with develo
 
 This document uses RFC 2119 keyword definitions to indicate requirement levels:
 
-*   **MUST**: Absolute requirements; non-negotiable for compliance. Violations constitute standard breaches.
-*   **MUST NOT**: Absolute prohibitions; these practices are never acceptable.
-*   **SHOULD**: Strong recommendations; deviations are permissible only when documented with valid technical or pedagogical justification.
-*   **SHOULD NOT**: Practices that are discouraged but may be acceptable in specific, documented circumstances.
-*   **MAY**: Optional items; use according to context, preference, or project needs.
+- **MUST**: Absolute requirements; non-negotiable for compliance. Violations constitute standard breaches.
+- **MUST NOT**: Absolute prohibitions; these practices are never acceptable.
+- **SHOULD**: Strong recommendations; deviations are permissible only when documented with valid technical or pedagogical justification.
+- **SHOULD NOT**: Practices that are discouraged but may be acceptable in specific, documented circumstances.
+- **MAY**: Optional items; use according to context, preference, or project needs.
 
 ## Scope and limitations
 
 ### Target versions
-*   **Content**: English US (internationalization-ready), Flesch-Kincaid Grade 8–10 reading level for general audiences, WCAG 2.2 Level AA conformance.
-*   **Frontend**: TypeScript **5.4+**, Node.js **20 LTS+**, React **18+** (or equivalent framework), ECMAScript **2023+**, CSS **2023+**.
-*   **Backend**: Python **3.12+** (or JVM/.NET equivalents), FastAPI **0.110+** (or equivalent), OpenAPI **3.1**.
-*   **Data**: PostgreSQL **15+**, Redis **7+** (if used), JSON Schema Draft **2020-12**.
-*   **Interoperability**:
-    *   **LTI 1.3 / LTI Advantage** (tool/platform integration)
-    *   **xAPI (Tin Can API) 1.0.3+** (learning activity statements)
-    *   **SCORM 2004 4th Edition** (legacy packaging/runtime where required)
-    *   **IMS QTI 2.1+** (or QTI 3.x if platform supports) for item interchange
-*   **Security**: OWASP ASVS-aligned practices; GDPR/FERPA/COPPA awareness as applicable.
+
+- **Content**: English US (internationalization-ready), Flesch-Kincaid Grade 8–10 reading level for general audiences, WCAG 2.2 Level AA conformance.
+- **Frontend**: TypeScript **5.4+**, Node.js **20 LTS+**, React **18+** (or equivalent framework), ECMAScript **2023+**, CSS **2023+**.
+- **Backend**: Python **3.12+** (or JVM/.NET equivalents), FastAPI **0.110+** (or equivalent), OpenAPI **3.1**.
+- **Data**: PostgreSQL **15+**, Redis **7+** (if used), JSON Schema Draft **2020-12**.
+- **Interoperability**:
+  - **LTI 1.3 / LTI Advantage** (tool/platform integration)
+  - **xAPI (Tin Can API) 1.0.3+** (learning activity statements)
+  - **SCORM 2004 4th Edition** (legacy packaging/runtime where required)
+  - **IMS QTI 2.1+** (or QTI 3.x if platform supports) for item interchange
+- **Security**: OWASP ASVS-aligned practices; GDPR/FERPA/COPPA awareness as applicable.
 
 ### Context
+
 These standards apply to:
-*   Authoring and delivering e-learning modules, lessons, and auto-gradable assessments.
-*   Building LMS/LXP-integrated web applications, APIs, content pipelines, and analytics engines.
-*   Creating interoperable question banks and feedback systems.
-*   Reviewing code and content for maintainability, accessibility, security, performance, and pedagogical validity.
+
+- Authoring and delivering e-learning modules, lessons, and auto-gradable assessments.
+- Building LMS/LXP-integrated web applications, APIs, content pipelines, and analytics engines.
+- Creating interoperable question banks and feedback systems.
+- Reviewing code and content for maintainability, accessibility, security, performance, and pedagogical validity.
 
 ### Exclusions
-*   Legacy Flash-based content or SCORM 1.2 implementations (superseded by modern standards).
-*   Detailed brand/UI visual design systems (colors, typography, marketing style guides) beyond accessibility requirements.
-*   Infrastructure deployment and server configuration (DevOps pipelines, unless affecting application code).
-*   Academic research on pedagogy beyond practical implementation guidance.
-*   Legal advice (you may identify risks and recommend counsel review).
+
+- Legacy Flash-based content or SCORM 1.2 implementations (superseded by modern standards).
+- Detailed brand/UI visual design systems (colors, typography, marketing style guides) beyond accessibility requirements.
+- Infrastructure deployment and server configuration (DevOps pipelines, unless affecting application code).
+- Academic research on pedagogy beyond practical implementation guidance.
+- Legal advice (you may identify risks and recommend counsel review).
 
 ---
 
@@ -56,6 +60,7 @@ These standards apply to:
 ### 1. Content architecture and instructional design
 
 #### 1.1 Learning objectives and alignment
+
 1.1.1. Each learning unit (lesson/page/segment) **MUST** include $1$–$3$ measurable learning objectives using Bloom's Taxonomy performance verbs (e.g., "identify," "apply," "debug," "compare," not "understand" or "learn").
 
 > **Rationale**: Explicit, action-oriented objectives provide measurable targets for assessment design and enable analytics alignment between content, questions, and learner outcomes.
@@ -67,6 +72,7 @@ These standards apply to:
 1.1.3. Content **SHOULD** structure objectives in progressive complexity, building from foundational knowledge (Remember/Understand) to higher-order skills (Analyze/Evaluate/Create).
 
 #### 1.2 Content structure and progression
+
 1.2.1. Content **MUST** follow a progressive structure: brief context/why it matters $\to$ core concept(s) $\to$ worked example(s) $\to$ formative check/recap $\to$ transition to assessment.
 
 > **Rationale**: Supports cognitive scaffolding and reduces extraneous cognitive load; follows the "Tell, Show, Do" framework for skill acquisition.
@@ -84,6 +90,7 @@ These standards apply to:
 > **Rationale**: Prevents mismatch in reading level and cognitive load; enables appropriate scaffolding.
 
 #### 1.3 Writing style and clarity
+
 1.3.1. Content **MUST** target Flesch-Kincaid Grade 8–10 reading level for adult professional audiences; simpler levels for younger or accessibility-focused audiences.
 
 > **Rationale**: Maximizes accessibility for non-native speakers and reduces cognitive load, improving task completion rates.
@@ -99,6 +106,7 @@ These standards apply to:
 1.3.4. Sentences **SHOULD** target maximum $20$–$25$ words when introducing new concepts; use concise, declarative statements.
 
 #### 1.4 Inclusivity and cultural sensitivity
+
 1.4.1. Content **MUST** use gender-neutral language, avoid stereotypes, and use diverse names/examples across culture, gender, and ability.
 
 > **Rationale**: Promotes equitable learning environments and avoids alienation of diverse global audiences; supports compliance with anti-discrimination frameworks.
@@ -110,6 +118,7 @@ These standards apply to:
 1.4.3. Visual representations (described in text) **MUST** depict diverse individuals and avoid reinforcing harmful stereotypes.
 
 #### 1.5 Content review workflow
+
 1.5.1. Before release, content **MUST** pass: factual/SME review (or cite source of truth), language/grammar check (Flesch-Kincaid verification), accessibility check (reading order, headings, alt text descriptors), and assessment alignment check (objectives $\leftrightarrow$ questions).
 
 > **Rationale**: Prevents misinformation, learner confusion, and accessibility barriers; quality gates ensure standards compliance.
@@ -119,10 +128,12 @@ These standards apply to:
 ### 2. Assessment design and question standards
 
 #### 2.1 Question type selection by cognitive level
+
 2.1.1. Question types **MUST** be selected based on the cognitive level being assessed:
-*   **Recall** (Remember): Flashcards, fill-in-the-blank, simple multiple choice (MCQ)
-*   **Understanding** (Understand): MCQ with conceptual distractors, true/false with justification feedback
-*   **Application/Analysis** (Apply/Analyze): Scenario-based MCQ, multiple select (MSQ), ordering/matching, short structured input with rubric
+
+- **Recall** (Remember): Flashcards, fill-in-the-blank, simple multiple choice (MCQ)
+- **Understanding** (Understand): MCQ with conceptual distractors, true/false with justification feedback
+- **Application/Analysis** (Apply/Analyze): Scenario-based MCQ, multiple select (MSQ), ordering/matching, short structured input with rubric
 
 > **Rationale**: Misaligned question types produce invalid assessment data; recall-only testing fails to measure higher-order skills required for workplace transfer.
 
@@ -147,6 +158,7 @@ These standards apply to:
 > **Rationale**: Flashcards leverage spaced repetition for declarative knowledge; subjective prompts defeat the algorithm's purpose.
 
 #### 2.2 Question quantity and sequencing
+
 2.2.1. Per lesson segment, you **SHOULD** include $3$–$6$ recall/understanding checks per concept cluster and $1$–$3$ scenario/application items per lesson to balance coverage without fatigue.
 
 2.2.2. Questions **MUST** be sequenced predictably by topic order or increasing difficulty (easy $\to$ medium $\to$ hard) unless adaptive behavior is explicitly intended.
@@ -156,6 +168,7 @@ These standards apply to:
 2.2.3. Assessments **SHOULD** distribute question types to cover Bloom's levels: approximately 30% Remember/Understand, 40% Apply/Analyze, 30% Evaluate/Create (where auto-gradable).
 
 #### 2.3 Auto-grading logic
+
 2.3.1. Grading logic **MUST** be deterministic and pure where possible (same input $\to$ same output), with versioned rubric rules stored as configuration (JSON/YAML), not hard-coded.
 
 > **Rationale**: Prevents disputes, supports auditability, and enables A/B testing of rubric versions without code deployment.
@@ -209,10 +222,11 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 ### 5. Software architecture and modularity
 
 5.1. Codebases **MUST** enforce separation of concerns:
-*   Domain logic (learning rules, grading algorithms)
-*   UI rendering (components)
-*   Persistence/integration (database/API)
-*   Analytics emission (xAPI/SCORM)
+
+- Domain logic (learning rules, grading algorithms)
+- UI rendering (components)
+- Persistence/integration (database/API)
+- Analytics emission (xAPI/SCORM)
 
 > **Rationale**: Reduces coupling, enables testing of business rules independent of UI, and supports swapping LMS platforms without rewriting core logic.
 
@@ -229,9 +243,10 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 ### 6. Code quality, syntax, and automation
 
 6.1. Formatting and linting **MUST** be enforced by automated tools in CI; manual style enforcement is prohibited.
-*   TypeScript: ESLint + Prettier (strict mode, `no-explicit-any`: error)
-*   Python: Ruff/Black (line length 100, Python 3.12+ target)
-*   CSS: Stylelint
+
+- TypeScript: ESLint + Prettier (strict mode, `no-explicit-any`: error)
+- Python: Ruff/Black (line length 100, Python 3.12+ target)
+- CSS: Stylelint
 
 > **Rationale**: Minimizes variability across developers and LLM outputs; automation ensures consistency at negligible cost.
 
@@ -322,9 +337,10 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 ### 11. Testing and quality assurance
 
 11.1. Systems **MUST** implement the test pyramid:
-*   Unit tests for grading/domain logic (80%+ coverage for calculation functions)
-*   Integration tests for APIs and database persistence
-*   UI/E2E tests for critical learner flows (login, assessment submission, progress save)
+
+- Unit tests for grading/domain logic (80%+ coverage for calculation functions)
+- Integration tests for APIs and database persistence
+- UI/E2E tests for critical learner flows (login, assessment submission, progress save)
 
 > **Rationale**: Prevents regressions in high-stakes paths; grading bugs have direct learner impact.
 
@@ -351,37 +367,40 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 ### Appendix A: Application instructions
 
 **When generating new content:**
+
 1. Ask clarifying questions: audience level, prerequisites, target LMS, required standards (SCORM vs xAPI), accessibility constraints, grading policy (partial credit rules), and language/locale.
 2. Produce:
-   * Learning objectives ($1$–$3$ per unit) using Bloom's verbs
-   * Structured passage following chunking rules (max 150 words/paragraph)
-   * Assessments aligned to objectives with item metadata (Bloom level, difficulty, objective mapping)
-   * Feedback text for correct/incorrect states
-   * Tolerance rules for FIB auto-grading
+   - Learning objectives ($1$–$3$ per unit) using Bloom's verbs
+   - Structured passage following chunking rules (max 150 words/paragraph)
+   - Assessments aligned to objectives with item metadata (Bloom level, difficulty, objective mapping)
+   - Feedback text for correct/incorrect states
+   - Tolerance rules for FIB auto-grading
 3. Include a "Design Rationale" block explaining pedagogical choices (e.g., "Selected MSQ for this concept because it naturally requires identifying multiple safety violations simultaneously").
 
 **When generating new code:**
+
 1. Confirm target stack and interoperability requirements (LTI 1.3, xAPI, SCORM).
 2. Produce:
-   * Architecture outline (separation of concerns diagram/description)
-   * TypeScript/Python schemas (interfaces/types) for content models
-   * API contracts (OpenAPI 3.1 fragments)
-   * UI components with accessibility attributes (labels, focus management)
-   * Grading logic with versioned rubric configuration
-   * Analytics event taxonomy (xAPI statement templates)
-   * Unit tests for grading logic
+   - Architecture outline (separation of concerns diagram/description)
+   - TypeScript/Python schemas (interfaces/types) for content models
+   - API contracts (OpenAPI 3.1 fragments)
+   - UI components with accessibility attributes (labels, focus management)
+   - Grading logic with versioned rubric configuration
+   - Analytics event taxonomy (xAPI statement templates)
+   - Unit tests for grading logic
 3. Include tool configurations (`.eslintrc`, `pyproject.toml`) and CI workflow steps unless provided.
 
 **When reviewing existing code/content:**
+
 1. Output a compliance report with:
-   * **Summary**: Pass/fail count of MUST items
-   * **Critical violations** (security, accessibility, deterministic grading): location + explanation + diff patch
-   * **Recommendations** (SHOULD items not met): justification and priority
-   * **Passed**: Standards met
+   - **Summary**: Pass/fail count of MUST items
+   - **Critical violations** (security, accessibility, deterministic grading): location + explanation + diff patch
+   - **Recommendations** (SHOULD items not met): justification and priority
+   - **Passed**: Standards met
 2. For each violation, provide:
-   * Standard reference (e.g., "2.1.3: MCQ Distractor Quality")
-   * Line/paragraph location and problematic text/code
-   * Suggested rewrite using diff syntax (`---`, `+++`)
+   - Standard reference (e.g., "2.1.3: MCQ Distractor Quality")
+   - Line/paragraph location and problematic text/code
+   - Suggested rewrite using diff syntax (`---`, `+++`)
 3. Calculate compliance score: $(\text{passed MUSTs} / \text{total applicable MUSTs}) \times 100\%$
 4. If security violations exist (exposed credentials, unsafe evaluation, XSS vulnerabilities), prepend a ⚠️ **SECURITY WARNING** banner.
 
@@ -401,18 +420,22 @@ where $c$ = correct selections, $C$ = total correct options, $w$ = wrong selecti
 ### Appendix C: Examples (compliant vs. non-compliant)
 
 **C1. Learning objectives**
-*Non-compliant:*
+_Non-compliant:_
+
 ```
 Objective: Understand APIs.
 ```
-*Compliant:*
+
+_Compliant:_
+
 ```
 Objective 1: Given an OpenAPI specification snippet, identify required versus optional fields (Analyze).
 Objective 2: Given a 400 Bad Request response, debug the error by interpreting the standardized error code (Evaluate).
 ```
 
 **C2. Multiple choice question**
-*Non-compliant:*
+_Non-compliant:_
+
 ```html
 <p>What is the best way to save?</p>
 <div onclick="check('A')">A. Click save</div>
@@ -420,7 +443,9 @@ Objective 2: Given a 400 Bad Request response, debug the error by interpreting t
 <div onclick="check('C')">C. All of the above</div>
 <div onclick="check('D')">D. None of the above</div>
 ```
-*Compliant:*
+
+_Compliant:_
+
 ```json
 {
   "questionId": "save-file-001",
@@ -455,16 +480,22 @@ Objective 2: Given a 400 Bad Request response, debug the error by interpreting t
 ```
 
 **C3. Accessibility (semantic HTML)**
-*Non-compliant:*
+_Non-compliant:_
+
 ```html
 <div class="button" onclick="submit()">Submit</div>
-<img src="diagram.png">
+<img src="diagram.png" />
 <div class="title">Photosynthesis</div>
 ```
-*Compliant:*
+
+_Compliant:_
+
 ```html
 <button type="button" onclick="submit()">Submit Quiz</button>
-<img src="diagram.png" alt="Diagram showing photosynthesis cycle: light energy and CO2 entering leaf, glucose and O2 output">
+<img
+  src="diagram.png"
+  alt="Diagram showing photosynthesis cycle: light energy and CO2 entering leaf, glucose and O2 output"
+/>
 <article>
   <h2>Photosynthesis Process</h2>
   <p>Plants convert light energy into chemical energy...</p>
@@ -472,32 +503,41 @@ Objective 2: Given a 400 Bad Request response, debug the error by interpreting t
 ```
 
 **C4. Fill-in-the-blank tolerance**
-*Non-compliant:*
+_Non-compliant:_
+
 ```javascript
 function grade(answer) {
-  return answer === "Polymorphism" ? 1 : 0; // Case sensitive, no synonyms
+  return answer === 'Polymorphism' ? 1 : 0; // Case sensitive, no synonyms
 }
 ```
-*Compliant:*
+
+_Compliant:_
+
 ```javascript
 function gradeFillBlank(userAnswer, config) {
   const normalized = userAnswer.trim().toLowerCase().normalize('NFKC');
-  const accepted = config.acceptedAnswers.map(a => a.toLowerCase().normalize('NFKC'));
-  
+  const accepted = config.acceptedAnswers.map((a) =>
+    a.toLowerCase().normalize('NFKC'),
+  );
+
   // Levenshtein distance check for typos (config.fuzzyThreshold)
-  return accepted.some(correct => 
-    normalized === correct || 
-    levenshtein(normalized, correct) <= config.fuzzyThreshold
+  return accepted.some(
+    (correct) =>
+      normalized === correct ||
+      levenshtein(normalized, correct) <= config.fuzzyThreshold,
   );
 }
 ```
 
 **C5. API error contract**
-*Non-compliant:*
+_Non-compliant:_
+
 ```javascript
 res.status(500).send({ error: err.message });
 ```
-*Compliant:*
+
+_Compliant:_
+
 ```json
 {
   "error": {

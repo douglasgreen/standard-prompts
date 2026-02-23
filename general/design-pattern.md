@@ -4,8 +4,8 @@ description: Standards document for design patterns
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Software design patterns engineering standards
 
+# Software design patterns engineering standards
 
 ## Role definition
 
@@ -505,7 +505,7 @@ This document excludes legacy deployment pipelines prior to version 3.0, vendor-
    - Pattern implementation following standards
    - Error handling at trust boundaries
    - Unit tests for critical logic
-   - Documentation comments explaining *why* patterns are applied
+   - Documentation comments explaining _why_ patterns are applied
 5. Validate against Appendix B checklist before delivery.
 
 **A.2 When reviewing existing code**
@@ -520,27 +520,37 @@ This document excludes legacy deployment pipelines prior to version 3.0, vendor-
    - Show diff-style before/after code blocks
    - Explain risks (security, maintenance, performance) of non-compliance
 4. Output format:
-   ```markdown
+
+   ````markdown
    ## Compliance summary
+
    - Status: [Compliant/Non-Compliant]
    - Critical issues: [Count]
    - Warnings: [Count]
 
    ## Critical issues
+
    ### 1. [Pattern] - [Standard Reference]
+
    **Location**: `file.ts:line`
    **Issue**: [Description]
    **Fix**:
+
    ```diff
    - // Non-compliant code
    + // Compliant code
    ```
+   ````
 
    ## Warnings
+
    [Same structure]
 
    ## Next steps
    - [Action items]
+
+   ```
+
    ```
 
 ### Appendix B: Enforcement checklist
@@ -586,6 +596,7 @@ Critical **MUST** items for quick validation:
 <summary>C.1 Dependency injection - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Service locator anti-pattern):
+
 ```typescript
 // Violates 6.2.1.3: Service locator hides dependencies
 class OrderService {
@@ -599,15 +610,20 @@ class OrderService {
 ```
 
 **Compliant** (Constructor injection):
+
 ```typescript
 // Compliant with 6.2.1.1, 6.2.1.2
-interface Database { save(order: Order): void; }
-interface EmailService { sendConfirmation(order: Order): void; }
+interface Database {
+  save(order: Order): void;
+}
+interface EmailService {
+  sendConfirmation(order: Order): void;
+}
 
 class OrderService {
   constructor(
     private readonly db: Database,
-    private readonly email: EmailService
+    private readonly email: EmailService,
   ) {}
 
   processOrder(order: Order): void {
@@ -616,63 +632,74 @@ class OrderService {
   }
 }
 ```
+
 </details>
 
 <details>
 <summary>C.2 Decorator - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Breaks interface contract):
+
 ```typescript
 // Violates 6.7.1.2: Adds public method not in interface
 class LoggingDataSource extends DataSource {
   constructor(private wrapped: DataSource) {}
 
   read(): string {
-    console.log("Reading");
+    console.log('Reading');
     return this.wrapped.read();
   }
 
-  enableVerboseLogging(): void { // Extra public method
+  enableVerboseLogging(): void {
+    // Extra public method
     this.verbose = true;
   }
 }
 ```
 
 **Compliant** (Transparent decoration):
+
 ```typescript
 // Compliant with 6.7.1.1, 6.7.1.2
 class LoggingDataSource implements DataSource {
   constructor(private wrapped: DataSource) {}
 
   read(): string {
-    console.log("Reading data");
+    console.log('Reading data');
     return this.wrapped.read();
   }
 
   write(data: string): void {
-    console.log("Writing data");
+    console.log('Writing data');
     this.wrapped.write(data);
   }
 }
 ```
+
 </details>
 
 <details>
 <summary>C.3 Strategy - Non-compliant vs Compliant</summary>
 
 **Non-compliant** (Conditional logic):
+
 ```typescript
 // Violates 6.8.1.1: Conditional sprawl instead of strategy
 class PaymentProcessor {
   process(amount: number, type: string) {
-    if (type === "credit") { /* ... */ }
-    else if (type === "paypal") { /* ... */ }
-    else { throw new Error("Unknown type"); }
+    if (type === 'credit') {
+      /* ... */
+    } else if (type === 'paypal') {
+      /* ... */
+    } else {
+      throw new Error('Unknown type');
+    }
   }
 }
 ```
 
 **Compliant** (Strategy pattern):
+
 ```typescript
 // Compliant with 6.8.1.1, 6.8.1.3
 interface PaymentStrategy {
@@ -691,6 +718,7 @@ class PaymentContext {
   }
 }
 ```
+
 </details>
 
 **End of standards document**

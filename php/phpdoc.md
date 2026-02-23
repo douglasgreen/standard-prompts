@@ -4,8 +4,8 @@ description: Standards document for PHPDoc documentation
 version: 1.0.0
 modified: 2026-02-20
 ---
-# PHPDoc standards for comprehensive code documentation and automated Markdown generation
 
+# PHPDoc standards for comprehensive code documentation and automated Markdown generation
 
 ## Role definition
 
@@ -26,19 +26,24 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **PHP**: 8.2+ (typed properties, union types, readonly classes, nullsafe operator)
 - **PHPDoc parsing/generation**: phpDocumentor 3.x+
 - **Static analysis**: PHPStan 1.10+ or Psalm 5+
 - **Style enforcement**: PHP_CodeSniffer 3.x with Slevomat Coding Standard or PHP CS Fixer 3.x
 
 ### Context
+
 These standards apply to **application and library PHP code** where PHPDoc serves to:
+
 - Generate **standalone hierarchical Markdown** reference documentation suitable for chatbot ingestion and automated program analysis.
 - Support **static analysis**, IDE navigation, and type safety through precise type annotations.
 - Drive consistent code generation and review behaviors across different LLMs and automated tooling.
 
 ### Exclusions
+
 This document **does not** define:
+
 - UI styling/CSS rules, visual design systems, or frontend framework implementations.
 - CI/CD pipeline design beyond documentation validation hooks.
 - Legacy PHP (<8.2) compatibility constraints or migration paths.
@@ -54,18 +59,21 @@ This document **does not** define:
 #### 1.1 Mandatory PHPDoc tags by element type
 
 **Classes, interfaces, traits, and enums** **MUST** include:
+
 - Short description (summary line)
 - `@package` namespace organization
 - `@since` version tag
 - `@api` or `@internal` visibility marker
 
 **Methods and functions** **MUST** include:
+
 - Short description
 - `@param` for each parameter (when parameters exist)
 - `@return` for all non-void returns; `@return void` **SHOULD** be included for clarity in public APIs
 - `@throws` for each exception type that may escape to callers
 
 **Properties** **MUST** include:
+
 - `@var` type declaration when the type is not fully expressed by native PHP type hints, or when the PHPDoc type is more specific (e.g., `list<Foo>` vs `array`)
 
 **Rationale**: Ensures metadata completeness for automated indexing, enables accurate static analysis, and provides the minimum contract information required for safe API consumption and chatbot analysis.
@@ -73,6 +81,7 @@ This document **does not** define:
 #### 1.2 Docblock structure and Markdown compatibility
 
 Docblocks **MUST** follow this exact structural order:
+
 1. Short description (single line, active voice, ends with period)
 2. Blank line
 3. Long description (Markdown-compatible paragraphs)
@@ -84,12 +93,14 @@ Docblocks **MUST** follow this exact structural order:
 #### 1.3 Short and long description formatting
 
 Short descriptions **MUST**:
+
 - Be a single sentence under 80 characters
 - Start with a capital letter and end with a period
 - Use imperative mood (e.g., "Calculate the total" not "This method calculates...")
 - Avoid merely restating the element name (e.g., "Class UserManager" is an insufficient description for `class UserManager`)
 
 Long descriptions **MUST**:
+
 - Use complete sentences organized into logical paragraphs separated by blank lines
 - Use active voice and present tense
 - Employ Markdown syntax for formatting (see section 1.4)
@@ -100,14 +111,16 @@ Long descriptions **MUST**:
 #### 1.4 Inline Markdown syntax
 
 Docblocks **MAY** use the following Markdown constructs:
+
 - `` `inline code` `` for variable names, method references, and short code snippets
 - `**bold**` for critical warnings or emphasis
 - `*italics*` for technical terms or newly introduced concepts
 - Unordered lists (`-` or `*`) for sequential steps or feature lists
-- Fenced code blocks (```` ```php ````) for multi-line examples
+- Fenced code blocks (` ```php `) for multi-line examples
 - Definition-style lists for key-value explanations
 
 Docblocks **MUST NOT** use:
+
 - HTML tags (except for complex tables when Markdown tables are insufficient, and even then sparingly)
 - Mixed list markers within the same list
 - Tabs for indentation (use 4 spaces)
@@ -117,6 +130,7 @@ Docblocks **MUST NOT** use:
 #### 1.5 Tag ordering standard
 
 Tags **MUST** appear in the following order (omitting non-applicable tags):
+
 1. Visibility/scope: `@api`, `@internal`
 2. Templates/generics: `@template`, `@template-covariant`, `@phpstan-type`
 3. Structural: `@extends`, `@implements`, `@use`, `@mixin`
@@ -133,12 +147,14 @@ Tags **MUST** appear in the following order (omitting non-applicable tags):
 #### 1.6 Language and terminology consistency
 
 All docblocks **MUST**:
+
 - Use American English spelling and grammar
 - Use active voice and present tense exclusively
 - Define acronyms on first use: "JSON Web Token (JWT)"
 - Use standardized terminology: "throws" for exceptions, "returns" for outputs, "caller" for consumers, "idempotent" only when repeated calls have identical effects
 
 Docblocks **MUST NOT** use:
+
 - Ambiguous qualifiers ("simple", "fast", "easy", "just") that create imposter syndrome or imprecision
 - Idioms or cultural references that impede internationalization
 - Jargon without definition
@@ -150,13 +166,15 @@ Docblocks **MUST NOT** use:
 ### 2. File-Level & Script Documentation
 
 2.1 **Applicability**
+
 - **MUST**: A file-level DocBlock must be the first structural element in any standalone PHP file, specifically:
   - Executable CLI scripts (e.g., cron jobs, build tools).
   - Configuration files returning arrays.
   - Procedural files (helper libraries) not strictly namespaced or class-based.
 - **MUST**: For files containing classes, file-level DocBlocks are **OPTIONAL** unless strictly required by project governance (e.g., licensing headers). If used, they must precede the namespace declaration.
 
-2.2 **Executable Script Structure**
+  2.2 **Executable Script Structure**
+
 - **MUST**: For executable scripts, the DocBlock must follow the `<?php` opening tag immediately (and the Shebang `#!` line, if present).
 - **MUST**: Include a **Summary** describing the script's primary operation (e.g., "Imports CSV data into the user table").
 - **MUST**: Include a **Description** containing a specific **"Arguments"** or **"Parameters"** section. This section must list:
@@ -165,11 +183,13 @@ Docblocks **MUST NOT** use:
   - Required Environment Variables.
 - **MUST**: Include an `@example` tag or fenced code block demonstrating the exact CLI command to trigger the script.
 
-2.3 **Procedural & Config Files**
+  2.3 **Procedural & Config Files**
+
 - **MUST**: Document the return structure of configuration files using `@return` or a Markdown description of the array shape.
 - **SHOULD**: Use `@author` and `@package` tags to establish ownership and module grouping for files that fall outside standard PSR-4 autoloading paths.
 
-2.4 **Syntax & Parsing**
+  2.4 **Syntax & Parsing**
+
 - **MUST**: Ensure the file-level DocBlock contains the `@package` tag if the file is part of a larger distribution, to prevent it from being treated as a "loose" file by documentation generators.
 - **RATIONALE**: Standalone scripts are often the entry points of an application. Documenting their inputs (arguments) and outputs (exit codes/side effects) is critical for automated DevOps pipelines and chatbots analyzing system capabilities.
 
@@ -180,6 +200,7 @@ Docblocks **MUST NOT** use:
 #### 3.1 Required class docblock elements
 
 Class docblocks **MUST** include:
+
 - **Purpose**: High-level role and responsibility in the application architecture
 - **Usage context**: When and why developers should use this class
 - **Relationships**: Key dependencies, parent classes, implemented interfaces, and design patterns employed
@@ -190,11 +211,13 @@ Class docblocks **MUST** include:
 #### 3.2 Usage examples for classes
 
 Examples **MUST** use fenced code blocks with `php` language identifier and demonstrate:
+
 - Instantiation or dependency injection acquisition
 - Minimal required configuration
 - A common method chain or typical workflow
 
 Examples **SHOULD**:
+
 - Show realistic minimal values rather than placeholder-only variables
 - Include error handling for public API classes
 - Avoid ellipses (`...`) except where clearly marked with comments
@@ -204,6 +227,7 @@ Examples **SHOULD**:
 #### 3.3 Property documentation standards
 
 Properties **MUST** document:
+
 - Semantic meaning and purpose
 - `@var` type using specific generics syntax (e.g., `list<User>`, `array<string, mixed>`) rather than bare `array`
 - Constraints (nullable, valid ranges, allowed values) if not obvious from types
@@ -216,18 +240,21 @@ Properties **MUST NOT** duplicate the type description when native PHP 8.2+ type
 #### 3.4 Interfaces, traits, and abstract classes
 
 **Interfaces** **MUST** document:
+
 - Contract semantics and behavioral guarantees
 - Thread-safety and reentrancy expectations
 - Method call ordering constraints
 - Exception policy expectations for implementations
 
 **Traits** **MUST** document:
+
 - Functionality provided and required host class properties/methods
 - Potential conflicts with other traits (method name collisions)
 - Side effects and initialization requirements
 - Intended reuse scope (`@api` vs `@internal`)
 
 **Abstract classes** **MUST** document:
+
 - What functionality is provided vs. what subclasses must implement
 - Extension points and protected invariants
 - Template methods and their required overrides
@@ -241,6 +268,7 @@ Properties **MUST NOT** duplicate the type description when native PHP 8.2+ type
 #### 4.1 Mandatory method tags
 
 Every method or function **MUST** include:
+
 - `@param` for each parameter, specifying type and purpose (never omit description)
 - `@return` describing the return value and its semantics (omit only for void methods, though `@return void` is preferred for clarity)
 - `@throws` for every exception type that may be observed by callers, including conditions that trigger each exception
@@ -250,6 +278,7 @@ Every method or function **MUST** include:
 #### 4.2 Method behavior specification
 
 Method docblocks **MUST** describe:
+
 - **Preconditions**: Input requirements and state assumptions (bulleted list preferred)
 - **Postconditions**: State changes, database persistence, cache invalidation, or events emitted
 - **Side effects**: External I/O, network calls, or global state mutations
@@ -260,6 +289,7 @@ Method docblocks **MUST** describe:
 #### 4.3 Code examples in method docblocks
 
 Methods that serve as **entry points, critical workflows, or complex utilities** **MUST** include at least one `@example` or fenced code block showing:
+
 - Typical input/output scenarios
 - At least one error handling scenario if exceptions are thrown
 - Integration patterns with other system components
@@ -271,6 +301,7 @@ Minor accessor methods or obvious implementations **MAY** omit examples if the c
 #### 4.4 Complex type documentation
 
 Arrays **MUST** use typed generics syntax:
+
 - `list<Foo>` for sequential arrays
 - `array<KeyType, ValueType>` for associative arrays
 - `array{key1: Type1, key2?: Type2}` for shaped arrays (PSR-5/PHPStan array shapes)
@@ -284,6 +315,7 @@ Union types **MUST** use pipe notation: `Type1|Type2`, with the most common type
 #### 4.5 Error handling and security documentation
 
 Security-sensitive methods (authentication, encryption, file system, SQL construction) **MUST** explicitly document:
+
 - Trust boundaries (what input is user-controlled vs. system-generated)
 - Validation and sanitization responsibilities (caller vs. callee)
 - Encoding/escaping requirements
@@ -306,11 +338,13 @@ Behavior changes to existing methods **SHOULD** add additional `@since` entries 
 #### 5.2 Deprecation notices
 
 Deprecated elements **MUST** include:
+
 ```php
 @deprecated <version> <message>
 ```
 
 Where `<message>` includes:
+
 - Replacement API with fully qualified name
 - Migration path or alternative approach
 - Removal timeline if known (e.g., "Will be removed in 3.0.0")
@@ -325,6 +359,7 @@ Where `<message>` includes:
 #### 6.1 Internal references
 
 When an element relates to others (factories, exceptions, configuration objects), docblocks **SHOULD** use `@see` with fully qualified names to reference:
+
 - Related classes, interfaces, or traits
 - Primary exception types thrown by the method
 - Configuration or builder classes used for instantiation
@@ -352,6 +387,7 @@ Use `{@inheritDoc}` **ONLY** when the inherited documentation is fully accurate 
 #### 7.1 PHPDocumentor configuration for standalone Markdown
 
 Projects **MUST** configure PHPDocumentor to generate:
+
 - Hierarchical table of contents (namespace → class → method)
 - Class index with short descriptions
 - Standalone pages that require no external context to understand
@@ -368,6 +404,7 @@ All examples in generated Markdown **MUST** render as fenced code blocks with `p
 #### 7.3 Fallback content for undocumented elements
 
 Public API elements (`@api`) **MUST NOT** be undocumented. For internal elements where documentation is missing, automated tools **SHOULD** generate minimal stubs containing:
+
 - One-sentence summary derived from the element name
 - `@internal` marker
 - Required tags inferred from signatures
@@ -387,6 +424,7 @@ Formatting, tag ordering, and completeness **MUST** be enforced through automati
 #### 8.2 Required CI validation
 
 Continuous integration **MUST** execute:
+
 - `phpdoc --validate` to check tag syntax and structure
 - PHPStan or Psalm at level 8+ to verify type consistency between PHPDoc and native types
 - PHP_CodeSniffer with PHPDoc sniffs to enforce tag presence and ordering
@@ -408,6 +446,7 @@ PHPDoc types **MUST NOT** contradict native PHP type hints. PHPDoc **MAY** be mo
 #### 9.1 Markdown structure for automated analysis
 
 Generated Markdown **MUST** include:
+
 - Consistent hierarchical headings (`#` Package, `##` Class, `###` Methods)
 - YAML frontmatter with metadata (title, namespace, version, stability)
 - API summary sections listing all public methods with signatures
@@ -418,6 +457,7 @@ Generated Markdown **MUST** include:
 #### 9.2 Custom annotations for enhanced analysis
 
 Projects **MAY** use PSR-5-compatible custom tags prefixed with `@x-` to provide machine-readable metadata:
+
 - `@x-security <classification>`: Trust boundaries, PII classification
 - `@x-performance <note>`: Big-O complexity, caching behavior, hot path indicators
 - `@x-observability <note>`: Logs, metrics, or traces emitted
@@ -438,6 +478,7 @@ Documentation **MUST** cover all public API elements without redundancy. Cross-r
 ### Appendix A: Application instructions
 
 **When generating new code:**
+
 1. Identify the public API surface and mark elements with `@api`.
 2. Write docblocks first for all `@api` elements following the Documentation Driven Development pattern:
    - Draft the summary and long description to clarify intent
@@ -448,6 +489,7 @@ Documentation **MUST** cover all public API elements without redundancy. Cross-r
 5. Run automated validation (`phpdoc --validate`, `phpstan analyse`) before committing.
 
 **When reviewing existing code:**
+
 1. Categorize findings into **MUST** (violations) and **SHOULD** (improvements).
 2. Flag:
    - Missing required tags (`@param`, `@return`, `@throws`)
@@ -462,6 +504,7 @@ Documentation **MUST** cover all public API elements without redundancy. Cross-r
 
 **Response format requirement:**
 Structure responses in this order:
+
 1. **Compliance summary** (percentage or grade)
 2. **MUST violations** (bulleted list with explanations)
 3. **SHOULD improvements** (bulleted list)
@@ -489,7 +532,7 @@ Critical **MUST** items for quick validation:
 
 #### Compliant Example: Executable CLI Script
 
-```php
+````php
 #!/usr/bin/env php
 <?php
 /**
@@ -524,11 +567,12 @@ require __DIR__ . '/../vendor/autoload.php';
 // Script logic follows...
 $days = $argv[1] ?? 30;
 // ...
-```
+````
 
 #### Compliant vs. Non-Compliant: Class documentation
 
 **Non-compliant:**
+
 ```php
 /**
  * User manager class
@@ -539,7 +583,8 @@ class UserManager {
 ```
 
 **Compliant:**
-```php
+
+````php
 /**
  * Manages user lifecycle operations and data access.
  *
@@ -585,11 +630,12 @@ class UserManager
      */
     public function getUser(int $id): ?User { }
 }
-```
+````
 
 #### Compliant vs. Non-Compliant: Complex types and deprecation
 
 **Non-compliant:**
+
 ```php
 /**
  * @param array $filters
@@ -600,6 +646,7 @@ public function findUsers(array $filters): array { }
 ```
 
 **Compliant:**
+
 ```php
 /**
  * Returns users matching the provided filters.
@@ -626,6 +673,7 @@ public function findUsers(array $filters): array { }
 #### Compliant vs. Non-Compliant: Security documentation
 
 **Non-compliant:**
+
 ```php
 /**
  * Saves user input to database
@@ -636,6 +684,7 @@ public function executeQuery(string $query): void { }
 ```
 
 **Compliant:**
+
 ```php
 /**
  * Executes a raw SQL query against the user database.

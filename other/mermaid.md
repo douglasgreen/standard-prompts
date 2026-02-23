@@ -4,8 +4,8 @@ description: Standards document for Mermaid diagramming
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Mermaid diagramming engineering standards for consistent generation and review
 
+# Mermaid diagramming engineering standards for consistent generation and review
 
 ## Role definition
 
@@ -22,13 +22,16 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 ## Scope and limitations
 
 ### Target versions
+
 - **Mermaid.js**: v11.0.0 or later (syntax and configuration expectations); v10.0.0+ acceptable for core diagram types only.
 - **Mermaid CLI** (`@mermaid-js/mermaid-cli`): v11.0.0 or later for automated rendering in CI pipelines.
 - **Node.js**: v20.0.0 or later for CLI-based automation (CI runners and local tooling).
 - **Markdown Renderers**: GitHub-Flavored Markdown (GFM), GitLab Flavored Markdown, or equivalent supporting Mermaid code blocks.
 
 ### Context
+
 These standards apply to:
+
 - Software architecture documentation (C4 models, system context, container diagrams).
 - Technical specifications, API documentation, and sequence diagrams for microservices.
 - Database schemas and entity-relationship documentation.
@@ -36,7 +39,9 @@ These standards apply to:
 - CI/CD workflow visualizations and Git branching strategy documentation.
 
 ### Exclusions
+
 This document **does not** cover:
+
 - Experimental or beta diagram types (timelines, mindmaps, sankey, architecture-beta) in production documentation unless explicitly version-pinned and justified.
 - Non-software artistic or generative uses of Mermaid.
 - Legacy Mermaid syntax prior to v10.0.0 (directive-only configuration workflows).
@@ -51,32 +56,32 @@ This document **does not** cover:
 
 **MUST** select diagram types based on the primary information architecture question:
 
-| **Diagram Type** | **Primary Use Case** | **When to Use** |
-|------------------|---------------------|-----------------|
-| **Flowchart** (`flowchart`) | Process flows, algorithms, routing logic | Representing branching logic, conditional paths, or sequential steps with decision points. |
-| **Sequence Diagram** (`sequenceDiagram`) | Temporal interactions, API calls | Illustrating time-ordered exchanges between actors/systems (e.g., microservices communication, user-system exchanges). |
-| **Class Diagram** (`classDiagram`) | Object-oriented design | Documenting classes, interfaces, inheritance, and relationships in OOP systems. |
-| **State Diagram** (`stateDiagram-v2`) | Finite state machines | Modeling system states and transitions (e.g., authentication flows, order/payment statuses). |
-| **Entity-Relationship** (`erDiagram`) | Database schemas | Defining data models, table relationships, and cardinality in software architectures. |
-| **Gantt** (`gantt`) | Project timelines | Tracking sprint schedules, release milestones, or task dependencies (not for system runtime behavior). |
-| **Gitgraph** (`gitgraph`) | Version control history | Visualizing Git branching strategies, merge flows, or commit timelines. |
-| **Quadrant Chart** (`quadrantChart`) | Prioritization matrices | Categorizing features (e.g., effort vs. impact), risk assessments. |
-| **User Journey** (`journey`) | User experience flows | Mapping user interactions across touchpoints with sentiment/score analysis. |
-| **Requirement Diagram** (`requirementDiagram`) | Requirements traceability | Linking requirements to design elements and test cases (SysML-style). |
+| **Diagram Type**                               | **Primary Use Case**                     | **When to Use**                                                                                                        |
+| ---------------------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Flowchart** (`flowchart`)                    | Process flows, algorithms, routing logic | Representing branching logic, conditional paths, or sequential steps with decision points.                             |
+| **Sequence Diagram** (`sequenceDiagram`)       | Temporal interactions, API calls         | Illustrating time-ordered exchanges between actors/systems (e.g., microservices communication, user-system exchanges). |
+| **Class Diagram** (`classDiagram`)             | Object-oriented design                   | Documenting classes, interfaces, inheritance, and relationships in OOP systems.                                        |
+| **State Diagram** (`stateDiagram-v2`)          | Finite state machines                    | Modeling system states and transitions (e.g., authentication flows, order/payment statuses).                           |
+| **Entity-Relationship** (`erDiagram`)          | Database schemas                         | Defining data models, table relationships, and cardinality in software architectures.                                  |
+| **Gantt** (`gantt`)                            | Project timelines                        | Tracking sprint schedules, release milestones, or task dependencies (not for system runtime behavior).                 |
+| **Gitgraph** (`gitgraph`)                      | Version control history                  | Visualizing Git branching strategies, merge flows, or commit timelines.                                                |
+| **Quadrant Chart** (`quadrantChart`)           | Prioritization matrices                  | Categorizing features (e.g., effort vs. impact), risk assessments.                                                     |
+| **User Journey** (`journey`)                   | User experience flows                    | Mapping user interactions across touchpoints with sentiment/score analysis.                                            |
+| **Requirement Diagram** (`requirementDiagram`) | Requirements traceability                | Linking requirements to design elements and test cases (SysML-style).                                                  |
 
 > **Rationale**: Selecting the wrong diagram type reduces comprehension and increases cognitive load. For example, using a flowchart for temporal API interactions obscures the time-ordered nature that sequence diagrams clarify, while using a sequence diagram for complex state machines obscures valid/invalid transitions.
 
 #### 1.2 Type-specific selection criteria
 
-**MUST** prefer **flowcharts** for *procedural* flows (algorithms, request routing, business rules).
+**MUST** prefer **flowcharts** for _procedural_ flows (algorithms, request routing, business rules).
 
 > **Rationale**: Flowcharts optimize for decision points and branching comprehension, representing transformations succinctly without temporal overhead.
 
-**MUST** prefer **state diagrams** when system correctness depends on *state invariants* (e.g., "paid" cannot transition to "created").
+**MUST** prefer **state diagrams** when system correctness depends on _state invariants_ (e.g., "paid" cannot transition to "created").
 
 > **Rationale**: State machines explicitly express valid/invalid transitions and guard conditions, preventing invalid state assumptions in distributed systems.
 
-**MUST** prefer **sequence diagrams** for illustrating *interactions over time* between components (APIs, microservices, user-system exchanges).
+**MUST** prefer **sequence diagrams** for illustrating _interactions over time_ between components (APIs, microservices, user-system exchanges).
 
 > **Rationale**: Time-ordered messaging clarifies causality, synchronous vs. asynchronous boundaries, and retry mechanisms that static diagrams cannot convey.
 
@@ -106,6 +111,7 @@ This document **does not** cover:
 #### 1.4 Experimental diagram types
 
 **SHOULD NOT** use experimental or beta diagram types (e.g., `architecture-beta`, `timeline`, `mindmap`, `sankey`) in production documentation without:
+
 1. Explicit version pinning in documentation (e.g., "Requires Mermaid $\geq$v11.1.0").
 2. Fallback alternatives for older renderers.
 3. Documented justification for using pre-stable features.
@@ -125,6 +131,7 @@ This document **does not** cover:
 > **Rationale**: Mermaid parsing depends on the declaration to determine the layout engine and syntax validation rules.
 
 **MUST** specify diagram direction explicitly where applicable:
+
 - `TD` or `TB`: Top to bottom (default for hierarchies).
 - `LR`: Left to right (preferred for timelines and wide processes).
 - `RL`: Right to left (for RTL languages or specific architectural conventions).
@@ -139,11 +146,13 @@ This document **does not** cover:
 > **Rationale**: Decoupling ID from content allows labels to change without breaking relationship logic (DRY principle). Semantic IDs (e.g., `authService` vs `A`) make the source code readable without rendering and reduce maintenance burden during refactors.
 
 **MUST** use descriptive, semantic identifiers:
+
 - **Format**: camelCase or snake_case (choose one per repository and enforce consistently).
 - **Prohibited**: Single-letter IDs (except in trivial educational examples), numeric-only IDs, or identifiers containing spaces.
 - **Recommended Length**: 3-30 characters.
 
 **MUST** escape reserved keywords and special characters:
+
 - Enclose labels containing spaces, punctuation, or reserved words (`end`, `style`, `class`, `subgraph`) in double quotes.
 - Use double quotes with backticks for Markdown-formatted labels (e.g., `"`**Bold** text"`).
 
@@ -152,6 +161,7 @@ This document **does not** cover:
 #### 2.3 Naming conventions by domain
 
 **MUST** use consistent casing within a diagram:
+
 - **Components/Services**: `PascalCase` or `kebab-case` (choose one per repository).
 - **Endpoints/paths**: `kebab-case` with leading `/` (e.g., `/v1/orders`).
 - **Events/topics**: `kebab-case` with clear domain prefix (e.g., `order.created`, `user.signup`).
@@ -170,6 +180,7 @@ This document **does not** cover:
 #### 3.1 Semantic styling
 
 **MUST** prioritize semantic meaning over decoration:
+
 - Use styling only to encode meaning (e.g., "external system", "PII boundary", "critical path", "error state").
 - **MUST** not rely solely on color to convey meaning; supplement with patterns, labels, or text.
 
@@ -201,6 +212,7 @@ class A error
 **MUST** write `accTitle` as a concise statement of what the diagram shows, and `accDescr` as a text alternative communicating essential relationships, flow, and decisions.
 
 **Example**:
+
 ```mermaid
 accTitle: Payment processing flow
 accDescr: The client submits payment details to the API gateway, which validates the request, processes the payment through the payment service, and returns success or error responses.
@@ -210,15 +222,15 @@ accDescr: The client submits payment details to the API gateway, which validates
 
 **SHOULD** use consistent node shapes for entity types to create visual affordances:
 
-| **Shape** | **Syntax** | **Semantic Use** |
-|-----------|-----------|------------------|
-| Rectangle | `[Text]` | Process, function, generic component |
-| Rounded Rectangle | `(Text)` | Start/end points, user actions |
-| Diamond | `{Text}` | Decision points, conditional logic |
-| Circle | `((Text))` | State indicators, events |
-| Cylinder | `[(Text)]` | Database, persistent storage |
-| Subroutine | `[[Text]]` | External module, library call |
-| Asymmetric | `>Text]` | Input/output operations |
+| **Shape**         | **Syntax** | **Semantic Use**                     |
+| ----------------- | ---------- | ------------------------------------ |
+| Rectangle         | `[Text]`   | Process, function, generic component |
+| Rounded Rectangle | `(Text)`   | Start/end points, user actions       |
+| Diamond           | `{Text}`   | Decision points, conditional logic   |
+| Circle            | `((Text))` | State indicators, events             |
+| Cylinder          | `[(Text)]` | Database, persistent storage         |
+| Subroutine        | `[[Text]]` | External module, library call        |
+| Asymmetric        | `>Text]`   | Input/output operations              |
 
 > **Rationale**: Shape consistency creates a visual language that accelerates comprehension and reduces the need for explicit legend decoding.
 
@@ -235,6 +247,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 **SHOULD** use subgraphs to organize related components by bounded context (e.g., "Authentication Layer", "Payment Domain", "External APIs").
 
 **MUST** provide meaningful subgraph IDs and labels:
+
 - ID: `authLayer`, `paymentDomain` (programmatic reference).
 - Label: `"Authentication Layer"`, `"Payment Services"` (human-readable).
 
@@ -245,6 +258,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 #### 4.2 Layered diagrams
 
 **MUST** split diagrams that exceed complexity thresholds into layered views:
+
 - **Context diagram**: High-level 10-15 nodes showing system boundaries.
 - **Container diagram**: Mid-level showing applications/services.
 - **Component diagram**: Detailed internals of specific services.
@@ -256,6 +270,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 #### 5.1 Sensitive information handling
 
 **MUST NOT** include in diagrams:
+
 - Production credentials, API keys, tokens, or secrets.
 - Personally identifiable information (PII) or real user data.
 - Internal IP addresses, hostnames, or infrastructure details (use generic placeholders like `10.0.0.x` or `api.example.com`).
@@ -263,6 +278,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 > **Rationale**: Diagrams are often stored in version control and rendered in public documentation. Accidental credential exposure creates security vulnerabilities.
 
 **MUST** use generic placeholders:
+
 - `api.example.com` instead of actual domains (per RFC 2606).
 - `<YOUR_API_KEY>` instead of real keys.
 - `User A`, `Service B` instead of real names or identifiers.
@@ -278,6 +294,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 #### 5.3 Interactivity and links
 
 **MUST** avoid `click` links and interactive elements in diagrams intended for public documentation unless:
+
 1. URLs are explicitly allowlisted.
 2. Targets are safe (no `javascript:` protocol).
 3. Content Security Policy (CSP) is compatible.
@@ -293,6 +310,7 @@ accDescr: The client submits payment details to the API gateway, which validates
 **MUST** split diagrams that cause slow rendering or layout instability; prefer the layered approach described in 4.2.
 
 **SHOULD** minimize layout nondeterminism by:
+
 - Keeping node labels short and consistent.
 - Avoiding excessive cross-links or bi-directional edges.
 - Using explicit groupings/subgraphs.
@@ -333,6 +351,7 @@ flowchart TD
 #### 7.3 Version control hygiene
 
 **MUST** treat diagram changes as code changes:
+
 - Review diffs to ensure nodes were not accidentally orphaned.
 - Use meaningful commit messages: "Update auth flow to include 2FA" (not "Update diagram").
 - Store Mermaid text as the canonical artifact; exported images are derived artifacts optionally committed for release documentation.
@@ -342,6 +361,7 @@ flowchart TD
 #### 8.1 Automated validation
 
 **MUST** implement at least one automated verification path:
+
 - Render Mermaid sources to SVG using Mermaid CLI (`mmdc`) in CI, failing on syntax errors.
 - Use pre-commit hooks to validate syntax before allowing commits.
 
@@ -364,7 +384,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
       - run: npm install -g @mermaid-js/mermaid-cli
       - run: |
           find docs -name "*.mmd" -exec mmdc -i {} -o /dev/null \;
@@ -398,6 +418,7 @@ jobs:
    - Suggested fix as a minimal diff or corrected Mermaid block.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references.
 - Use `diff` syntax for before/after corrections.
 - Keep explanations concise; demonstrate plain language principles.
@@ -424,16 +445,18 @@ Critical **MUST** items for quick validation:
 #### C.1 Flowchart: User authentication flow
 
 **Non-compliant** (violations highlighted):
+
 ```mermaid
 flowchart
     a --> b
     b --> c
     c --> end
-    
+
 style c fill:#ff0000
 ```
 
 **Issues**:
+
 - Missing direction specification.
 - Single-letter node IDs (`a`, `b`, `c`).
 - Reserved keyword `end` used as bare identifier.
@@ -441,33 +464,35 @@ style c fill:#ff0000
 - No accessibility metadata.
 
 **Compliant**:
+
 ```mermaid
 flowchart TD
     accTitle: User authentication flow
     accDescr: A user enters credentials, which are validated against the auth service. Valid credentials proceed to the dashboard; invalid credentials show an error and return to the input step.
-    
+
     start((Start)) --> input["User enters credentials"]
     input --> validate{"Valid credentials?"}
-    
+
     validate -->|Yes| authService[[Auth Service]]
     validate -->|No| showError["Display error"]
-    
+
     authService --> dashboard["User Dashboard"]
     showError --> input
-    
+
     style dashboard fill:#4CAF50,stroke:#2E7D32,color:#fff
     style showError fill:#F44336,stroke:#C62828,color:#fff
-    
+
     classDef success fill:#4CAF50,stroke:#2E7D32,color:#fff
     classDef error fill:#F44336,stroke:#C62828,color:#fff
     classDef process fill:#2196F3,stroke:#1565C0,color:#fff
-    
+
     class authService process
 ```
 
 #### C.2 Sequence diagram: API interaction
 
 **Non-compliant**:
+
 ```mermaid
 sequenceDiagram
     A->>B: Request
@@ -477,6 +502,7 @@ sequenceDiagram
 ```
 
 **Issues**:
+
 - Single-letter participants.
 - No explicit participant definitions.
 - Generic labels ("Request", "Response").
@@ -484,29 +510,31 @@ sequenceDiagram
 - No accessibility metadata.
 
 **Compliant**:
+
 ```mermaid
 sequenceDiagram
     accTitle: Order creation sequence
     accDescr: The mobile app calls the API gateway to create an order. The gateway validates the token with the auth service, then creates the order in the database and returns the order ID to the app.
-    
+
     participant App as Mobile App
     participant Gateway as API Gateway
     participant Auth as Auth Service
     participant DB as Order DB
-    
+
     App->>+Gateway: POST /v1/orders
     Gateway->>+Auth: Validate token
     Auth-->>-Gateway: Token valid
     Gateway->>+DB: INSERT order
     DB-->>-Gateway: Order ID: 12345
     Gateway-->>-App: 201 Created (orderId)
-    
+
     Note over App,Gateway: Authorization: Bearer <token>
 ```
 
 #### C.3 ER diagram: Database schema
 
 **Non-compliant**:
+
 ```mermaid
 erDiagram
     A ||--o{ B : has
@@ -514,28 +542,30 @@ erDiagram
 ```
 
 **Issues**:
+
 - Generic entity names.
 - No attributes defined.
 - No primary/foreign key annotations.
 - No accessibility metadata.
 
 **Compliant**:
+
 ```mermaid
 erDiagram
     accTitle: Blog database schema
     accDescr: Users author multiple posts. Each post contains multiple comments. Users also write comments on posts.
-    
+
     USER ||--o{ POST : authors
     POST ||--o{ COMMENT : contains
     USER ||--o{ COMMENT : writes
-    
+
     USER {
         uuid id PK
         string email UK
         string username
         datetime created_at
     }
-    
+
     POST {
         uuid id PK
         uuid author_id FK
@@ -544,7 +574,7 @@ erDiagram
         enum status
         datetime published_at
     }
-    
+
     COMMENT {
         uuid id PK
         uuid post_id FK
@@ -557,6 +587,7 @@ erDiagram
 #### C.4 State diagram: Order lifecycle
 
 **Non-compliant**:
+
 ```mermaid
 stateDiagram-v2
     s1 --> s2
@@ -565,28 +596,29 @@ stateDiagram-v2
 ```
 
 **Compliant**:
+
 ```mermaid
 stateDiagram-v2
     accTitle: Order state machine
     accDescr: Orders start in PendingPayment. After payment confirmation, they move to Processing, then Shipped, and finally Delivered. Orders may be Cancelled from PendingPayment or Refunded after delivery.
-    
+
     [*] --> PendingPayment
-    
+
     PendingPayment --> Processing : Payment confirmed
     PendingPayment --> Cancelled : Timeout / Cancelled by user
-    
+
     Processing --> Shipped : Inventory allocated
     Processing --> Failed : Payment declined
-    
+
     Shipped --> Delivered : Confirmed delivery
     Shipped --> Returned : Customer initiated return
-    
+
     Failed --> [*]
     Cancelled --> [*]
     Delivered --> [*]
     Returned --> Refunded
     Refunded --> [*]
-    
+
     style Delivered fill:#4CAF50,color:#fff
     style Failed fill:#F44336,color:#fff
     style Cancelled fill:#FF9800,color:#fff

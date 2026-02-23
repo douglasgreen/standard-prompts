@@ -4,8 +4,8 @@ description: Standards document for Bash scripting
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Bash scripting engineering standards for consistent LLM code generation and review
 
+# Bash scripting engineering standards for consistent LLM code generation and review
 
 ## Role definition
 
@@ -76,7 +76,7 @@ The following requirement levels are defined per RFC 2119:
 2.1 **MUST** use the following shebang for portable Bash discovery:  
 `#!/usr/bin/env bash`
 
-> **Rationale**: `bash` may not be located at `/bin/bash` across systems (e.g., macOS, *BSD, and some Linux distributions); `env` resolves via `$PATH`.
+> **Rationale**: `bash` may not be located at `/bin/bash` across systems (e.g., macOS, \*BSD, and some Linux distributions); `env` resolves via `$PATH`.
 
 2.2 **SHOULD** pin an absolute interpreter path only in controlled environments (e.g., containers) and document the deviation.
 
@@ -96,9 +96,10 @@ The following requirement levels are defined per RFC 2119:
 3.1 **MUST** enable strict mode near the top (after comments, before logic):  
 `set -Eeuo pipefail`
 
-> **Rationale**:  
-> - `set -e`: Fails fast on errors, preventing cascading failures.  
-> - `set -u`: Treats unset variables as errors, catching typos and missing configuration.  
+> **Rationale**:
+>
+> - `set -e`: Fails fast on errors, preventing cascading failures.
+> - `set -u`: Treats unset variables as errors, catching typos and missing configuration.
 > - `set -o pipefail`: Ensures pipeline failures are detected, not masked by the last command's exit status.
 
 3.2 **MUST** install traps for cleanup when creating temporary files, directories, or acquiring resources:  
@@ -122,6 +123,7 @@ The following requirement levels are defined per RFC 2119:
 ### 4. Script inputs: CLI arguments, environment variables, and validation
 
 4.1 **MUST** parse options predictably:
+
 - Prefer `getopts` for short options.
 - For long options, **MAY** implement a manual parser or use a vendored library, but it MUST be pinned and tested.
 
@@ -132,6 +134,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Improves usability, reduces misconfiguration, and supports self-documenting automation.
 
 4.3 **MUST** validate all external inputs (arguments, environment variables, file contents) before using them in:
+
 - file paths
 - command arguments
 - arithmetic
@@ -150,6 +153,7 @@ The following requirement levels are defined per RFC 2119:
 ### 5. Variables: naming, scope, quoting, and arrays
 
 5.1 **MUST** follow naming conventions:
+
 - `UPPER_SNAKE_CASE` for exported environment variables and constants (`readonly`).
 - `lower_snake_case` for local variables and internal state.
 - Function names: `lower_snake_case`.
@@ -183,6 +187,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 > **Rationale**: Improves portability and consistency with POSIX semantics.
 
 6.2 **MUST** document non-trivial functions with:
+
 - purpose
 - parameters (positional arguments)
 - outputs (stdout/stderr)
@@ -191,6 +196,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 > **Rationale**: Bash lacks strong type/signature visibility; documentation contracts prevent misuse and aid maintenance.
 
 6.3 **MUST** choose one return pattern per function and adhere to it:
+
 - **Status-only**: return code signals success/failure; stdout for user logs only.
 - **Data via stdout**: stdout emits machine-readable data; logs go to stderr.
 
@@ -221,6 +227,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 ### 8. Files, directories, and path handling
 
 8.1 **MUST** treat paths as data:
+
 - Always quote: `"$path"`
 - Avoid parsing `ls` output
 - Use arrays for sets of paths
@@ -261,6 +268,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 ### 10. Security considerations
 
 10.1 **MUST** avoid:
+
 - `eval` on untrusted input
 - `curl | bash` patterns
 - executing or sourcing untrusted files
@@ -273,6 +281,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 > **Rationale**: Prevents injection and quoting errors by maintaining argument boundaries.
 
 10.3 **MUST** protect secrets:
+
 - Never print secrets to stdout/stderr or logs.
 - Avoid passing secrets on command lines when possible (prefer stdin or files with restricted permissions).
 - Disable `set -x` (xtrace) around secret handling using `set +x` / `set -x`.
@@ -300,6 +309,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 ### 12. Logging, output streams, and CLI accessibility
 
 12.1 **MUST** separate streams:
+
 - stdout: machine-readable output (when applicable)
 - stderr: logs, warnings, errors
 
@@ -310,6 +320,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 > **Rationale**: Standard logs improve debugging and incident response correlating across distributed systems.
 
 12.3 **MUST** support verbosity control at minimum:
+
 - `--quiet`
 - `--verbose`
 
@@ -322,6 +333,7 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 ### 13. Portability across shells and platforms
 
 13.1 **MUST** declare whether the script is **Bash-only** (default) or **POSIX sh** compatible.
+
 - Bash-only scripts MUST use the Bash shebang and may use Bash features.
 - POSIX scripts MUST use `#!/bin/sh` and avoid Bashisms.
 
@@ -342,11 +354,13 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 > **Rationale**: Bash is dynamically typed and fragile; automated tests prevent regressions during refactoring.
 
 14.2 **MUST** make scripts testable:
+
 - Functions should be sourceable without executing main logic (use the guard clause pattern from §1.2).
 
 > **Rationale**: Enables unit tests to import functions safely without triggering side effects.
 
 14.3 **SHOULD** provide a debug mode:
+
 - `DEBUG=1` enabling `set -x` with a helpful `PS4` (e.g., `export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'`)
 - Ensure secrets are masked in trace output
 
@@ -391,12 +405,14 @@ Exceptions (MAY) only when intentionally splitting/globbing and documented inlin
 ### Appendix A: Application instructions
 
 **When generating new Bash code:**
+
 1. Produce a complete script or library conforming to all **MUST** items.
 2. Default to Bash-only (per this standard) unless the user explicitly requests POSIX `sh`.
 3. Include: shebang, header, strict mode, logging helpers, `usage()`, `main()`, traps as needed, dependency checks, safe quoting, and array-based argument passing.
 4. If requirements conflict (e.g., user asks for insecure patterns), explain the risk and ask for confirmation before generating non-compliant code.
 
 **When reviewing existing Bash code:**
+
 1. Respond concisely using this structure:
    - **Compliance Summary**: Pass/Fail with top risk assessment (Critical/High/Medium).
    - **Findings Table**: Severity, Standard Reference (e.g., §10.1), Issue, Why It Matters, Suggested Fix.

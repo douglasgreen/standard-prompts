@@ -4,8 +4,8 @@ description: Standards document for chatbot usage
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Standards for software development using chatbots
 
+# Standards for software development using chatbots
 
 ## Role definition
 
@@ -130,9 +130,10 @@ The following requirement levels are defined per RFC 2119:
 ### 4.1 Model selection criteria
 
 7.1.1. **MUST** select models based on task complexity:
-   - Complex reasoning/architecture: Claude 4.5 Sonnet/Opus, GPT-5.2 or GPT-5.2-Codex, Gemini 3 Pro
-   - High-volume/simple tasks: Claude Haiku, GPT-4o mini, Gemini Flash
-   - Code-specific tasks: Claude 4.5 Sonnet (for instruction following), GPT-5.2 (for broad language support)
+
+- Complex reasoning/architecture: Claude 4.5 Sonnet/Opus, GPT-5.2 or GPT-5.2-Codex, Gemini 3 Pro
+- High-volume/simple tasks: Claude Haiku, GPT-4o mini, Gemini Flash
+- Code-specific tasks: Claude 4.5 Sonnet (for instruction following), GPT-5.2 (for broad language support)
 
 > **Rationale**: Model capabilities vary significantly; selecting inappropriate models wastes resources or produces suboptimal results for complex tasks.
 
@@ -190,6 +191,7 @@ The following requirement levels are defined per RFC 2119:
 6. If security violations exist, prepend ⚠️ **SECURITY WARNING** to output.
 
 **Response formatting:**
+
 - Use active voice, present tense, and sentence case.
 - Provide code diffs for suggested changes.
 - Include estimated effort for remediation (hours/complexity).
@@ -216,6 +218,7 @@ Critical **MUST** items for quick validation:
 ### Appendix C: Examples
 
 **Non-compliant prompt (vague, insecure, unstructured):**
+
 ```text
 Can you please write some code to connect to my database? The password is
 SuperSecret123! and the host is prod-db.internal.company.com. Make it good
@@ -223,7 +226,8 @@ and follow best practices. Also include some documentation if you have time.
 ```
 
 **Compliant prompt (structured, secure, specific):**
-```xml
+
+````xml
 <role>
 You are a senior Python engineer specializing in secure database architecture.
 </role>
@@ -260,11 +264,13 @@ from contextlib import asynccontextmanager
 async def get_db():
     async with async_session() as session:
         yield session
-```
+````
+
 </example>
 ```
 
 **Non-compliant generated code (monolithic, unsafe):**
+
 ```javascript
 // Bad: Mixed concerns, no validation, hardcoded values
 function handleUserData(data) {
@@ -277,12 +283,13 @@ function handleUserData(data) {
 ```
 
 **Compliant generated code (modular, validated, secure):**
+
 ```typescript
 // Good: Separation of concerns, input validation, parameterized queries
 import { z } from 'zod';
 
 const UserIdSchema = z.object({
-  id: z.string().uuid()
+  id: z.string().uuid(),
 });
 
 type UserIdInput = z.infer<typeof UserIdSchema>;
@@ -294,10 +301,9 @@ class UserRepository {
     const validated = UserIdSchema.parse(input);
 
     try {
-      const result = await this.db.query(
-        'SELECT * FROM users WHERE id = $1',
-        [validated.id]
-      );
+      const result = await this.db.query('SELECT * FROM users WHERE id = $1', [
+        validated.id,
+      ]);
       return result.rows[0] ?? null;
     } catch (error) {
       logger.error({ error, userId: validated.id }, 'Database query failed');

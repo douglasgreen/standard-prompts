@@ -4,8 +4,8 @@ description: Standards document for CLI development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Standards for POSIX-compatible command-line interface development
 
+# Standards for POSIX-compatible command-line interface development
 
 ## Role definition
 
@@ -22,6 +22,7 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **POSIX**: IEEE Std **1003.1-2017 (POSIX.1-2017)** or later for utility conventions and shell semantics.
 - **Shell scripts**: **POSIX `sh`** (IEEE Std 1003.1) or **Bash 5.0+** if explicitly documented as Bash-specific.
 - **Language runtimes** (unless user specifies otherwise):
@@ -32,11 +33,13 @@ The following requirement levels are defined per RFC 2119:
   - C **C17** with POSIX libc
 
 ### Context
+
 - Command-line utilities intended for interactive use or automation in terminal environments (TTY and non-TTY).
 - Tools supporting pipeline composition (pipes, redirection, exit code chaining).
 - POSIX-like operating systems: Linux (kernel 5.10+), macOS 12+, BSD variants, and WSL2.
 
 ### Exclusions
+
 - Graphical User Interfaces (GUIs), web interfaces, and full-screen Text User Interfaces (TUIs) (e.g., ncurses-based applications).
 - Windows-native console applications without POSIX compatibility layers.
 - Legacy pre-POSIX systems (e.g., Solaris 10, AIX) and proprietary embedded systems without POSIX support.
@@ -50,18 +53,19 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: Enables unit testing of business logic without subprocess spawning, supports reuse as a library, and reduces regression risk when the CLI surface changes.
 
 1.2 **MUST** structure programs into distinct modules:
+
 - `cli` or `cmd`: Argument parsing, help/version display, command dispatch.
 - `core` or `internal`: Domain logic and data transformations.
 - `io`: File system abstractions, network boundaries, and formatting writers.
 - `config`: Configuration loading and precedence management.
 - `errors`: Error types, exit codes, and user-facing message formatting.  
-**Rationale**: Prevents "god main()" antipatterns, clarifies dependencies, and facilitates maintenance as the tool grows.
+  **Rationale**: Prevents "god main()" antipatterns, clarifies dependencies, and facilitates maintenance as the tool grows.
 
-1.3 **MUST** keep side effects (file writes, network calls, process execution) behind explicit interfaces or functions.  
-**Rationale**: Supports deterministic testing, safer refactoring, and clearer audit trails for security-sensitive operations.
+  1.3 **MUST** keep side effects (file writes, network calls, process execution) behind explicit interfaces or functions.  
+  **Rationale**: Supports deterministic testing, safer refactoring, and clearer audit trails for security-sensitive operations.
 
-1.4 **SHOULD** use a **command/subcommand** architecture for multi-action tools (e.g., `tool init`, `tool run`).  
-**Rationale**: Scales the user interface without breaking existing scripts or polluting the global option namespace.
+  1.4 **SHOULD** use a **command/subcommand** architecture for multi-action tools (e.g., `tool init`, `tool run`).  
+  **Rationale**: Scales the user interface without breaking existing scripts or polluting the global option namespace.
 
 ### 2. CLI contract and interface design
 
@@ -69,27 +73,29 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: Standard discoverability for users and automation; required by POSIX Utility Conventions.
 
 2.2 **MUST** implement a stable, documented CLI contract including:
+
 - Option names, defaults, and required arguments.
 - Exit codes and their meanings.
 - Output format stability guarantees (especially for machine-readable modes).  
-**Rationale**: CLI users write scripts around these contracts; changing them constitutes breaking changes.
+  **Rationale**: CLI users write scripts around these contracts; changing them constitutes breaking changes.
 
-2.3 **MUST** follow POSIX/GNU conventions:
+  2.3 **MUST** follow POSIX/GNU conventions:
+
 - Long options use double hyphens (`--verbose`); short options use single (`-v`).
 - Options precede operands where reasonable.
 - Support `--` to terminate option parsing (protecting filenames starting with hyphens).
 - Support option clustering for short flags if implemented (e.g., `-abc` equivalent to `-a -b -c`).  
-**Rationale**: Minimizes user surprise, ensures compatibility with standard shell completions, and prevents argument injection vulnerabilities.
+  **Rationale**: Minimizes user surprise, ensures compatibility with standard shell completions, and prevents argument injection vulnerabilities.
 
-2.4 **MUST** define configuration precedence (highest to lowest):  
-`CLI flags` > `Environment variables` > `Configuration files` > `Compiled defaults`.  
-**Rationale**: Predictable override behavior enables temporary adjustments (flags) without modifying persistent state (config files).
+  2.4 **MUST** define configuration precedence (highest to lowest):  
+  `CLI flags` > `Environment variables` > `Configuration files` > `Compiled defaults`.  
+  **Rationale**: Predictable override behavior enables temporary adjustments (flags) without modifying persistent state (config files).
 
-2.5 **SHOULD** provide **machine-readable output** modes (e.g., `--json`, `--tsv`, `--format=yaml`) and ensure they remain stable across versions.  
-**Rationale**: Prevents brittle text scraping in automation and enables reliable tool chaining.
+  2.5 **SHOULD** provide **machine-readable output** modes (e.g., `--json`, `--tsv`, `--format=yaml`) and ensure they remain stable across versions.  
+  **Rationale**: Prevents brittle text scraping in automation and enables reliable tool chaining.
 
-2.6 **MUST** avoid interactive prompts when `stdin` is not a TTY; provide `--yes`, `--no`, or `--non-interactive` flags for automation.  
-**Rationale**: Prevents CI/CD pipeline hangs and ensures composability in scripts.
+  2.6 **MUST** avoid interactive prompts when `stdin` is not a TTY; provide `--yes`, `--no`, or `--non-interactive` flags for automation.  
+  **Rationale**: Prevents CI/CD pipeline hangs and ensures composability in scripts.
 
 ### 3. Input/output, streams, and terminal handling
 
@@ -103,18 +109,20 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: Ensures compatibility with standard Unix text processing tools (`grep`, `awk`, `wc`) and prevents prompt rendering issues.
 
 3.4 **SHOULD** adapt output to terminal width when displaying tables or wrapped text:
+
 - Detect TTY and terminal width.
 - Provide `--no-wrap` or `--width` overrides for deterministic logs.  
-**Rationale**: Improves usability in constrained terminals without breaking automation in pipes.
+  **Rationale**: Improves usability in constrained terminals without breaking automation in pipes.
 
-3.5 **MUST** treat color and styling as optional:
+  3.5 **MUST** treat color and styling as optional:
+
 - Default to **no color** when stdout is not a TTY.
 - Support `--color=auto|always|never` (or equivalent).
 - Respect the `NO_COLOR` environment variable.  
-**Rationale**: Accessibility (low vision, color blindness), log file readability (no escape codes), and piping safety.
+  **Rationale**: Accessibility (low vision, color blindness), log file readability (no escape codes), and piping safety.
 
-3.6 **MUST** never rely on color alone to convey meaning; include text cues, labels, or icons.  
-**Rationale**: Ensures accessibility for color-blind users and readability in monochrome logs.
+  3.6 **MUST** never rely on color alone to convey meaning; include text cues, labels, or icons.  
+  **Rationale**: Ensures accessibility for color-blind users and readability in monochrome logs.
 
 ### 4. Error handling, exit codes, and diagnostics
 
@@ -125,27 +133,30 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: Scripts depend on specific codes for error handling; changing codes breaks automation.
 
 4.3 **MUST** distinguish error categories with appropriate codes:
+
 - `0`: Success.
 - `1`: General error (catchall).
 - `2`: CLI usage error (invalid arguments, unknown options).
 - `126`: Command invoked cannot execute (permission denied).
 - `127`: Command not found (missing dependency).
 - `128+N`: Fatal error signal (e.g., `130` for SIGINT, `143` for SIGTERM).  
-**Rationale**: Aligns with `sysexits.h` conventions and ecosystem expectations, enabling precise error handling in calling scripts.
+  **Rationale**: Aligns with `sysexits.h` conventions and ecosystem expectations, enabling precise error handling in calling scripts.
 
-4.4 **MUST** handle `SIGINT` (Ctrl+C) gracefully for long-running operations:
+  4.4 **MUST** handle `SIGINT` (Ctrl+C) gracefully for long-running operations:
+
 - Perform cleanup (temporary files, locks).
 - Exit with status `130` (128 + `SIGINT` value 2).  
-**Rationale**: Prevents resource leaks and corrupted partial state; meets user expectations for interruption behavior.
+  **Rationale**: Prevents resource leaks and corrupted partial state; meets user expectations for interruption behavior.
 
-4.5 **MUST** avoid printing stack traces or debug dumps by default in user-facing modes; provide `--debug`, `--verbose`, or `-v` flags for diagnostics.  
-**Rationale**: Improves user experience and prevents accidental leakage of sensitive implementation details.
+  4.5 **MUST** avoid printing stack traces or debug dumps by default in user-facing modes; provide `--debug`, `--verbose`, or `-v` flags for diagnostics.  
+  **Rationale**: Improves user experience and prevents accidental leakage of sensitive implementation details.
 
-4.6 **MUST** ensure error messages are actionable:
+  4.6 **MUST** ensure error messages are actionable:
+
 - State what failed and why.
 - Include relevant context (file paths, values) where safe.
 - Suggest corrective action when possible.  
-**Rationale**: Reduces support burden and speeds recovery without requiring source code inspection.
+  **Rationale**: Reduces support burden and speeds recovery without requiring source code inspection.
 
 ### 5. Security and safety
 
@@ -153,25 +164,27 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: CLIs frequently process attacker-controlled strings in automation contexts; trust boundaries must be explicit.
 
 5.2 **MUST** prevent shell injection:
+
 - Never pass user input through shell interpreters (`system()`, `sh -c`, `eval`) unless unavoidable.
 - Prefer `execve`-family calls or safe APIs with argument arrays.
 - If shell use is required, strictly quote/escape input using language-specific utilities (e.g., `shlex.quote` in Python).  
-**Rationale**: Prevents remote code execution, data exfiltration, and privilege escalation.
+  **Rationale**: Prevents remote code execution, data exfiltration, and privilege escalation.
 
-5.3 **MUST** handle filesystem operations safely:
+  5.3 **MUST** handle filesystem operations safely:
+
 - Use atomic writes (write to temp file, `fsync`, then `rename`) for critical data.
 - Use secure temporary file creation (`mkstemp`, `tempfile` modules) with restrictive permissions (0600).
 - Canonicalize paths and validate against directory traversal (`../`, symlinks) when accessing user-provided paths.  
-**Rationale**: Prevents Time-of-Check to Time-of-Use (TOCTOU) race conditions, data corruption, and unauthorized file access.
+  **Rationale**: Prevents Time-of-Check to Time-of-Use (TOCTOU) race conditions, data corruption, and unauthorized file access.
 
-5.4 **MUST** accept secrets (passwords, API keys, tokens) only via environment variables, secure configuration files, or interactive `stdin` prompts (using `getpass` or equivalent), **never** via command-line arguments.  
-**Rationale**: Command-line arguments are visible to all users via `ps`, process monitors, and shell history; this prevents credential exposure.
+  5.4 **MUST** accept secrets (passwords, API keys, tokens) only via environment variables, secure configuration files, or interactive `stdin` prompts (using `getpass` or equivalent), **never** via command-line arguments.  
+  **Rationale**: Command-line arguments are visible to all users via `ps`, process monitors, and shell history; this prevents credential exposure.
 
-5.5 **MUST** redact secrets in logs, error messages, and debug output.  
-**Rationale**: CLI output is frequently captured in CI logs and shared; redaction prevents credential leakage.
+  5.5 **MUST** redact secrets in logs, error messages, and debug output.  
+  **Rationale**: CLI output is frequently captured in CI logs and shared; redaction prevents credential leakage.
 
-5.6 **SHOULD** implement "dry run" modes (`--dry-run`, `-n`) for destructive operations and provide clear descriptions of what would change.  
-**Rationale**: Reduces irreversible mistakes in production environments and automation.
+  5.6 **SHOULD** implement "dry run" modes (`--dry-run`, `-n`) for destructive operations and provide clear descriptions of what would change.  
+  **Rationale**: Reduces irreversible mistakes in production environments and automation.
 
 ### 6. Performance, streaming, and resource management
 
@@ -190,26 +203,29 @@ The following requirement levels are defined per RFC 2119:
 ### 7. Portability and environment
 
 7.1 **MUST** follow the **XDG Base Directory Specification**:
+
 - Config: `$XDG_CONFIG_HOME/<app>/` (fallback `~/.config/<app>/`).
 - Data: `$XDG_DATA_HOME/<app>/` (fallback `~/.local/share/<app>/`).
 - Cache: `$XDG_CACHE_HOME/<app>/` (fallback `~/.cache/<app>/`).  
-**Rationale**: Aligns with modern Unix conventions, keeps home directories tidy, and supports proper backup/ignore patterns.
+  **Rationale**: Aligns with modern Unix conventions, keeps home directories tidy, and supports proper backup/ignore patterns.
 
-7.2 **MUST** avoid non-portable assumptions:
+  7.2 **MUST** avoid non-portable assumptions:
+
 - File path separators (use libraries, not hardcoded `/`).
 - Line endings (handle CRLF gracefully where possible).
 - Locale/encoding (assume UTF-8 but handle invalid sequences gracefully).
 - Filesystem case sensitivity.  
-**Rationale**: POSIX-like systems differ materially (Linux vs. macOS vs. BSD); portability ensures broader utility.
+  **Rationale**: POSIX-like systems differ materially (Linux vs. macOS vs. BSD); portability ensures broader utility.
 
-7.3 **Shell scripts MUST**:
+  7.3 **Shell scripts MUST**:
+
 - Use `#!/bin/sh` for POSIX compliance or `#!/usr/bin/env bash` if Bash-specific features are required (documented).
 - Avoid Bashisms (`[[ ]]`, arrays, `source`, process substitution) in `sh` scripts.
 - Use safe quoting (`"$var"`) and check for undefined variables (`set -u` or equivalent).  
-**Rationale**: `/bin/sh` may be `dash`, `ash`, or `ksh` on various systems; Bashisms cause portability failures.
+  **Rationale**: `/bin/sh` may be `dash`, `ash`, or `ksh` on various systems; Bashisms cause portability failures.
 
-7.4 **SHOULD** respect locale environment variables (`LC_ALL`, `LC_CTYPE`, `LANG`) for human-facing output (dates, sorting), but keep machine-readable modes locale-invariant.  
-**Rationale**: Human usability without breaking automation that depends on consistent formatting.
+  7.4 **SHOULD** respect locale environment variables (`LC_ALL`, `LC_CTYPE`, `LANG`) for human-facing output (dates, sorting), but keep machine-readable modes locale-invariant.  
+  **Rationale**: Human usability without breaking automation that depends on consistent formatting.
 
 ### 8. Configuration and environment variables
 
@@ -228,32 +244,35 @@ The following requirement levels are defined per RFC 2119:
 **Rationale**: Fast, deterministic tests that don't require subprocess overhead.
 
 9.2 **MUST** include integration tests that execute the compiled/binary CLI as a subprocess, asserting:
+
 - Correct stdout/stderr separation.
 - Specific exit codes for success and failure modes.
 - Stable machine-readable output formats.  
-**Rationale**: Verifies the actual user-visible contract, including argument parsing and stream handling.
+  **Rationale**: Verifies the actual user-visible contract, including argument parsing and stream handling.
 
-9.3 **SHOULD** include "golden" tests for `--help` output and complex formatting to ensure stability.  
-**Rationale**: Prevents accidental changes to user-facing documentation and output formats.
+  9.3 **SHOULD** include "golden" tests for `--help` output and complex formatting to ensure stability.  
+  **Rationale**: Prevents accidental changes to user-facing documentation and output formats.
 
 ### 10. Documentation and help text
 
 10.1 **MUST** make `--help` output complete and accurate:
+
 - Usage synopsis.
 - Description of commands and options.
 - Examples for common tasks.
 - Notes on stdin/stdout behavior and exit codes.  
-**Rationale**: Users should not need the source code or internet access to use the tool safely.
+  **Rationale**: Users should not need the source code or internet access to use the tool safely.
 
-10.2 **SHOULD** provide a man page (troff format) or comprehensive `README.md` including:
+  10.2 **SHOULD** provide a man page (troff format) or comprehensive `README.md` including:
+
 - Installation instructions.
 - Quick start examples.
 - Security notes for risky options.
 - Configuration and environment variable reference.  
-**Rationale**: Supports adoption, reduces operational risk, and aligns with Unix documentation conventions.
+  **Rationale**: Supports adoption, reduces operational risk, and aligns with Unix documentation conventions.
 
-10.3 **MUST** include inline documentation (docstrings/comments) for public functions explaining purpose, parameters, return values, and exceptions.  
-**Rationale**: Enables automated documentation generation and reduces onboarding friction for maintainers.
+  10.3 **MUST** include inline documentation (docstrings/comments) for public functions explaining purpose, parameters, return values, and exceptions.  
+  **Rationale**: Enables automated documentation generation and reduces onboarding friction for maintainers.
 
 ### 11. Code quality and automation
 
@@ -289,7 +308,7 @@ The following requirement levels are defined per RFC 2119:
 
 1. Output sections in this order:
    - **Summary** (1–3 bullets of high-level assessment).
-   - **Blocking issues (MUST violations)**: Each includes *what*, *why (rationale)*, and a concrete fix.
+   - **Blocking issues (MUST violations)**: Each includes _what_, _why (rationale)_, and a concrete fix.
    - **Needs justification (SHOULD violations)**: Deviations and what justification would be acceptable.
    - **Optional improvements (MAY)**.
    - **Proposed patch** as a unified diff when feasible.
@@ -297,12 +316,14 @@ The following requirement levels are defined per RFC 2119:
 2. Format violations as:
    ```markdown
    ### [Section X.Y] Standard Name
+
    - **Violation**: Description
    - **Location**: File:Line or function name
    - **Fix**: Corrected code or diff
    ```
 
 **When constraints conflict:**
+
 - Prefer: POSIX portability > security > stdout/stderr correctness > stable CLI contract > performance.
 - If user demands behavior violating a **MUST**, explicitly flag the violation and propose a compliant alternative.
 
@@ -327,7 +348,9 @@ Critical **MUST** items for quick validation:
 ### Appendix C: Examples
 
 #### C.1 stdout vs stderr separation
+
 **Non-compliant** (breaks pipes):
+
 ```python
 # Error goes to stdout, corrupting data stream
 print("ERROR: File not found")
@@ -335,6 +358,7 @@ sys.exit(1)
 ```
 
 **Compliant**:
+
 ```python
 import sys
 
@@ -347,7 +371,9 @@ sys.exit(1)
 ```
 
 #### C.2 Exit codes and signal handling
+
 **Non-compliant** (returns 0 on error, no SIGINT handling):
+
 ```python
 if bad_args:
     print("bad args")
@@ -355,6 +381,7 @@ if bad_args:
 ```
 
 **Compliant**:
+
 ```python
 import sys
 import signal
@@ -371,12 +398,15 @@ if bad_args:
 ```
 
 #### C.3 Shell safety (POSIX `sh`)
+
 **Non-compliant** (word-splitting, injection risk):
+
 ```sh
 rm -rf $TARGET  # Unquoted, unvalidated
 ```
 
 **Compliant**:
+
 ```sh
 #!/bin/sh
 # Validate before destructive action
@@ -391,13 +421,16 @@ rm -rf -- "$TARGET"
 ```
 
 #### C.4 Machine-readable mode stability
+
 **Non-compliant** (mixing human text with JSON):
+
 ```python
 print("Loading data...")  # Goes to stdout, breaks JSON parsing
 print(json.dumps(data))
 ```
 
 **Compliant**:
+
 ```python
 import sys
 import json
@@ -411,7 +444,9 @@ print()  # Ensure trailing newline
 ```
 
 #### C.5 Secrets handling
+
 **Non-compliant** (exposure via ps):
+
 ```python
 parser.add_argument("--password", required=True)
 args = parser.parse_args()
@@ -419,6 +454,7 @@ args = parser.parse_args()
 ```
 
 **Compliant**:
+
 ```python
 import os
 import getpass
@@ -431,13 +467,16 @@ if not api_key:
 ```
 
 #### C.6 Atomic file writes
+
 **Non-compliant** (risk of corruption):
+
 ```python
 with open("config.json", "w") as f:
     f.write(json.dumps(data))  # If killed here, file is empty/truncated
 ```
 
 **Compliant**:
+
 ```python
 import tempfile
 import os

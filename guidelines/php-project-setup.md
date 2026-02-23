@@ -4,6 +4,7 @@ description: Guidelines document for PHP project setup
 version: 1.0.1
 modified: 2026-02-22
 ---
+
 # PHP Project Setup Guide
 
 **Target versions:** PHP 8.3+, Composer 2.6+, PHPUnit 10+, PHPStan 1.10+  
@@ -30,13 +31,13 @@ modified: 2026-02-22
 
 Use this decision matrix to determine which template applies to your use case:
 
-| Scenario | Template | Entry point | Framework |
-|----------|----------|-------------|-----------|
-| Reusable Composer package | [Library](#3-template-a-php-library) | None | None |
-| Simple HTTP API or website | [Vanilla Web](#4-template-b-vanilla-php-web-application) | `public/index.php` | None |
-| Command-line tool or worker | [Vanilla CLI](#5-template-c-vanilla-php-cli-application) | `bin/console` | None |
-| Custom framework with selected components | [Symfony Components](#6-template-d-symfony-components-project) | `public/index.php` or `bin/console` | Partial |
-| Full-featured web application or API | [Full Symfony](#7-template-e-full-symfony-framework-application) | `public/index.php` + `bin/console` | Full Symfony 6.4+ |
+| Scenario                                  | Template                                                         | Entry point                         | Framework         |
+| ----------------------------------------- | ---------------------------------------------------------------- | ----------------------------------- | ----------------- |
+| Reusable Composer package                 | [Library](#3-template-a-php-library)                             | None                                | None              |
+| Simple HTTP API or website                | [Vanilla Web](#4-template-b-vanilla-php-web-application)         | `public/index.php`                  | None              |
+| Command-line tool or worker               | [Vanilla CLI](#5-template-c-vanilla-php-cli-application)         | `bin/console`                       | None              |
+| Custom framework with selected components | [Symfony Components](#6-template-d-symfony-components-project)   | `public/index.php` or `bin/console` | Partial           |
+| Full-featured web application or API      | [Full Symfony](#7-template-e-full-symfony-framework-application) | `public/index.php` + `bin/console`  | Full Symfony 6.4+ |
 
 > **NOTE:** All templates assume PHP 8.3 or later with strict typing enabled.
 
@@ -151,11 +152,7 @@ Create `composer.json` with common automation scripts:
     "test:unit": "phpunit --testsuite=Unit",
     "test:integration": "phpunit --testsuite=Integration",
     "audit": "composer audit",
-    "qa": [
-      "@cs:check",
-      "@stan",
-      "@test"
-    ]
+    "qa": ["@cs:check", "@stan", "@test"]
   },
   "config": {
     "sort-packages": true,
@@ -759,7 +756,7 @@ final class ComponentKernel
 
         try {
             $parameters = $matcher->match($request->getPathInfo());
-            
+
             return match ($parameters['_controller']) {
                 'health' => new Response('OK', 200, ['Content-Type' => 'text/plain']),
                 default => new Response('Not Found', 404),
@@ -986,11 +983,7 @@ Add to `composer.json`:
     "test:unit": "bin/phpunit --testsuite=Unit",
     "test:integration": "bin/phpunit --testsuite=Integration",
     "test:functional": "bin/phpunit --testsuite=Functional",
-    "qa": [
-      "@cs:check",
-      "@stan",
-      "@test"
-    ]
+    "qa": ["@cs:check", "@stan", "@test"]
   }
 }
 ```
@@ -1189,7 +1182,7 @@ docs/
 
 ### 9.1 `README.md` template
 
-```markdown
+````markdown
 # Project Name
 
 Brief description of the project.
@@ -1204,6 +1197,7 @@ Brief description of the project.
 ```bash
 composer install
 ```
+````
 
 ## Quality assurance
 
@@ -1214,7 +1208,8 @@ composer qa
 ## Documentation
 
 See `docs/index.md` for complete documentation.
-```
+
+````
 
 ### 9.2 `docs/index.md` template
 
@@ -1240,7 +1235,7 @@ last_updated: 2026-02-08
 ## Explanation
 - [Architecture overview](architecture.md)
 - [Architecture Decision Records](adr/)
-```
+````
 
 ---
 
@@ -1337,6 +1332,7 @@ You now have complete setup instructions for:
 5. **Full Symfony Applications** — Production-ready web apps with complete tooling
 
 All templates enforce:
+
 - **PHP 8.3+** with `declare(strict_types=1);`
 - **PSR-4 autoloading** and **PSR-12 coding standards**
 - **PHPStan level 8+** static analysis
@@ -1345,6 +1341,7 @@ All templates enforce:
 - **Security best practices** (no committed secrets, input validation)
 
 **Next steps:**
+
 1. Select your project type from the decision matrix
 2. Apply the corresponding template configuration
 3. Run `composer install` and `composer qa`

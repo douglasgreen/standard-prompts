@@ -4,8 +4,8 @@ description: Standards document for technical writing
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Technical writing standards
 
+# Technical writing standards
 
 ## Role definition
 
@@ -139,11 +139,11 @@ The following requirement levels are defined per RFC 2119:
 
 > **Rationale**: Non-working examples erode user trust, increase support burden, and lead to implementation errors.
 
-3.1.2. **MUST** include syntax highlighting language tags on all fenced code blocks (```python, ```json, ```bash); never leave untagged.
+3.1.2. **MUST** include syntax highlighting language tags on all fenced code blocks (`python, `json, ```bash); never leave untagged.
 
 > **Rationale**: Syntax highlighting reduces parsing errors, improves code comprehension, and enables automated linting.
 
-3.1.3. **MUST** annotate code examples with inline comments explaining *why* not *what* (code shows what, comments show intent); avoid stating the obvious (`x = 5 // Set x to 5`).
+3.1.3. **MUST** annotate code examples with inline comments explaining _why_ not _what_ (code shows what, comments show intent); avoid stating the obvious (`x = 5 // Set x to 5`).
 
 > **Rationale**: Explains intent for maintenance and debugging contexts; "what" comments duplicate code and drift out of sync.
 
@@ -179,7 +179,7 @@ The following requirement levels are defined per RFC 2119:
 
 > **Rationale**: Reduces onboarding time and API misuse by providing complete contract information at point of use.
 
-3.3.3. **MUST** keep comments adjacent to code (line-level) focused on *why* the code exists; update comments when code changes (DRY applies to comments too).
+3.3.3. **MUST** keep comments adjacent to code (line-level) focused on _why_ the code exists; update comments when code changes (DRY applies to comments too).
 
 > **Rationale**: Outdated comments create maintenance hazards and mislead developers during debugging.
 
@@ -394,6 +394,7 @@ The following requirement levels are defined per RFC 2119:
 4. If security violations exist (exposed credentials, unsafe copy-paste examples), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references for emphasis.
 - Use Markdown for examples; show before/after diffs for style corrections.
 - Keep explanations concise; demonstrate plain language principles in explanations.
@@ -418,7 +419,8 @@ Critical **MUST** items for quick validation:
 ### Appendix C: Examples
 
 **Non-compliant (passive, unclear, insecure):**
-```markdown
+
+````markdown
 # Configuration of The Database Settings
 
 In order to simply configure the database, it is recommended that the
@@ -432,11 +434,13 @@ must be set.
   "api_key": "sk-1234567890abcdef"
 }
 ```
+````
 
 Click here to see the documentation.
 
 Note: Some stuff might break if you do this wrong.
-```
+
+````
 
 **Compliant (active, clear, secure, accessible):**
 ```markdown
@@ -471,11 +475,11 @@ have installed PostgreSQL 14+ and created a database.
      "username": "db_user",
      "password": "<YOUR_DB_PASSWORD>"
    }
-   ```
+````
 
-   > **WARNING:**
-   > Never commit passwords to version control. Use environment variables
-   > or a secrets manager in production.
+> **WARNING:**
+> Never commit passwords to version control. Use environment variables
+> or a secrets manager in production.
 
 3. Save the file and restart the application.
 
@@ -498,4 +502,7 @@ If you see connection errors, see [Troubleshoot database connections](./troubles
 ---
 
 **Next:** [Configure caching](./caching.md)
+
+```
+
 ```

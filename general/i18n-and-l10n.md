@@ -4,8 +4,8 @@ description: Standards document for internationalization and localization
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Internationalization and localization engineering standards
 
+# Internationalization and localization engineering standards
 
 ## Role definition
 
@@ -39,6 +39,7 @@ These standards apply to code targeting the following minimum versions unless ex
 ### Context
 
 Applies to:
+
 - Full-stack web applications (SPA, SSR, static sites)
 - RESTful and GraphQL APIs serving multi-locale clients
 - Mobile applications (iOS/Android) and desktop cross-platform applications
@@ -76,6 +77,7 @@ Applies to:
 #### 1.2 Message Identity and Organization
 
 **1.2.1** Applications **MUST** choose exactly one message identity strategy per codebase and document it:
+
 - **Key-based** hierarchical identifiers (`checkout.total.label`)
 - **ID-based** stable identifiers (hashed or explicit `id`)
 - **Source-as-key** (only for small applications; must support extraction and versioning)
@@ -83,6 +85,7 @@ Applies to:
 > **Rationale**: Stable IDs reduce churn, enable translation memory reuse, prevent broken references during refactors, and simplify tooling integration.
 
 **1.2.2** Resource bundles **MUST** follow standard directory conventions:
+
 - Java: `src/main/resources/messages_[locale].properties`
 - Python (gettext): `locale/[locale]/LC_MESSAGES/messages.po`
 - JavaScript/TypeScript: `public/locales/[locale]/[namespace].json` or `src/i18n/[locale].json`
@@ -105,6 +108,7 @@ Applies to:
 #### 2.2 Negotiation Strategy
 
 **2.2.1** Applications **MUST** implement deterministic locale resolution with the following priority order:
+
 1. User's explicit preference (stored profile/session)
 2. URL parameter or subdomain (`?lang=fr`, `fr.example.com`)
 3. HTTP `Accept-Language` header
@@ -320,6 +324,7 @@ Applies to:
 > **Rationale**: Invalid ICU syntax causes runtime crashes; missing placeholders break messages in production.
 
 **10.3** Projects **SHOULD** enforce i18n-specific linting rules:
+
 - **JavaScript/TypeScript**: ESLint with `eslint-plugin-i18next` or `formatjs` rules to detect hardcoded strings
 - **Python**: `pylint` with i18n extensions or `bandit` for security
 - **PHP**: PHP_CodeSniffer with i18n sniffs (PSR-12 compliance)
@@ -331,6 +336,7 @@ Applies to:
 ### Appendix A: Application Instructions
 
 **When generating new code:**
+
 1. Identify all user-facing strings, dates, numbers, and currencies in requirements.
 2. Implement centralized i18n service/hook with BCP 47 locale support.
 3. Externalize strings immediately using hierarchical keys; never hardcode.
@@ -341,6 +347,7 @@ Applies to:
 8. Include pseudo-localization test coverage in the testing strategy.
 
 **When reviewing existing code:**
+
 1. Scan for hardcoded string literals in UI components, error messages, and logs.
 2. Verify locale negotiation logic follows priority order (user prefs > URL > headers > default).
 3. Check that dates/numbers use `Intl` or equivalent, not manual formatting.
@@ -354,6 +361,7 @@ Applies to:
    - **Test Recommendations**
 
 **Response formatting:**
+
 - Use concise bullet points and checklists.
 - Provide code diffs for fixes.
 - Bold **MUST**, **SHOULD**, and **MAY** references.
@@ -481,37 +489,40 @@ jobs:
 #### D.1 String Externalization and ICU MessageFormat
 
 **Non-Compliant** (Concatenation, hardcoded, no plural support):
+
 ```javascript
 function MessageCount({ count }) {
   // Violates: No concatenation, must use ICU, must externalize
-  return <div>You have {count} new message{count !== 1 ? 's' : ''}</div>;
+  return (
+    <div>
+      You have {count} new message{count !== 1 ? 's' : ''}
+    </div>
+  );
 }
 ```
 
 **Compliant**:
+
 ```javascript
 import { FormattedMessage } from 'react-intl';
 
 function MessageCount({ count }) {
   // messages.json: "new_messages": "You have {count, plural, one {# new message} other {# new messages}}"
-  return (
-    <FormattedMessage 
-      id="inbox.new_messages" 
-      values={{ count }} 
-    />
-  );
+  return <FormattedMessage id="inbox.new_messages" values={{ count }} />;
 }
 ```
 
 #### D.2 Date Formatting
 
 **Non-Compliant** (Hardcoded format, no timezone):
+
 ```python
 # Violates: Hardcoded format, not locale-aware
 return f"{date.month}/{date.day}/{date.year}"
 ```
 
 **Compliant**:
+
 ```python
 from babel.dates import format_date
 from datetime import datetime
@@ -526,17 +537,19 @@ def format_order_date(date_obj: datetime, locale: str) -> str:
 #### D.3 Currency Handling
 
 **Non-Compliant** (Assumes USD, manual formatting):
+
 ```javascript
 // Violates: Assumes $ means USD, manual decimals
 const price = `$${amount.toFixed(2)}`;
 ```
 
 **Compliant**:
+
 ```javascript
 const price = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
-  currency: 'EUR',  // ISO 4217 code from data model
-  currencyDisplay: 'symbol'
+  currency: 'EUR', // ISO 4217 code from data model
+  currencyDisplay: 'symbol',
 }).format(amount);
 // Output: "1 234,56 €" (non-breaking space, comma decimal)
 ```
@@ -544,6 +557,7 @@ const price = new Intl.NumberFormat('fr-FR', {
 #### D.4 Bidirectional Text Support
 
 **Non-Compliant** (Physical CSS, no isolation):
+
 ```css
 /* Violates: Physical directions break RTL */
 .username {
@@ -553,40 +567,43 @@ const price = new Intl.NumberFormat('fr-FR', {
 ```
 
 **Compliant**:
+
 ```css
 .username {
-  margin-inline-start: 10px;  /* Adapts to LTR/RTL */
+  margin-inline-start: 10px; /* Adapts to LTR/RTL */
   text-align: start;
-  unicode-bidi: isolate;      /* Prevents spillover */
+  unicode-bidi: isolate; /* Prevents spillover */
 }
 ```
 
 ```html
 <!-- Violates: No direction attribute -->
 <html>
-  
-<!-- Compliant -->
-<html lang="ar" dir="rtl">
-  <body>
-    <p>مرحبا <span dir="ltr" class="username">John</span></p>
-  </body>
+  <!-- Compliant -->
+  <html lang="ar" dir="rtl">
+    <body>
+      <p>مرحبا <span dir="ltr" class="username">John</span></p>
+    </body>
+  </html>
 </html>
 ```
 
 #### D.5 Locale Negotiation
 
 **Non-Compliant** (Silent mutation, no fallback):
+
 ```javascript
 // Violates: Silent mutation, no explicit fallback
 const locale = user.locale || 'en';
 ```
 
 **Compliant**:
+
 ```typescript
 function negotiateLocale(
-  requested: string[], 
-  supported: string[], 
-  defaultLocale: string
+  requested: string[],
+  supported: string[],
+  defaultLocale: string,
 ): { locale: string; fallbackChain: string[] } {
   // BCP 47 matching with CLDR parent fallback
   for (const tag of requested) {

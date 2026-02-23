@@ -4,8 +4,8 @@ description: Standards document for software upgrade management
 version: 1.0.1
 modified: 2026-02-22
 ---
-# Software upgrade management and engineering standards
 
+# Software upgrade management and engineering standards
 
 ## Role definition
 
@@ -37,6 +37,7 @@ This document uses requirement level keywords as defined in RFC 2119:
 ### Context
 
 These standards apply to:
+
 - Enterprise application upgrade lifecycle management for web applications and RESTful APIs.
 - Library and framework version transitions within shared code ecosystems.
 - Dependency management and vulnerability remediation workflows.
@@ -45,6 +46,7 @@ These standards apply to:
 ### Exclusions
 
 This document explicitly excludes:
+
 - Initial greenfield project setup (reference separate Architecture Standards).
 - Database schema migration strategies (reference Database Standards).
 - Infrastructure-as-Code configuration (reference DevOps Standards).
@@ -93,7 +95,7 @@ This document explicitly excludes:
 
 #### 2.1 Combined upgrade methodology
 
-2.1.1. When performing major version upgrades (e.g., to PHP 8.4), you **SHOULD** combine compatibility fixes with feature adoption from the *previous* minor version (e.g., PHP 8.3 features) in a single pass.
+2.1.1. When performing major version upgrades (e.g., to PHP 8.4), you **SHOULD** combine compatibility fixes with feature adoption from the _previous_ minor version (e.g., PHP 8.3 features) in a single pass.
 
 > **Rationale**: Optimizes engineering time by avoiding redundant code reviews, balancing necessity (compatibility) with incremental value (features) without delaying delivery.
 
@@ -180,6 +182,7 @@ This document explicitly excludes:
 #### 5.2 Automated updates
 
 5.2.1. Renovate or Dependabot **MUST** be enabled with the following configuration:
+
 - One merge request per dependency for granular review.
 - Security patches grouped separately with `security` label.
 - Auto-merge enabled **ONLY** for patch versions when CI passes.
@@ -211,12 +214,12 @@ This document explicitly excludes:
 
 6.2.1. Vulnerability response times **MUST** adhere to the following Service Level Agreement:
 
-| Severity | Public-Facing Apps | Internal Apps | Response Action |
-|----------|-------------------|---------------|-----------------|
-| **CRITICAL** | 24 hours | 72 hours | Emergency patch deployment |
-| **HIGH** | 48 hours | 7 days | Scheduled patch window |
-| **MEDIUM** | 30 days | Next quarter | Include in upgrade batch |
-| **LOW** | Next major upgrade | Backlog | Monitor for severity escalation |
+| Severity     | Public-Facing Apps | Internal Apps | Response Action                 |
+| ------------ | ------------------ | ------------- | ------------------------------- |
+| **CRITICAL** | 24 hours           | 72 hours      | Emergency patch deployment      |
+| **HIGH**     | 48 hours           | 7 days        | Scheduled patch window          |
+| **MEDIUM**   | 30 days            | Next quarter  | Include in upgrade batch        |
+| **LOW**      | Next major upgrade | Backlog       | Monitor for severity escalation |
 
 > **Rationale**: Aligns with NIST SP 800-40r4 risk-based patching prioritization; public-facing systems are high-value attack surface targets requiring immediate attention.
 
@@ -311,6 +314,7 @@ This document explicitly excludes:
 4. If security violations exist (exposed credentials, unsafe copy-paste examples), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references for emphasis.
 - Use Markdown for examples; show before/after diffs for corrections.
 - Keep explanations concise; demonstrate plain language principles.
@@ -338,6 +342,7 @@ Critical **MUST** items for quick validation:
 #### C.1 Non-compliant vs. compliant PHP upgrade process
 
 **Non-compliant** (Skipping versions, no automation):
+
 ```php
 // Direct jump to 8.4 without incremental migration
 // Violates Section 1.1.2 (no skipping) and 2.2.1 (no Rector)
@@ -354,6 +359,7 @@ function legacyProcess($data) {
 ```
 
 **Compliant** (Following standards):
+
 ```php
 <?php
 
@@ -383,6 +389,7 @@ final class DataProcessor
 #### C.2 Dependency constraint compliance
 
 **Non-compliant** (Application using loose constraints):
+
 ```json
 {
   "name": "company/application",
@@ -392,9 +399,11 @@ final class DataProcessor
   }
 }
 ```
-*Violates Section 5.1.1 (applications must pin versions).*
+
+_Violates Section 5.1.1 (applications must pin versions)._
 
 **Compliant** (Application with lockfile enforcement):
+
 ```json
 {
   "name": "company/application",
@@ -409,11 +418,13 @@ final class DataProcessor
   }
 }
 ```
-*Compliant with Section 5.1.1 (exact pinning) and 5.1.2 (platform config).*
+
+_Compliant with Section 5.1.1 (exact pinning) and 5.1.2 (platform config)._
 
 #### C.3 Incremental Rector application
 
 **Non-compliant** (Single commit with mixed concerns):
+
 ```bash
 # Violates Section 2.2.2 (incremental application)
 rector process --set php84 --set type-declaration --set dead-code
@@ -421,6 +432,7 @@ git commit -m "Various fixes"
 ```
 
 **Compliant** (Atomic commits per standard):
+
 ```bash
 # Step 1: Version compatibility only
 rector process --set php84

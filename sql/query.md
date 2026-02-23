@@ -4,8 +4,8 @@ description: Standards document for SQL query development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# SQL query writing and administration standards
 
+# SQL query writing and administration standards
 
 ## Role definition
 
@@ -22,9 +22,11 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Oracle 19c+, SQLite 3.30+, BigQuery, Snowflake) unless specified otherwise. Default to **portable ANSI/ISO SQL** when dialect is unspecified.
 
 ### Context
+
 - Data manipulation and query writing (DML: SELECT, INSERT, UPDATE, DELETE)
 - Stored procedures, functions, and trigger implementations (bodies)
 - Query optimization and performance tuning
@@ -32,6 +34,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 - Database administration and maintenance scripts
 
 ### Exclusions
+
 - Schema design and DDL (CREATE TABLE, ALTER TABLE, index creation strategy)
 - Database migration management and versioning
 - Specific NoSQL database patterns
@@ -43,6 +46,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 ### 1. Core philosophy and architecture
 
 #### 1.1 SQL dialect and design principles
+
 1.1.1. **MUST** confirm the target SQL dialect before generating dialect-specific syntax. Default to **portable ANSI/ISO SQL** when unspecified.
 
 > **Rationale**: Dialect-specific syntax improves performance and feature utilization but reduces portability. Explicit confirmation prevents syntax errors when moving between database systems.
@@ -58,6 +62,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 1.1.4. **SHOULD** write SQL for humans first, optimizers second. Prioritize readability, then optimize when profiling proves it necessary.
 
 #### 1.2 Modularity in queries
+
 1.2.1. **MUST** avoid copy-pasted logic across queries; extract into views, CTEs, or deterministic functions.
 
 > **Rationale**: Copy-pasted logic increases the risk of inconsistencies and makes updates error-prone, violating the DRY principle.
@@ -70,9 +75,10 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 
 ### 2. Naming conventions for queries
 
-*All identifiers **MUST** use `snake_case` (lowercase with underscores).*
+_All identifiers **MUST** use `snake_case` (lowercase with underscores)._
 
 #### 2.1 Aliases and variables
+
 2.1.1. **Table aliases** — **MUST** be meaningful abbreviations (`users AS u`, `orders AS o`). Cryptic aliases (`t1`, `x9`, `a`, `b`) are **FORBIDDEN**.
 
 > **Rationale**: Meaningful aliases maintain context without verbosity. Single-letter aliases are acceptable only when they clearly represent the table (first letter or obvious abbreviation).
@@ -90,11 +96,8 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 **Automation mandate:** Formatting **MUST** be enforced by tooling, not manual inspection. Recommended tools: **SQLFluff** (preferred), `sqlfmt`, `pg_format`, or dialect-native formatters. A configuration file (e.g., `.sqlfluff`) **MUST** be committed to repository root.
 
 #### 3.1 Syntax rules
-3.1.1. **Capitalization**:
-    - SQL Keywords (`SELECT`, `FROM`, `WHERE`, `JOIN`) — **MUST** be `UPPERCASE`.
-    - Data Types (`INTEGER`, `VARCHAR`, `DECIMAL`) — **SHOULD** be `UPPERCASE`.
-    - Identifiers (tables, columns, aliases) — **MUST** be `snake_case` lowercase.
-    - Built-in Functions (`COUNT`, `COALESCE`, `SUM`) — **MUST** be `UPPERCASE`.
+
+3.1.1. **Capitalization**: - SQL Keywords (`SELECT`, `FROM`, `WHERE`, `JOIN`) — **MUST** be `UPPERCASE`. - Data Types (`INTEGER`, `VARCHAR`, `DECIMAL`) — **SHOULD** be `UPPERCASE`. - Identifiers (tables, columns, aliases) — **MUST** be `snake_case` lowercase. - Built-in Functions (`COUNT`, `COALESCE`, `SUM`) — **MUST** be `UPPERCASE`.
 
 > **Rationale**: Capitalization distinguishes SQL language keywords from user-defined identifiers, reducing parsing errors and improving readability.
 
@@ -107,6 +110,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 > **Rationale**: Semicolons explicitly terminate statements, preventing ambiguity in multi-statement scripts and ensuring compatibility across database systems.
 
 3.1.5. **Comma placement** — Leading commas **SHOULD** be used (consistent project-wide trailing is acceptable):
+
 ```sql
 SELECT
     c.customer_id
@@ -115,6 +119,7 @@ SELECT
 ```
 
 #### 3.2 Query structure
+
 3.2.1. **Alignment** — Each major clause (`SELECT`, `FROM`, `WHERE`, `GROUP BY`) **MUST** begin on its own line, left-aligned at the current scope.
 
 3.2.2. **JOINs** — **MUST** use explicit ANSI-92 syntax (`INNER JOIN`, `LEFT JOIN`). Implicit comma-joins in `FROM` or `WHERE` are **FORBIDDEN**. Always specify `INNER JOIN`, never bare `JOIN`. Join conditions **MUST** use `ON` clause, not `WHERE`.
@@ -130,11 +135,13 @@ SELECT
 > **Rationale**: `SELECT *` breaks when schema changes, retrieves unnecessary data increasing I/O, and obscures intended column usage. Explicit column lists document dependencies and improve performance.
 
 #### 3.3 Complex expressions
+
 3.3.1. **CTEs** — Use Common Table Expressions (`WITH` clauses) to decompose complex logic. Recursive CTEs **MUST** include termination conditions.
 
 > **Rationale**: CTEs improve readability by breaking complex queries into logical steps. Descriptive names document intent. Recursive CTEs without termination conditions create infinite loops and resource exhaustion.
 
 3.3.2. **CASE** — Format with each `WHEN`/`THEN` on its own line, indented:
+
 ```sql
 CASE
     WHEN status = 'active' THEN 'Active'
@@ -148,6 +155,7 @@ END AS status_label
 ### 4. Query writing and performance
 
 #### 4.1 Correctness and safety
+
 4.1.1. **Ordering** — Queries with `LIMIT`/`OFFSET` or `FETCH FIRST` **MUST** include explicit `ORDER BY` with a stable, unique tie-breaker (e.g., primary key).
 
 > **Rationale**: Without explicit ordering, result sets are non-deterministic (database-dependent). Pagination without ordering produces inconsistent page contents.
@@ -165,9 +173,8 @@ END AS status_label
 > **Rationale**: `UNION` incurs sort/distinct overhead to remove duplicates. `UNION ALL` is significantly faster when uniqueness is guaranteed by data or not required.
 
 #### 4.2 SARGability (Search-Argument Able)
-4.2.1. Predicates in `WHERE` clauses **MUST** be SARGable. Do not wrap indexed columns in functions.
-    - *Forbidden:* `WHERE YEAR(created_at) = 2024`
-    - *Required:* `WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01'`
+
+4.2.1. Predicates in `WHERE` clauses **MUST** be SARGable. Do not wrap indexed columns in functions. - _Forbidden:_ `WHERE YEAR(created_at) = 2024` - _Required:_ `WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01'`
 
 > **Rationale**: Non-SARGable predicates prevent index usage, forcing full table scans and severe performance degradation on large tables.
 
@@ -176,6 +183,7 @@ END AS status_label
 > **Rationale**: `EXISTS` short-circuits on first match; `IN` with correlated subqueries often executes the subquery for every row or creates inefficient execution plans.
 
 #### 4.3 Optimization patterns
+
 4.3.1. **Window functions** — Prefer window functions (`ROW_NUMBER`, `RANK`, `LAG`, `LEAD`) over self-joins. Reuse window specifications with `WINDOW` clause where supported.
 
 > **Rationale**: Window functions operate in a single table scan; self-joins multiply I/O. They simplify complex analytical queries and improve performance.
@@ -191,6 +199,7 @@ END AS status_label
 ### 5. Security and privacy
 
 #### 5.1 Injection prevention
+
 5.1.1. **Parameterization** — Dynamic values **MUST** be represented as parameterized placeholders (`?`, `$1`, `:name`, `%s`). String concatenation of user input into SQL is a **blocking violation**.
 
 > **Rationale**: String concatenation creates SQL injection vulnerabilities, allowing attackers to execute arbitrary SQL commands. Parameterization is the only reliable defense.
@@ -202,6 +211,7 @@ END AS status_label
 5.1.3. **Prepared statements** — **SHOULD** use prepared statements, stored procedures, or query builders to enforce parameterization.
 
 #### 5.2 Access control execution
+
 5.2.1. **Least privilege** — Application service accounts **MUST** have minimum permissions (read-only roles get `SELECT` only; writers get specific DML on specific tables, never DDL).
 
 > **Rationale**: Privilege escalation attacks exploit over-privileged accounts. Separation of read/write/DDL permissions limits blast radius of compromised credentials.
@@ -211,6 +221,7 @@ END AS status_label
 ### 6. Stored procedures, functions, and transactions
 
 #### 6.1 Modularity and design
+
 6.1.1. **Single purpose** — Procedures/functions **SHOULD** do one thing well. If exceeding 100 statements, refactor.
 
 6.1.2. **Determinism** — Functions **SHOULD** be deterministic and side-effect-free; mark `DETERMINISTIC`/`IMMUTABLE` where applicable.
@@ -222,6 +233,7 @@ END AS status_label
 > **Rationale**: Deep trigger chains create unpredictable execution order, complex debugging scenarios, and performance degradation. Explicit documentation prevents maintenance errors.
 
 #### 6.2 Error handling
+
 6.2.1. **Error handling** — **MUST** use structured error handling (`TRY...CATCH`, `EXCEPTION` blocks, `DECLARE HANDLER`). Handlers **MUST** log errors and re-raise; **MUST NOT** swallow exceptions silently.
 
 > **Rationale**: Silent exception swallowing hides errors, causing data corruption and making debugging impossible. Logging provides audit trails for failures.
@@ -229,6 +241,7 @@ END AS status_label
 6.2.2. **SQLSTATE** — Use ISO SQLSTATE codes for portable error classification where possible.
 
 #### 6.3 Transaction control
+
 6.3.1. **Atomicity** — Multi-step DML **MUST** be wrapped in explicit transactions (`BEGIN` ... `COMMIT`/`ROLLBACK`).
 
 > **Rationale**: Explicit transactions ensure ACID compliance; partial commits leave databases in inconsistent states during failures.
@@ -251,7 +264,7 @@ END AS status_label
 
 ### 8. Accessibility and inclusive design
 
-*Although SQL is backend code, the data it serves powers accessible user interfaces.*
+_Although SQL is backend code, the data it serves powers accessible user interfaces._
 
 8.1. **Semantic data** — Queries feeding UI tables **SHOULD** return semantic column names mapping to accessible headers, not cryptic codes.
 
@@ -276,6 +289,7 @@ END AS status_label
 ### Appendix A: Application instructions
 
 **When generating SQL queries:**
+
 1. Confirm target dialect (or default to ANSI SQL).
 2. Silently apply **ALL** standards above.
 3. Start with a short "Assumptions" list (dialect, schema, constraints).
@@ -285,20 +299,22 @@ END AS status_label
 7. Provide notes on performance and security implications.
 
 **When reviewing SQL:**
+
 1. Parse code against **MUST** and **SHOULD** rules.
 2. Produce a **Compliance Report** formatted as:
 
-| Category | Rule (Section) | Severity | Status | Finding | Suggested Fix |
-|:---|:---|:---:|:---:|:---|:---|
-| Security | §5.1.1 Parameterization | **MUST** | 🔴 FAIL | String concatenation detected in WHERE clause. | Use parameterized placeholder `$1`. |
-| Performance | §4.2.1 SARGability | **SHOULD** | 🟡 WARN | Function applied to indexed column `YEAR(created_at)`. | Rewrite as range check: `created_at >= '2024-01-01' AND created_at < '2025-01-01'`. |
-| Style | §3.1.1 Capitalization | **MUST** | 🟢 PASS | — | — |
+| Category    | Rule (Section)          |  Severity  | Status  | Finding                                                | Suggested Fix                                                                       |
+| :---------- | :---------------------- | :--------: | :-----: | :----------------------------------------------------- | :---------------------------------------------------------------------------------- |
+| Security    | §5.1.1 Parameterization |  **MUST**  | 🔴 FAIL | String concatenation detected in WHERE clause.         | Use parameterized placeholder `$1`.                                                 |
+| Performance | §4.2.1 SARGability      | **SHOULD** | 🟡 WARN | Function applied to indexed column `YEAR(created_at)`. | Rewrite as range check: `created_at >= '2024-01-01' AND created_at < '2025-01-01'`. |
+| Style       | §3.1.1 Capitalization   |  **MUST**  | 🟢 PASS | —                                                      | —                                                                                   |
 
 3. Provide a **Summary**: "X of Y rules passed. Z blocking violations."
 4. Provide a **Refactored Version** of the SQL in a code block (or a `diff` for large scripts).
 5. Flag any **Must-violations** or **Should-violations** explicitly, explaining the tradeoff if justified.
 
 **When optimizing or explaining:**
+
 1. Request `EXPLAIN` plan and DDL if not provided.
 2. Identify violations against §4 (Performance) and §5 (Security).
 3. Reference specific standard sections (e.g., "per §4.2.1, this predicate is non-SARGable").
@@ -320,7 +336,9 @@ Critical **MUST** items for quick validation:
 ### Appendix C: Examples
 
 #### Example 1: Formatting, joins, and security
+
 **Non-compliant:**
+
 ```sql
 -- Violations: §3.1.1 (case), §3.2.2 (comma join), §3.2.4 (cryptic aliases), §3.2.5 (SELECT *), §5.1.1 (injection)
 select *
@@ -331,6 +349,7 @@ and u.Name like '%'+@Input+'%'
 ```
 
 **Compliant:**
+
 ```sql
 /* Assumptions: ANSI SQL; parameter :input provided by application layer */
 WITH year_bounds AS (
@@ -354,7 +373,9 @@ WHERE
 ```
 
 #### Example 2: Pagination and determinism
+
 **Non-compliant:**
+
 ```sql
 -- Violations: §4.1.1 (no ORDER BY), §4.1.3 (OFFSET on large set), §3.2.5 (SELECT *)
 SELECT *
@@ -363,6 +384,7 @@ LIMIT 50 OFFSET 10000;
 ```
 
 **Compliant (keyset pagination):**
+
 ```sql
 /* Assumptions: Cursor provides :last_created_at and :last_id from previous page */
 SELECT
@@ -378,7 +400,9 @@ FETCH FIRST 50 ROWS ONLY;
 ```
 
 #### Example 3: Stored procedure with error handling
+
 **Compliant:**
+
 ```sql
 CREATE OR REPLACE PROCEDURE sp_process_payment(
     p_order_id BIGINT,
@@ -407,7 +431,7 @@ BEGIN
     END IF;
 
     /* Process payment logic here... */
-    
+
 EXCEPTION
     WHEN OTHERS THEN
         /* Log error details then re-raise */

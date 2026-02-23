@@ -4,8 +4,8 @@ description: Standards document for Python programming
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Python engineering standards for consistent code generation and review
 
+# Python engineering standards for consistent code generation and review
 
 ## Role definition
 
@@ -22,18 +22,22 @@ The following requirement levels are defined per [RFC 2119](https://www.ietf.org
 ## Scope and limitations
 
 ### Target versions
+
 - **Python**: **3.12+** (leveraging PEP 695 type parameters, improved error messages, and performance enhancements).
 - **Packaging**: **PEP 621** project metadata via `pyproject.toml`; **PEP 517/518** build system.
 - **Type checking**: `mypy` (strict mode) or `pyright` (strict mode) with documented configuration.
 - **Datastores (if applicable)**: **PostgreSQL 15+**; **SQLAlchemy 2.0+** or equivalent modern ORM.
 
 ### Context
+
 These standards apply to:
+
 - Python libraries, services, and applications (CLI, batch, workers, REST/HTTP APIs, background jobs).
 - Web backends rendering HTML or returning JSON.
 - Production-quality code intended for collaboration, CI/CD, and long-term maintenance.
 
 ### Exclusions
+
 - Legacy Python (<3.12) migration guidance.
 - Frontend JavaScript/TypeScript, CSS frameworks, or HTML visual design systems (except accessibility requirements).
 - Vendor-specific deployment pipelines (exact CI vendor YAML, Kubernetes manifests), except for general 12-Factor principles.
@@ -45,6 +49,7 @@ These standards apply to:
 ### 1. Architecture and design
 
 #### 1.1 Separation of concerns
+
 **1.1.1.** Business logic **MUST** be isolated from transport layers (HTTP handlers, CLI parsers) and infrastructure (database adapters, external APIs).
 
 > **Rationale**: Prevents tight coupling, enables testing without external dependencies, and allows swapping frameworks or persistence layers without refactoring core logic.
@@ -58,6 +63,7 @@ These standards apply to:
 **1.1.4.** Package structure **MAY** follow Clean Architecture/Hexagonal patterns (`domain/`, `application/`, `infrastructure/`, `interfaces/`) for complex applications.
 
 #### 1.2 SOLID principles
+
 **1.2.1.** Classes **MUST** adhere to the Open/Closed Principle: open for extension (through composition or protocols), closed for modification.
 
 > **Rationale**: Prevents ripple effects from changes; new features shouldn't require modifying stable, tested code.
@@ -67,6 +73,7 @@ These standards apply to:
 **1.2.3.** Interfaces (protocols or abstract base classes) **SHOULD** be segregated so clients depend only on methods they use (Interface Segregation Principle).
 
 #### 1.3 12-Factor methodology (services)
+
 **1.3.1.** Configuration **MUST** be stored in environment variables (or equivalent injected config objects), never hardcoded in source code.
 
 > **Rationale**: Enables deployment across environments without code changes and prevents credential leakage in version control.
@@ -98,6 +105,7 @@ These standards apply to:
 ### 3. Syntax, style, and formatting (automation-first)
 
 #### 3.1 Automated formatting
+
 **3.1.1.** All Python code **MUST** be formatted using **Black** (or `ruff format` if explicitly documented) with a consistent line length (default 88 characters acceptable).
 
 > **Rationale**: Eliminates stylistic variance across tools and reviewers, reducing diff noise and cognitive load.
@@ -107,6 +115,7 @@ These standards apply to:
 > **Rationale**: Prevents a large class of defects and enforces consistency automatically without manual review overhead.
 
 #### 3.2 Naming and conventions
+
 **3.2.1.** Code **MUST** follow PEP 8 naming conventions: `snake_case` for functions/variables, `PascalCase` for classes, `UPPER_SNAKE_CASE` for constants.
 
 > **Rationale**: Shared conventions improve scan-ability and reduce review friction across Python ecosystems.
@@ -116,6 +125,7 @@ These standards apply to:
 **3.2.3.** Private members **MUST** be prefixed with a single underscore (`_private`); name mangling (double underscore) **SHOULD** be avoided except for preventing name clashes in inheritance.
 
 #### 3.3 Imports
+
 **3.3.1.** Imports **MUST** be organized into three groups separated by blank lines: standard library, third-party packages, and local application imports.
 
 > **Rationale**: Prevents namespace pollution and makes dependency tracking explicit.
@@ -125,6 +135,7 @@ These standards apply to:
 ### 4. Typing and interface contracts
 
 #### 4.1 Type annotations
+
 **4.1.1.** All public functions and methods **MUST** include type hints for parameters and return values.
 
 > **Rationale**: Enables static type checking to catch bugs before runtime, improves IDE autocomplete, and serves as inline documentation.
@@ -138,11 +149,13 @@ These standards apply to:
 **4.1.4.** Generic types **SHOULD** use PEP 695 syntax where supported (Python 3.12+).
 
 #### 4.2 Static analysis
+
 **4.2.1.** Code **MUST** pass strict type checking (`mypy --strict` or `pyright --strict`) with no errors in CI.
 
 > **Rationale**: Strict mode enforces comprehensive type coverage, maximizing bug detection and API contract reliability.
 
 #### 4.3 Data models
+
 **4.3.1.** Structured data **MUST** be modeled using `@dataclass(frozen=True)` for immutable value objects or **Pydantic** for validation at boundaries; raw dictionaries **MUST NOT** pass through multiple application layers.
 
 > **Rationale**: Dictionaries are unstructured and unsafe; explicit models ensure data integrity, validation, and IDE support.
@@ -150,6 +163,7 @@ These standards apply to:
 ### 5. Error handling, logging, and observability
 
 #### 5.1 Exception handling
+
 **5.1.1.** Bare `except:` clauses **MUST NOT** be used; exceptions **MUST** be caught specifically (e.g., `except ValueError:`).
 
 > **Rationale**: Bare catches mask `KeyboardInterrupt`, `SystemExit`, and unexpected failures, making debugging impossible and preventing graceful shutdown.
@@ -161,6 +175,7 @@ These standards apply to:
 **5.1.3.** Custom exceptions **MUST** inherit from `Exception` (or a project-specific base), not `BaseException`, and **SHOULD** be defined for domain-specific errors.
 
 #### 5.2 Logging
+
 **5.2.1.** Applications **MUST** use structured logging (JSON) or consistent key-value logging; ad-hoc `print` statements **MUST NOT** be used in production code.
 
 > **Rationale**: Enables queryable logs and reliable incident response in aggregation systems.
@@ -172,6 +187,7 @@ These standards apply to:
 **5.2.3.** Correlation IDs **SHOULD** be included in logs at service boundaries for distributed tracing.
 
 #### 5.3 Validation
+
 **5.3.1.** All external inputs (HTTP requests, CLI args, environment variables, file contents) **MUST** be validated at system boundaries using Pydantic, `attrs`, or explicit schema validation.
 
 > **Rationale**: Prevents injection attacks, type errors, and data corruption; fails fast with clear error messages.
@@ -179,6 +195,7 @@ These standards apply to:
 ### 6. Security
 
 #### 6.1 Secure defaults
+
 **6.1.1.** `eval`, `exec`, `pickle`, and unsafe YAML loading (`yaml.load` without `SafeLoader`) **MUST NOT** be used on untrusted data.
 
 > **Rationale**: These are common remote code execution (RCE) vectors.
@@ -190,11 +207,13 @@ These standards apply to:
 **6.1.3.** Passwords **MUST** be hashed using modern algorithms (Argon2id or bcrypt) with sufficient cost factors; plaintext storage **MUST NOT** occur.
 
 #### 6.2 Secrets management
+
 **6.2.1.** Secrets **MUST** be loaded from environment variables, secret managers (e.g., AWS Secrets Manager, HashiCorp Vault), or secure injection mechanisms; hardcoding secrets in source code **MUST NOT** occur.
 
 > **Rationale**: Hardcoded secrets are frequently leaked through version control and are difficult to rotate.
 
 #### 6.3 Web/API security (if applicable)
+
 **6.3.1.** Authentication and authorization **MUST** be enforced at boundaries; authorization **MUST** be verified for each protected resource action.
 
 > **Rationale**: Authentication without authorization is a common access control failure mode.
@@ -252,6 +271,7 @@ These standards apply to:
 ### 10. Testing strategy and quality gates
 
 **10.1.** Tests **MUST** be written using `pytest` (or documented equivalent) covering:
+
 - Core domain logic,
 - Boundary validation,
 - Error paths,
@@ -296,7 +316,9 @@ These standards apply to:
 ### Appendix A: Application instructions
 
 #### A.1 Generating new code
+
 When asked to generate code:
+
 1. Confirm target context (library vs. service, sync vs. async, data store choice).
 2. Provide a short file tree and the minimal set of files needed.
 3. Ensure implementations include:
@@ -309,7 +331,9 @@ When asked to generate code:
 4. Output commands to run formatting (`black`/`ruff format`), linting (`ruff check`), type checking (`mypy`), and tests (`pytest`).
 
 #### A.2 Reviewing existing code
+
 When reviewing code, output:
+
 1. **Summary**: 3–8 bullets of the most critical issues (BLOCKING vs. IMPORTANT).
 2. **Compliance checklist**: Mark each critical **MUST** item as ✅/❌/N/A.
 3. **Findings**: Grouped by category with:
@@ -319,6 +343,7 @@ When reviewing code, output:
 4. **Refactored code**: Provide corrected implementations for the highest-impact violations.
 
 **Response formatting**:
+
 - Use `diff` blocks for suggested changes.
 - Bold **MUST**/**SHOULD**/**MAY** references for emphasis.
 - Keep explanations concise; demonstrate plain language principles.
@@ -343,6 +368,7 @@ Critical **MUST** items for quick validation:
 #### C.1 Non-compliant vs. compliant: Dependency injection
 
 **Non-compliant** (hidden global dependency):
+
 ```python
 import requests
 
@@ -353,6 +379,7 @@ def get_user(user_id: str) -> dict:
 ```
 
 **Compliant** (injected dependency):
+
 ```python
 from typing import Protocol
 from dataclasses import dataclass
@@ -364,7 +391,7 @@ class HttpClient(Protocol):
 class UserService:
     http: HttpClient
     base_url: str
-    
+
     def get_user(self, user_id: str) -> dict:
         url = f"{self.base_url}/users/{user_id}"
         return self.http.get_json(url, timeout_s=5.0)
@@ -373,6 +400,7 @@ class UserService:
 #### C.2 Non-compliant vs. compliant: Error handling
 
 **Non-compliant** (bare except, no chaining):
+
 ```python
 def parse_age(value: str) -> int:
     try:
@@ -382,6 +410,7 @@ def parse_age(value: str) -> int:
 ```
 
 **Compliant**:
+
 ```python
 class ValidationError(ValueError):
     """Raised when input validation fails."""
@@ -391,7 +420,7 @@ def parse_age(value: str) -> int:
         age = int(value)
     except ValueError as e:
         raise ValidationError(f"Invalid age format: {value}") from e
-    
+
     if age < 0:
         raise ValidationError("Age must be non-negative")
     return age
@@ -400,6 +429,7 @@ def parse_age(value: str) -> int:
 #### C.3 Non-compliant vs. compliant: Type safety and validation
 
 **Non-compliant** (raw dict, no validation):
+
 ```python
 def create_user(data: dict) -> dict:
     # Violation: Raw dict, no type safety, no validation
@@ -408,6 +438,7 @@ def create_user(data: dict) -> dict:
 ```
 
 **Compliant** (Pydantic model, parameterized query):
+
 ```python
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import text
@@ -417,7 +448,7 @@ class UserCreate(BaseModel):
 
 def create_user(data: dict, session) -> UserCreate:
     validated = UserCreate(**data)  # Validation at boundary
-    
+
     # Parameterized query prevents injection
     result = session.execute(
         text("INSERT INTO users (email) VALUES (:email) RETURNING id"),

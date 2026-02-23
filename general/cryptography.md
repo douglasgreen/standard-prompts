@@ -4,8 +4,8 @@ description: Standards document for cryptography
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Cryptography engineering standards for LLM code generation and review
 
+# Cryptography engineering standards for LLM code generation and review
 
 ## Role definition
 
@@ -22,7 +22,9 @@ These requirement levels are defined per RFC 2119 for consistent interpretation:
 ## Scope and limitations
 
 ### Target versions
+
 Unless explicitly constrained by legacy interoperability requirements, assume the following minimum versions:
+
 - **Python**: 3.12+
 - **Node.js**: 20+ (LTS)
 - **TypeScript**: 5.3+
@@ -34,14 +36,18 @@ Unless explicitly constrained by legacy interoperability requirements, assume th
 - **TLS**: 1.2+ (TLS 1.3 preferred)
 
 ### Context
+
 These standards apply to application-layer cryptography including:
+
 - **Data in transit**: TLS configuration, certificate validation, token validation
 - **Data at rest**: Encryption, key wrapping, envelope encryption, backup protection
 - **Authentication artifacts**: Password hashing, session/token signing, API key derivation
 - **Cross-service protocols**: Message encryption/signing, key rotation, serialization
 
 ### Exclusions
+
 This document explicitly excludes:
+
 - Designing novel cryptographic algorithms or primitives (proprietary cipher design).
 - Formal cryptographic proofs or security reductions.
 - Hardware side-channel resistance beyond typical constant-time best practices (e.g., EM/power analysis, fault injection).
@@ -93,12 +99,14 @@ This document explicitly excludes:
 > **Rationale**: Subtle errors in custom constructions (e.g., nonce reuse in homemade CTR modes) lead to total confidentiality compromise.
 
 2.3 **MUST** use authenticated encryption with associated data (AEAD) for symmetric encryption:
+
 - Acceptable algorithms: AES-128-GCM, AES-256-GCM, or ChaCha20-Poly1305.
 - **MUST** use AAD for context binding (e.g., tenant ID, record type, protocol version).
 
 > **Rationale**: Unauthenticated encryption is vulnerable to tampering and padding oracle attacks. AEAD prevents "encrypt-then-forget-MAC" bugs in a single abstraction.
 
 2.4 **MUST NOT** use the following deprecated or unsafe algorithms:
+
 - ECB mode (electronic codebook).
 - CBC mode without an authentication layer (HMAC-SHA-256 or equivalent).
 - MD5, SHA-1 for security-critical operations (digital signatures, certificate validation).
@@ -108,12 +116,14 @@ This document explicitly excludes:
 > **Rationale**: These algorithms are broken, deprecated by NIST/IETF, or unsafe for modern security requirements.
 
 2.5 **MUST** use modern hash and MAC functions:
+
 - Hash: SHA-256, SHA-384, or SHA-512; SHA-3 where required.
 - MAC: HMAC-SHA-256 or HMAC-SHA-512; KMAC for SHA-3 contexts.
 
 > **Rationale**: These are widely standardized, supported, and resist known cryptanalytic attacks.
 
 2.6 **MUST** use password hashing designed for passwords:
+
 - **Preferred**: Argon2id (memory $\geq$ 64 MB, iterations $\geq$ 3, parallelism $\geq$ 4).
 - **Acceptable**: scrypt (N $\geq$ 2^14, r $\geq$ 8, p $\geq$ 1) or bcrypt (cost $\geq$ 12).
 - **Legacy only**: PBKDF2-HMAC-SHA-256 with $\geq$ 600,000 iterations (OWASP 2023 minimum).
@@ -121,6 +131,7 @@ This document explicitly excludes:
 > **Rationale**: General-purpose hash functions are inadequate against GPU/ASIC brute-force attacks. Password hashing must be memory-hard and tunable.
 
 2.7 **MUST** use modern asymmetric primitives:
+
 - Signatures: Ed25519 (preferred) or ECDSA with P-256/P-384.
 - Key exchange: X25519 or ECDH with P-256/P-384.
 - RSA **MAY** be used for compatibility; **MUST** use minimum 3072-bit keys with OAEP/PSS padding.
@@ -128,6 +139,7 @@ This document explicitly excludes:
 > **Rationale**: Modern curves reduce implementation footguns (e.g., nonce reuse in ECDSA) and offer better performance with equivalent security.
 
 2.8 **MUST** enforce strict token/JWT handling:
+
 - Explicitly allow only expected algorithms via allow-lists (never `alg: none`).
 - Validate issuer, audience, expiry, not-before, and key ID handling.
 - Use constant-time comparison for signature verification.
@@ -141,6 +153,7 @@ This document explicitly excludes:
 > **Rationale**: Weak randomness breaks encryption, signatures, and keys entirely. Non-cryptographic PRNGs are predictable and seed-recoverable.
 
 3.2 **MUST** ensure AEAD nonces/IVs meet scheme requirements:
+
 - Nonces **MUST** be unique per key or monotonic (counter-based with persistence).
 - Random nonces **MUST** use the full recommended size (96 bits for GCM, 192 bits for XChaCha20) and CSPRNG.
 
@@ -157,6 +170,7 @@ This document explicitly excludes:
 ### 4. Key management and lifecycle
 
 4.1 **MUST** define key roles and separation:
+
 - Separate keys for encryption vs. MAC vs. signing vs. derivation.
 - Separate keys per environment (dev/staging/prod) and per tenant where required.
 
@@ -167,6 +181,7 @@ This document explicitly excludes:
 > **Rationale**: Repository and CI/CD leaks are common; hardcoded keys persist indefinitely in git history and build artifacts.
 
 4.3 **MUST** implement a key rotation strategy:
+
 - Key IDs (KID) tracked in metadata.
 - New encryptions use the active key; old keys retained for decryption only.
 - Automated re-encryption of data to the new key within defined timeframes.
@@ -184,6 +199,7 @@ This document explicitly excludes:
 ### 5. Data formats, encoding, and interoperability
 
 5.1 **MUST** define a canonical payload format for encrypted blobs including:
+
 - Version identifier.
 - Algorithm identifier.
 - Nonce/IV.
@@ -195,6 +211,7 @@ This document explicitly excludes:
 > **Rationale**: Prevents ad-hoc formats that become unmaintainable, prone to parsing vulnerabilities, and inhibit rotation.
 
 5.2 **MUST** use unambiguous encoding:
+
 - Base64url for web tokens and URL-safe contexts.
 - Base64 for general blobs.
 - UTF-8 for all text encoding.
@@ -220,6 +237,7 @@ This document explicitly excludes:
 > **Rationale**: Information leakage through error messages enables oracle attacks and reconnaissance.
 
 6.3 **MUST NOT** log secrets or secret-derived materials:
+
 - Private keys, symmetric keys, shared secrets.
 - Plaintext sensitive data.
 - Password hashes, password reset tokens, full JWTs, session tokens.
@@ -262,6 +280,7 @@ This document explicitly excludes:
 ### 9. Dependency, supply chain, and configuration hygiene
 
 9.1 **MUST** pin and update dependencies responsibly:
+
 - Use lockfiles (`poetry.lock`, `package-lock.json`, `go.sum`, `Cargo.lock`).
 - Implement automated vulnerability scanning (Dependabot, Snyk, OWASP Dependency-Check) in CI.
 - Review cryptographic library updates within 48-72 hours for critical patches.
@@ -289,6 +308,7 @@ This document explicitly excludes:
 ### 11. Testing and verification
 
 11.1 **MUST** include tests covering:
+
 - Known-answer tests (KATs) / official test vectors for serialization and round-trips.
 - Failure-path tests (bad tag, wrong key, wrong AAD, expired token, malformed input).
 
@@ -309,6 +329,7 @@ This document explicitly excludes:
 ### 12. Documentation requirements
 
 12.1 **MUST** document public cryptographic APIs following the Diátaxis framework (tutorials, how-to guides, reference, explanation), including:
+
 - Purpose and threat model summary.
 - Inputs/outputs and encoding specifications.
 - Key ownership and storage requirements.
@@ -322,6 +343,7 @@ This document explicitly excludes:
 > **Rationale**: Anchors decisions to stable, auditable references and facilitates compliance verification.
 
 12.3 **MUST** ensure documentation of security-critical UX (authentication flows, MFA entry, error messages) meets WCAG 2.1 AA accessibility standards:
+
 - Do not rely on color alone for security state.
 - Provide actionable, non-leaking error messages.
 - Support screen readers for MFA/token entry fields.
@@ -331,6 +353,7 @@ This document explicitly excludes:
 ### 13. Language-specific coding conventions
 
 13.1 **MUST** follow language-specific mainstream standards and enforce via automation:
+
 - **Python**: PEP 8, `ruff`, `black`, `mypy --strict`.
 - **JavaScript/TypeScript**: ESLint with `@typescript-eslint`, Prettier.
 - **Java**: Standard conventions, Checkstyle, SpotBugs with security rules.
@@ -351,19 +374,22 @@ This document explicitly excludes:
 > **Rationale**: Cryptographic requirements are highly context-dependent; silent assumptions generate insecure code (e.g., hardcoded keys).
 
 14.2 When **generating code**, **MUST**:
+
 - Output a brief architecture plan.
 - Provide a file list with paths.
 - Provide complete code in fenced code blocks per file.
 - Include minimal tests and usage examples.
 - Flag any **SHOULD** deviations with justification.
 
-14.3 When **reviewing code**, **MUST**:
+  14.3 When **reviewing code**, **MUST**:
+
 - Provide a prioritized findings list with severity (Critical/High/Medium/Low).
 - Cite violated standard section (e.g., "3.2 - Nonce reuse").
 - Provide concrete fixes as diffs.
 - Calculate compliance score if requested.
 
-14.4 **MUST** keep responses concise and structured:
+  14.4 **MUST** keep responses concise and structured:
+
 - Use checklists, tables, and diffs.
 - Avoid long prose unless explicitly requested.
 
@@ -415,6 +441,7 @@ Critical **MUST** items for quick validation:
 <summary>Example 1: Non-compliant vs. Compliant AEAD encryption</summary>
 
 **Non-compliant** (Multiple violations):
+
 ```python
 # VIOLATIONS:
 # 2.4: Uses ECB mode (insecure)
@@ -432,6 +459,7 @@ def encrypt_data(plaintext: bytes) -> bytes:
 ```
 
 **Compliant**:
+
 ```python
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import secrets
@@ -439,44 +467,46 @@ import os
 
 class SecureCryptoService:
     """Symmetric encryption using AES-256-GCM (Section 2.3)."""
-    
+
     def __init__(self, key: bytes):
         # 2.1: Uses high-level cryptography library
         # 4.2: Key loaded from env/KMS, not hardcoded here
         if len(key) != 32:
             raise ValueError("Key must be 256 bits")
         self._cipher = AESGCM(key)
-    
+
     def encrypt(self, plaintext: bytes, aad: bytes) -> bytes:
         # 3.1: CSPRNG via secrets module
         nonce = secrets.token_bytes(12)  # 96-bit for GCM
-        
+
         # 2.3: AEAD with AAD for context binding
         ciphertext = self._cipher.encrypt(nonce, plaintext, aad)
-        
+
         # 5.1: Versioned envelope format
         return b'\x01' + nonce + ciphertext  # v1 || nonce || ct+tag
-    
+
     def decrypt(self, ciphertext: bytes, aad: bytes) -> bytes:
         if len(ciphertext) < 13 or ciphertext[0] != 1:
             # 6.1: Fail closed with generic error
             raise ValueError("Invalid input")
-        
+
         nonce = ciphertext[1:13]
         ct = ciphertext[13:]
-        
+
         try:
             return self._cipher.decrypt(nonce, ct, aad)
         except Exception:
             # 6.2: Generic error, no padding/MAC details
             raise ValueError("Decryption failed")
 ```
+
 </details>
 
 <details>
 <summary>Example 2: Non-compliant vs. Compliant password verification</summary>
 
 **Non-compliant** (Timing attack vulnerable):
+
 ```python
 import hashlib
 
@@ -488,6 +518,7 @@ def verify_password(stored_hash: str, provided: str) -> bool:
 ```
 
 **Compliant**:
+
 ```python
 import argon2
 import hmac
@@ -504,50 +535,56 @@ def verify_password(stored_hash: str, provided: str) -> bool:
         # 6.1: Fail closed, generic error
         return False
 ```
+
 </details>
 
 <details>
 <summary>Example 3: Non-compliant vs. Compliant JWT handling</summary>
 
 **Non-compliant**:
+
 ```javascript
 // Accepts any algorithm, no constant time check
-const decoded = jwt.decode(token, {complete: true});
+const decoded = jwt.decode(token, { complete: true });
 const verified = jwt.verify(token, publicKey); // No alg restriction!
 ```
 
 **Compliant**:
+
 ```javascript
 const crypto = require('crypto');
 
 function verifyToken(token, expectedIssuer, expectedAudience, jwks) {
-    // 2.8: Strict algorithm allow-list
-    const header = JSON.parse(
-        Buffer.from(token.split('.')[0], 'base64url').toString()
-    );
-    
-    if (!['Ed25519', 'ES256', 'RS256'].includes(header.alg)) {
-        throw new Error('Unsupported algorithm');
-    }
-    
-    const key = jwks[header.kid];
-    if (!key) throw new Error('Key not found');
-    
-    // Verify signature with algorithm specified
-    // ... library-specific verification ...
-    
-    // Validate claims
-    const now = Math.floor(Date.now() / 1000);
-    if (payload.iss !== expectedIssuer || 
-        payload.aud !== expectedAudience ||
-        payload.exp <= now || 
-        payload.nbf > now) {
-        throw new Error('Invalid claims');
-    }
-    
-    // 7.1: If comparing signatures manually, use timingSafeEqual
-    // (handled by library here)
-    return payload;
+  // 2.8: Strict algorithm allow-list
+  const header = JSON.parse(
+    Buffer.from(token.split('.')[0], 'base64url').toString(),
+  );
+
+  if (!['Ed25519', 'ES256', 'RS256'].includes(header.alg)) {
+    throw new Error('Unsupported algorithm');
+  }
+
+  const key = jwks[header.kid];
+  if (!key) throw new Error('Key not found');
+
+  // Verify signature with algorithm specified
+  // ... library-specific verification ...
+
+  // Validate claims
+  const now = Math.floor(Date.now() / 1000);
+  if (
+    payload.iss !== expectedIssuer ||
+    payload.aud !== expectedAudience ||
+    payload.exp <= now ||
+    payload.nbf > now
+  ) {
+    throw new Error('Invalid claims');
+  }
+
+  // 7.1: If comparing signatures manually, use timingSafeEqual
+  // (handled by library here)
+  return payload;
 }
 ```
+
 </details>

@@ -4,8 +4,8 @@ description: Standards document for Vue.js development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Vue.js 3 enterprise engineering standards
 
+# Vue.js 3 enterprise engineering standards
 
 ## Role definition
 
@@ -24,6 +24,7 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **Vue.js**: 3.5+ (Composition API as primary paradigm)
 - **Node.js**: 20.9+ LTS (or newer compatible LTS)
 - **TypeScript**: 5.0+
@@ -34,12 +35,14 @@ The following requirement levels are defined per RFC 2119:
 - **Lint/Format**: ESLint 9+ with flat config; Prettier 3+
 
 ### Context
+
 - Single-page applications (SPAs) and progressive web applications (PWAs)
 - Component libraries and design systems built with Vue 3
 - Enterprise dashboards, public-facing websites, and internal tools
 - Projects using Vue 3 Composition API with TypeScript
 
 ### Exclusions
+
 - **Vue 2.x**: Legacy migration strategies are outside this document's scope
 - **Server-Side Rendering (SSR)**: Nuxt 3-specific conventions are excluded; refer to Nuxt documentation
 - **Mobile Native**: Vue Native or NativeScript implementations are not covered
@@ -53,11 +56,13 @@ The following requirement levels are defined per RFC 2119:
 ### 1. Architecture and project structure
 
 #### 1.1 Directory structure
+
 1.1.1. **MUST** use a predictable, feature-oriented structure to minimize coupling and improve discoverability.
 
 > **Rationale**: Consistent module boundaries reduce cognitive load and scale better than ad-hoc folders. Feature-based organization supports incremental development and enables easier code splitting.
 
 Recommended baseline:
+
 ```
 src/
   app/                # app bootstrap, plugins, providers
@@ -90,6 +95,7 @@ src/
 > **Rationale**: Prevents "god components" and enables reuse/testing of business logic independent of routing context.
 
 #### 1.2 Module boundaries
+
 1.2.1. **MUST** avoid coupling reusable components to global stores, router instances, or direct network calls.
 
 > **Rationale**: Reusable components must remain portable and testable; orchestration belongs in parent components or composables.
@@ -101,6 +107,7 @@ src/
 ### 2. Vue API usage and component syntax
 
 #### 2.1 Default authoring model
+
 2.1.1. **MUST** use Vue 3 **Composition API** for new code, and **MUST** use `<script setup>` in SFCs by default.
 
 > **Rationale**: Better type inference, reuse patterns, and runtime performance with less boilerplate.
@@ -112,6 +119,7 @@ src/
 > **Rationale**: Vue explicitly discourages using normal `<script>` for options already expressible in `<script setup>`.
 
 #### 2.2 TypeScript integration
+
 2.2.1. **MUST** type props with TypeScript (type-based `defineProps<...>()`) for application code; add runtime validation only when building public library components or accepting untyped external inputs.
 
 > **Rationale**: TypeScript provides maintainable contracts; runtime checks are for boundary safety.
@@ -121,6 +129,7 @@ src/
 ### 3. Component naming, props, events, and reusability
 
 #### 3.1 Component naming and casing
+
 3.1.1. **MUST** keep one component per file (with a build system).
 
 > **Rationale**: Improves navigation, review, and reuse.
@@ -132,6 +141,7 @@ src/
 3.1.4. **MUST** use multi-word component names to avoid conflicts with HTML elements (e.g., `AppButton`, not `Button`).
 
 #### 3.2 Props definition
+
 3.2.1. **MUST** explicitly declare props (never rely on implicit fallthrough).
 
 > **Rationale**: Makes component contracts explicit and avoids attribute ambiguity.
@@ -143,6 +153,7 @@ src/
 3.2.3. **SHOULD** provide default values for optional props using `withDefaults()`.
 
 #### 3.3 Custom events
+
 3.3.1. **MUST** explicitly declare emitted events via `defineEmits` / `emits`.
 
 > **Rationale**: Self-documenting API; prevents unintended listener fallthrough behavior.
@@ -154,6 +165,7 @@ src/
 3.3.3. **SHOULD** validate event payloads for boundary events (forms, auth, payments) using object syntax validation.
 
 #### 3.4 Slots and extensibility
+
 3.4.1. **SHOULD** prefer slots for layout/extensibility; prefer props for simple data/configuration.
 
 3.4.2. **MUST** document slot contracts (slot name + slot props) in component docs or JSDoc/TSDoc.
@@ -165,7 +177,9 @@ src/
 ### 4. State and data management
 
 #### 4.1 Local vs. shared state
+
 4.1.1. **MUST** keep state local unless it is:
+
 - shared across routes/features,
 - needs caching across navigation,
 - used by non-parent/child components,
@@ -178,7 +192,9 @@ src/
 > **Rationale**: Pinia provides a safer architecture; ad-hoc globals can introduce SSR security risks.
 
 #### 4.2 Reactivity correctness
+
 4.2.1. **MUST** use:
+
 - `ref` for primitives / single values,
 - `reactive` for cohesive objects,
 - `computed` for derived state,
@@ -197,16 +213,19 @@ src/
 ### 5. Async operations, loading, and error handling
 
 #### 5.1 Async state representation
+
 5.1.1. **MUST** represent async state explicitly: `{ data, status, error }` or similar, with statuses like `idle | loading | success | error`.
 
 > **Rationale**: Prevents "half-loaded UI" and ambiguous state.
 
 #### 5.2 Error capture
+
 5.2.1. **MUST** implement global error handling via `app.config.errorHandler` and component-level capture where needed via `onErrorCaptured` / `errorCaptured`.
 
 > **Rationale**: Prevents silent failures and enables centralized logging/telemetry.
 
 #### 5.3 Suspense usage
+
 5.3.1. **SHOULD** avoid relying on `<Suspense>` for core app flows unless the team explicitly accepts experimental APIs.
 
 > **Rationale**: Vue documents `<Suspense>` as experimental and subject to change.
@@ -218,6 +237,7 @@ src/
 ### 6. Routing and navigation
 
 #### 6.1 History mode
+
 6.1.1. **SHOULD** use `createWebHistory()` for production web apps.
 
 > **Rationale**: Recommended by Vue Router and better for SEO than hash URLs.
@@ -227,11 +247,13 @@ src/
 > **Rationale**: Hash mode avoids server config but harms SEO.
 
 #### 6.2 Route definitions
+
 6.2.1. **MUST** lazy-load route components via dynamic imports by default.
 
 > **Rationale**: Vue Router recommends dynamic imports to reduce initial bundle size.
 
 #### 6.3 Guards
+
 6.3.1. **MUST** keep guards small and deterministic; heavy work belongs in services/composables.
 
 6.3.2. **SHOULD** use `beforeResolve` for data fetching that should not run if navigation won't complete.
@@ -239,6 +261,7 @@ src/
 ### 7. Performance optimization
 
 #### 7.1 Rendering and reactivity
+
 7.1.1. **MUST** provide stable `:key` values for list rendering (`v-for`).
 
 > **Rationale**: Ensures correct DOM diffing and avoids state leakage between rows.
@@ -248,11 +271,13 @@ src/
 > **Rationale**: Reduces unnecessary updates and improves maintainability.
 
 #### 7.2 Code splitting
+
 7.2.1. **MUST** split by routes; **SHOULD** additionally split by feature modules where beneficial.
 
 7.2.2. **MAY** configure bundler chunking (e.g., Rollup `manualChunks`) for large apps.
 
 #### 7.3 Profiling
+
 7.3.1. **SHOULD** use Vue DevTools (timeline/components) to investigate performance issues.
 
 7.3.2. If using Vite, **SHOULD** consider the `vite-plugin-vue-devtools` workflow.
@@ -260,21 +285,25 @@ src/
 ### 8. Styling, responsiveness, and accessibility
 
 #### 8.1 Styling approach
+
 8.1.1. **SHOULD** use one of:
-   - SFC `scoped` styles for component-local rules,
-   - CSS Modules for stricter isolation,
-   - A utility framework (e.g., Tailwind) with documented conventions.
+
+- SFC `scoped` styles for component-local rules,
+- CSS Modules for stricter isolation,
+- A utility framework (e.g., Tailwind) with documented conventions.
 
 8.1.2. **MUST** centralize design tokens (spacing, colors, typography) in `src/styles/` (or equivalent).
 
 > **Rationale**: Prevents divergence and makes theming feasible.
 
 #### 8.2 Responsive design
+
 8.2.1. **MUST** design for mobile-to-desktop responsiveness (fluid layouts, not fixed widths).
 
 > **Rationale**: Cross-device compatibility is a core web requirement.
 
 #### 8.3 Accessibility baseline
+
 8.3.1. **MUST** meet **WCAG 2.2 Level AA** for product UI unless explicitly scoped lower by the user.
 
 > **Rationale**: WCAG 2.2 is a W3C Recommendation and AA is a common organizational baseline.
@@ -290,16 +319,19 @@ src/
 ### 9. Security standards
 
 #### 9.1 Template trust
+
 9.1.1. **MUST** never render non-trusted content as Vue templates.
 
 > **Rationale**: Vue warns this is equivalent to arbitrary JavaScript execution (and can impact SSR/server safety).
 
 #### 9.2 XSS prevention
+
 9.2.1. **MUST** avoid `v-html`. If absolutely necessary, **MUST** sanitize input first and document sanitization strategy in the review output.
 
 > **Rationale**: `v-html` enables XSS vectors; lint rule exists specifically for this risk.
 
 #### 9.3 Secrets and configuration
+
 9.3.1. **MUST** never place secrets in client bundles; use server-side tokens and short-lived credentials.
 
 > **Rationale**: Client code is inspectable; secrets will leak.
@@ -307,24 +339,29 @@ src/
 ### 10. Testing and quality assurance
 
 #### 10.1 Test pyramid
+
 10.1.1. **MUST** include:
-   - Unit tests for pure logic (utils, composables),
-   - Component tests for UI behavior,
-   - A small number of E2E tests for critical paths.
+
+- Unit tests for pure logic (utils, composables),
+- Component tests for UI behavior,
+- A small number of E2E tests for critical paths.
 
 > **Rationale**: Balanced coverage reduces regressions with manageable runtime cost.
 
 #### 10.2 Component tests
+
 10.2.1. **SHOULD** use `@vue/test-utils` patterns to assert events/DOM interactions (e.g., `emitted()`).
 
 10.2.2. **MUST** test:
-   - Prop typing/validation behavior (where applicable),
-   - Emitted event contracts,
-   - Accessibility-critical behavior (focus, labels) for key components.
+
+- Prop typing/validation behavior (where applicable),
+- Emitted event contracts,
+- Accessibility-critical behavior (focus, labels) for key components.
 
 > **Rationale**: Component contracts are primary integration points.
 
 #### 10.3 Coverage
+
 10.3.1. **SHOULD** enforce coverage thresholds (typical starting point: lines/branches/functions $\geq 80\%$) and raise gradually.
 
 > **Rationale**: Encourages sustained test discipline without blocking early delivery.
@@ -332,11 +369,13 @@ src/
 ### 11. Tooling, linting, and formatting
 
 #### 11.1 Automation-first formatting
+
 11.1.1. **MUST** enforce formatting via Prettier (not manual rules in prose).
 
 > **Rationale**: Prevents style debates and reduces review noise.
 
 #### 11.2 Linting
+
 11.2.1. **MUST** use ESLint with `eslint-plugin-vue` flat configs (recommended/essential as appropriate).
 
 11.2.2. **MUST** enable Vue+TS ESLint integration using `@vue/eslint-config-typescript` utilities.
@@ -344,6 +383,7 @@ src/
 > **Rationale**: Vue+TS linting is nuanced; official config utilities reduce misconfiguration risk.
 
 #### 11.3 Pre-commit and CI
+
 11.3.1. **SHOULD** run typecheck, lint, and unit tests in CI; run lint+format via pre-commit for fast feedback.
 
 11.3.2. **MUST** ensure CI is the source of truth (no "works on my machine").
@@ -353,18 +393,22 @@ src/
 ### 12. Documentation and maintainability
 
 #### 12.1 Code documentation
+
 12.1.1. **MUST** document public APIs:
-   - Shared components: props/events/slots
-   - Composables: inputs/outputs and side effects
-   - Stores: state shape + action semantics
+
+- Shared components: props/events/slots
+- Composables: inputs/outputs and side effects
+- Stores: state shape + action semantics
 
 > **Rationale**: These are the main reuse surfaces and failure points.
 
 #### 12.2 README and runbooks
+
 12.2.1. **SHOULD** maintain:
-   - Setup instructions
-   - Environment variables (names only)
-   - Troubleshooting common issues
+
+- Setup instructions
+- Environment variables (names only)
+- Troubleshooting common issues
 
 > **Rationale**: Reduces onboarding time and operational risk.
 
@@ -409,6 +453,7 @@ src/
 4. If security violations exist (exposed credentials, unsafe `v-html`), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references for emphasis.
 - Use Markdown for examples; show before/after diffs for corrections.
 - Keep explanations concise; demonstrate plain language principles.
@@ -440,46 +485,48 @@ Critical **MUST** items for quick validation:
 #### C1: Component structure and API
 
 **Non-compliant** (Options API, implicit emits, loose types):
+
 ```vue
 <script>
 export default {
   props: ['userId', 'role'],
   emits: ['update'],
   data() {
-    return { count: 0 }
+    return { count: 0 };
   },
   methods: {
     handleClick() {
-      this.$emit('update', this.userId)
-    }
-  }
-}
+      this.$emit('update', this.userId);
+    },
+  },
+};
 </script>
 ```
 
 **Compliant** (Composition API, strict typing, explicit contracts):
+
 ```vue
 <script setup lang="ts">
 interface Props {
-  userId: string
-  role?: 'admin' | 'user'
+  userId: string;
+  role?: 'admin' | 'user';
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  role: 'user'
-})
+  role: 'user',
+});
 
 const emit = defineEmits<{
-  'user-updated': [userId: string]
-}>()
+  'user-updated': [userId: string];
+}>();
 
 defineSlots<{
-  header(props: { userName: string }): any
-  default(): any
-}>()
+  header(props: { userName: string }): any;
+  default(): any;
+}>();
 
 function handleClick() {
-  emit('user-updated', props.userId)
+  emit('user-updated', props.userId);
 }
 </script>
 
@@ -495,89 +542,94 @@ function handleClick() {
 #### C2: State management (Pinia)
 
 **Non-compliant** (Vuex-style, direct mutation, no error handling):
+
 ```typescript
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useStore = defineStore('main', {
   state: () => ({ users: [] }),
   actions: {
     async fetchUsers() {
-      this.users = await api.get('/users')
-    }
-  }
-})
+      this.users = await api.get('/users');
+    },
+  },
+});
 ```
 
 **Compliant** (Composition style, error handling, TypeScript):
+
 ```typescript
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { User } from '@/types'
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { User } from '@/types';
 
 export const useUserStore = defineStore('user', () => {
-  const users = ref<User[]>([])
-  const loading = ref(false)
-  const error = ref<Error | null>(null)
-  
-  const userCount = computed(() => users.value.length)
-  
+  const users = ref<User[]>([]);
+  const loading = ref(false);
+  const error = ref<Error | null>(null);
+
+  const userCount = computed(() => users.value.length);
+
   async function fetchUsers() {
-    loading.value = true
-    error.value = null
-    
+    loading.value = true;
+    error.value = null;
+
     try {
-      const response = await api.get<User[]>('/users')
-      users.value = response.data
+      const response = await api.get<User[]>('/users');
+      users.value = response.data;
     } catch (err) {
-      error.value = err instanceof Error ? err : new Error('Unknown error')
-      console.error('Failed to fetch users:', err)
+      error.value = err instanceof Error ? err : new Error('Unknown error');
+      console.error('Failed to fetch users:', err);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
-  
-  return { users, loading, error, userCount, fetchUsers }
-})
+
+  return { users, loading, error, userCount, fetchUsers };
+});
 ```
 
 #### C3: Routing with lazy loading
 
 **Non-compliant** (Static imports, no meta typing):
-```typescript
-import AboutView from '@/pages/AboutView.vue'
 
-export const routes = [{ path: '/about', component: AboutView }]
+```typescript
+import AboutView from '@/pages/AboutView.vue';
+
+export const routes = [{ path: '/about', component: AboutView }];
 ```
 
 **Compliant** (Dynamic imports, typed meta):
+
 ```typescript
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 export const routes = [
   {
     path: '/about',
     name: 'about',
     component: () => import('@/pages/AboutView.vue'),
-    meta: { requiresAuth: false }
-  }
-]
+    meta: { requiresAuth: false },
+  },
+];
 
 // Type augmentation for route meta
 declare module 'vue-router' {
   interface RouteMeta {
-    requiresAuth?: boolean
+    requiresAuth?: boolean;
   }
 }
 
 export const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
 ```
 
 #### C4: Security and XSS prevention
 
 **Non-compliant** (Unsafe v-html):
+
 ```vue
 <template>
   <div v-html="userSuppliedHtml" />
@@ -585,15 +637,16 @@ export const router = createRouter({
 ```
 
 **Compliant** (Sanitized with documentation):
+
 ```vue
 <script setup lang="ts">
-import { computed } from 'vue'
-import DOMPurify from 'dompurify'
+import { computed } from 'vue';
+import DOMPurify from 'dompurify';
 
-const props = defineProps<{ html: string }>()
+const props = defineProps<{ html: string }>();
 
 // Sanitize to prevent XSS; only vetted HTML allowed
-const safeHtml = computed(() => DOMPurify.sanitize(props.html))
+const safeHtml = computed(() => DOMPurify.sanitize(props.html));
 </script>
 
 <template>
@@ -604,6 +657,7 @@ const safeHtml = computed(() => DOMPurify.sanitize(props.html))
 #### C5: Accessible form component
 
 **Non-compliant** (Missing accessibility):
+
 ```vue
 <template>
   <div>
@@ -615,33 +669,32 @@ const safeHtml = computed(() => DOMPurify.sanitize(props.html))
 ```
 
 **Compliant** (WCAG 2.2 AA):
+
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const email = ref('')
-const errorMessage = ref('')
-const isSubmitting = ref(false)
+const email = ref('');
+const errorMessage = ref('');
+const isSubmitting = ref(false);
 
 async function handleSubmit() {
-  isSubmitting.value = true
-  errorMessage.value = ''
-  
+  isSubmitting.value = true;
+  errorMessage.value = '';
+
   try {
-    await submitEmail(email.value)
+    await submitEmail(email.value);
   } catch (err) {
-    errorMessage.value = 'Failed to submit. Please try again.'
+    errorMessage.value = 'Failed to submit. Please try again.';
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 </script>
 
 <template>
   <form @submit.prevent="handleSubmit">
-    <label for="email-input" class="form-label">
-      Email Address
-    </label>
+    <label for="email-input" class="form-label"> Email Address </label>
     <input
       id="email-input"
       v-model="email"

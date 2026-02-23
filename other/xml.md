@@ -4,8 +4,8 @@ description: Standards document for XML development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# XML engineering standards for consistent generation and review
 
+# XML engineering standards for consistent generation and review
 
 ## Role definition
 
@@ -305,6 +305,7 @@ This document excludes: proprietary binary XML formats (EXI, Fast Infoset), non-
 #### 13.3 Review behavior
 
 13.3.1. **MUST** produce structured review output containing:
+
 1. **Summary verdict**: Compliant / Partially compliant / Non-compliant
 2. **Findings table** with columns: `ID`, `Severity (MUST/SHOULD/MAY)`, `Standard Reference`, `Issue`, `Fix`
 3. **Suggested patch** as unified diff when feasible
@@ -341,6 +342,7 @@ This document excludes: proprietary binary XML formats (EXI, Fast Infoset), non-
 4. If security violations exist (exposed credentials, XXE risks, unsafe parser configs), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references.
 - Use Markdown tables for findings.
 - Show before/after diffs for corrections.
@@ -368,6 +370,7 @@ Critical **MUST** items for quick validation:
 #### C.1 Non-compliant vs. compliant: XXE vulnerability
 
 **Non-compliant (insecure parser configuration):**
+
 ```java
 // Vulnerable to XXE
 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -376,6 +379,7 @@ Document doc = db.parse(untrustedInput);  // Dangerous!
 ```
 
 **Compliant (secure by default):**
+
 ```java
 // Secure configuration
 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -391,6 +395,7 @@ Document doc = db.parse(untrustedInput);
 #### C.2 Non-compliant vs. compliant: Namespace and versioning
 
 **Non-compliant (missing namespace, inconsistent naming):**
+
 ```xml
 <?xml version="1.0"?>
 <Order>
@@ -403,6 +408,7 @@ Document doc = db.parse(untrustedInput);
 ```
 
 **Compliant (proper namespacing and structure):**
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <ord:order xmlns:ord="https://example.com/schemas/order/v1"
@@ -420,6 +426,7 @@ Document doc = db.parse(untrustedInput);
 #### C.3 Non-compliant vs. compliant: Schema documentation
 
 **Non-compliant (undocumented, weak typing):**
+
 ```xml
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="product">
@@ -434,6 +441,7 @@ Document doc = db.parse(untrustedInput);
 ```
 
 **Compliant (documented, strongly typed):**
+
 ```xml
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="https://example.com/schemas/product/v1"

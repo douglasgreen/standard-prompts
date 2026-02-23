@@ -4,8 +4,8 @@ description: Standards document for software testing specifications
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Standards for agile web test specifications
 
+# Standards for agile web test specifications
 
 ## Role definition
 
@@ -30,10 +30,10 @@ The following requirement levels are defined per RFC 2119:
   - Mobile: **iOS 17+**, **Android 14+** (or project-defined minimums).
   - Accessibility baseline: **WCAG 2.2 AA**.
   - Security baseline: **OWASP ASVS 4.0.3** (conceptual guidance).
-  **Rationale**: Establishes unambiguous, current baselines for cross-platform compatibility and compliance.
+    **Rationale**: Establishes unambiguous, current baselines for cross-platform compatibility and compliance.
 
 > If the project defines different minimum supported versions, you **MUST** state them explicitly in the "Test Environment" section and treat them as the authoritative target versions for that specification.
-**Rationale**: Prevents accidental testing against the wrong support matrix and ensures environment-specific constraints are explicit.
+> **Rationale**: Prevents accidental testing against the wrong support matrix and ensures environment-specific constraints are explicit.
 
 ### Context
 
@@ -58,7 +58,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 - Defect tracking tool configurations or triage workflows
 - Automated test scripts, API testing, database queries, or any testing requiring backend/DB access
 - Performance test tooling configuration or load testing protocols
-**Rationale**: Keeps the specification focused on manual test design and execution readiness, reducing churn from project management variables and respecting tester access constraints.
+  **Rationale**: Keeps the specification focused on manual test design and execution readiness, reducing churn from project management variables and respecting tester access constraints.
 
 ---
 
@@ -67,6 +67,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 ### 1. Document architecture and metadata
 
 #### 1.1 Required metadata block
+
 - The document **MUST** begin with YAML frontmatter or a structured metadata block including:
   - `title`: Document title including feature/epic name
   - `sut`: Product/system under test
@@ -75,9 +76,10 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   - `last_updated`: ISO 8601 date (`YYYY-MM-DD`)
   - `status`: Draft/Ready/Approved
   - `related_requirements`: Traceability IDs (user stories, acceptance criteria)
-  **Rationale**: Enables traceability, prevents execution against outdated specifications, and supports audit trails required by ISO/IEC/IEEE 29119-3.
+    **Rationale**: Enables traceability, prevents execution against outdated specifications, and supports audit trails required by ISO/IEC/IEEE 29119-3.
 
 #### 1.2 Hierarchical structure
+
 - The document **MUST** use the following top-level sections in this order:
   1. **Overview & Scope**
   2. **Test Environment**
@@ -87,9 +89,10 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   6. **Test Data**
   7. **Risk Assessment**
   8. **Confirmation Checklist**
-  **Rationale**: Stable information architecture reduces cognitive load across teams and enables automated parsing by test management systems.
+     **Rationale**: Stable information architecture reduces cognitive load across teams and enables automated parsing by test management systems.
 
 #### 1.3 Formatting and navigation
+
 - Specifications **MUST** use ATX-style Markdown headings (`#` not underlines); single space after hash symbol; exactly one H1 per document.
   **Rationale**: Consistent parsing across Markdown processors and version control systems; underlined headings create maintenance noise in diffs.
 - Documents **SHOULD** include a table of contents if they exceed $2$ printed pages ($\approx 800$–$1200$ words).
@@ -100,6 +103,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 ### 2. Language, tone, and specification quality
 
 #### 2.1 Unambiguous, testable statements
+
 - Each requirement-like statement **MUST** be objectively testable (clear pass/fail criteria) or explicitly labeled as exploratory guidance.
   **Rationale**: Avoids "false precision" and ensures repeatability across different testers.
 - Steps and expected results **MUST** be written in active voice (e.g., "User clicks...", "System displays...").
@@ -108,6 +112,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   **Rationale**: Prevents subjective interpretation that leads to inconsistent test execution.
 
 #### 2.2 Consistent terminology
+
 - **MUST** use normative keywords (**MUST**, **SHOULD**, **MAY**) only when expressing standards or execution constraints; otherwise use plain language.
   **Rationale**: Preserves the semantic weight of normative language for actual requirements.
 - **MUST** define acronyms on first use (e.g., "System Under Test (SUT)"); maintain consistency throughout.
@@ -116,6 +121,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   **Rationale**: Industry consistency reduces reader confusion and translation overhead.
 
 #### 2.3 Frontend-oriented language
+
 - **MUST** describe behavior using the language of the application front end and user experience, not internal implementation.
 - **MUST NOT** reference database tables, columns, backend processes, API endpoints, JSON payloads, or internal data structures in test steps or expected results. Exception: Security risk descriptions (e.g., "SQL injection") may reference technical concepts, but verification steps must remain UI-based.
 - Preconditions and expected results **MUST** describe observable UI states, user-facing messages, interactive elements, and browser-rendered content.
@@ -124,78 +130,90 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 ### 3. Scope definition
 
 #### 3.1 Scope boundaries
+
 - **Overview & Scope** **MUST** include:
   - Testing goals (quality questions this cycle answers)
   - Key user scenarios in scope (bulleted list)
   - Explicit exclusions (features, platforms, or scenarios **not** tested)
   - Dependencies (external systems, feature flags, prerequisites)
   - Assumptions (documented assumptions about state or data)
-  **Rationale**: Prevents scope creep, manages stakeholder expectations, and ensures testing effort aligns with sprint commitments.
+    **Rationale**: Prevents scope creep, manages stakeholder expectations, and ensures testing effort aligns with sprint commitments.
 
 #### 3.2 Traceability
+
 - Each scope item **SHOULD** reference source requirements using stable identifiers (e.g., `US-1234`, `REQ-AUTH-05`).
   **Rationale**: Enables bidirectional traceability and impact analysis when requirements change.
 
 ### 4. Test environment specification
 
 #### 4.1 Environment configuration
+
 - **Test Environment** **MUST** specify:
   - Environment name(s) (e.g., Staging, QA)
   - Base URL(s) and access constraints (VPN, SSO)
   - Browser/device/OS matrix with specific versions
   - Test accounts/roles available (e.g., Admin, Member, Guest) with credentials stored securely per Section 9.2
   - Dependencies affecting behavior (feature flags, third-party services, stubs)
-  **Rationale**: Execution without environment clarity is not reproducible and leads to "works on my machine" discrepancies.
+    **Rationale**: Execution without environment clarity is not reproducible and leads to "works on my machine" discrepancies.
 
 #### 4.2 Data management
+
 - The specification **MUST** document how test data is reset/isolated (UI-based reset flows, seed dataset accessible via admin panel, or "no reset available" with associated risks).
   **Rationale**: Prevents false failures and cross-test contamination without requiring database access.
 
 #### 4.3 Observability
+
 - The specification **SHOULD** describe minimal observability aids available to manual testers without database access (browser Developer Tools Console/Network tab, UI-visible audit trails, application error messages, analytics debug views accessible via UI).
   **Rationale**: Speeds diagnosis and improves defect report quality while respecting access constraints.
 
 ### 5. Test method specification
 
 #### 5.1 Method declaration
+
 - **Test Method** **MUST** declare whether each scope area is executed as:
   - **Manual scripted only** (strict step-by-step execution),
   - **Exploratory** (session-based), or
   - **Hybrid** (script + charters).
-  **Rationale**: Aligns expectations on repeatability versus discovery and confirms no automation or DB access is required.
+    **Rationale**: Aligns expectations on repeatability versus discovery and confirms no automation or DB access is required.
 
 #### 5.2 Exploratory charters
+
 - If using exploratory testing, charters **MUST** include: mission, constraints, risks targeted, and evidence to capture (screenshots, screen recordings).
   **Rationale**: Maintains rigor and makes exploratory work reviewable and auditable.
 
 #### 5.3 Evidence standards
+
 - The specification **MUST** define evidence expectations per test type (e.g., screenshots for UI states, HAR files for network issues, screen recordings for intermittent reproduction).
   **Rationale**: Ensures defects are actionable and audit-friendly.
 
 ### 6. Test scenarios
 
 #### 6.1 Scenario structure
+
 - Each scenario **MUST** include:
   - **Scenario ID**: Stable unique identifier (e.g., `SC-AUTH-LOGIN-01`)
   - **Title**: User-value phrasing (e.g., "User logs in with valid credentials")
   - **Objective**: $1$–$2$ sentences describing the goal from a user perspective
   - **Preconditions**: System state as observable via UI + role required
   - **Success criteria**: Observable UI outcome defining passage
-  **Rationale**: Scenarios bridge scope goals to concrete test cases while maintaining narrative coherence and respecting UI-only access.
+    **Rationale**: Scenarios bridge scope goals to concrete test cases while maintaining narrative coherence and respecting UI-only access.
 
 #### 6.2 Coverage and modularity
+
 - Scenarios **SHOULD** map to user journeys and major risk areas (security, accessibility, payments, data loss).
   **Rationale**: Prevents "happy-path only" coverage.
 - Repeated flows **SHOULD** be abstracted as reusable "Common Procedures" referenced by ID (e.g., `CP-LOGIN-01`).
   **Rationale**: Reduces maintenance cost and inconsistency per DRY principles.
 
 #### 6.3 Stable identifiers
+
 - Scenario IDs **MUST** be stable across revisions; do not renumber solely for ordering.
   **Rationale**: Preserves history, reporting, and cross-references.
 
 ### 7. Test cases
 
 #### 7.1 Test case fields
+
 - Each test case **MUST** include:
   - **Test Case ID**: Stable unique identifier
   - **Title**: Concise description of user action
@@ -205,9 +223,10 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   - **Steps**: Numbered, atomic actions describing user interactions with UI elements
   - **Expected Result**: Observable UI outcome per step or checkpoint group (visible text, navigation, element states)
   - **Postconditions**: UI state changes visible to the user (if relevant)
-  **Rationale**: Ensures consistent execution by testers without backend access, supports handoff between testers, and maintains audit trails per IEEE 829-2008.
+    **Rationale**: Ensures consistent execution by testers without backend access, supports handoff between testers, and maintains audit trails per IEEE 829-2008.
 
 #### 7.2 Step granularity and determinism
+
 - Steps **MUST** be atomic (one main action) and use imperative mood describing user actions (e.g., "Click...", "Enter...", "Verify...").
   **Rationale**: Improves debuggability and reduces ambiguous failures.
 - Expected results **MUST** be objective and verifiable from the UI (avoid subjective terms like "looks good"; use "Submit button displays green checkmark and 'Success' message").
@@ -216,21 +235,25 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   **Rationale**: Reduces flaky manual outcomes and improves repeatability.
 
 #### 7.3 Error handling and negative testing
+
 - For each critical flow, the suite **MUST** include negative tests (invalid input, expired session, unauthorized access) or explicitly justify omission.
   **Rationale**: Most production defects occur in edge/error paths; explicit justification ensures conscious risk acceptance.
 
 #### 7.4 Accessibility integration
+
 - UI-affecting test cases **MUST** include accessibility checkpoints (keyboard navigation, focus visibility/order, labels/names, error messaging) or reference a dedicated accessibility scenario covering them.
   **Rationale**: Accessibility is a functional requirement for many users and a compliance risk; embedding checks ensures coverage.
 
 ### 8. Test data management
 
 #### 8.1 Data cataloging
+
 - **Test Data** **MUST** define each dataset with: Data ID, purpose, format, source/creation method (UI flow or pre-seeded), lifecycle/reset behavior, and access constraints.
 - **Constraint**: Test data **MUST** be pre-configured in the system or creatable via the UI; specifications **MUST NOT** assume testers can query, insert, or modify data directly in databases.
   **Rationale**: Prevents ad-hoc data creation, ensures consistent results, and respects the constraint that testers lack database access.
 
 #### 8.2 Privacy and security
+
 - The specification **MUST NOT** include secrets, real credentials, tokens, or production PII. If realistic data is required, it **MUST** be synthetic or anonymized per policy.
   **Rationale**: Prevents security incidents and compliance violations (GDPR, CCPA).
 - Boundary and equivalence partitions **SHOULD** be included for critical inputs (length limits, formats, locales).
@@ -239,6 +262,7 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 ### 9. Risk assessment
 
 #### 9.1 Risk table structure
+
 - **Risk Assessment** **MUST** include a table with:
   - Risk ID
   - Description (may reference technical concepts like SQL injection for security context)
@@ -246,31 +270,36 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   - Likelihood (High/Med/Low or $1$–$5$)
   - Mitigation via tests (scenario/test case IDs using UI-based verification)
   - Residual risk / notes
-  **Rationale**: Makes risk-driven testing explicit and auditable per ISTQB guidelines.
+    **Rationale**: Makes risk-driven testing explicit and auditable per ISTQB guidelines.
 
 #### 9.2 Risk scoring
+
 - If numeric scoring is used, the specification **MUST** define the scoring rubric and compute priority as $Impact \times Likelihood$.
   **Rationale**: Prevents arbitrary prioritization and enables objective resource allocation.
 
 #### 9.3 Security and accessibility risks
+
 - The assessment **MUST** include at least one security-focused risk per relevant area (auth, authorization, input handling) and explicit accessibility risks (WCAG non-compliance).
   **Rationale**: Web applications face routine security threats and legal accessibility requirements; baseline documentation ensures conscious risk acceptance.
 
 ### 10. Confirmation checklist
 
 #### 10.1 Purpose and placement
+
 - The specification **MUST** include a **Confirmation Checklist** section immediately following **Test Data**.
 - The checklist **MUST** serve as a consolidated, sequential execution tracker that maps all testable items from the testing request to their corresponding Scenario and Test Case IDs.
 - When all items are checked, the tester **MUST** be able to confirm that all Scenarios and Cases are complete.
   **Rationale**: Provides an at-a-glance completion status for sprint testing and prevents missed coverage without requiring testers to parse lengthy scenario tables during execution.
 
 #### 10.2 Structure and numbering
+
 - Items **MUST** be numbered sequentially throughout the entire checklist (e.g., $1$ to $n$) for unambiguous reference in defect reports and stand-ups.
 - Each item **MUST** use Markdown task list syntax (`1. [ ]` or `- [ ]`) to enable physical/digital check-off.
 - Items **SHOULD** be grouped by functional area (e.g., "Environment & Navigation", "Case Study Lifecycle") with clear subheadings for readability.
   **Rationale**: Sequential numbering enables precise communication ("Item 47 failed") while grouping maintains cognitive alignment with the system under test.
 
 #### 10.3 Content and traceability
+
 - Each checklist item **MUST** describe a single, testable verification step (e.g., "Verify KaTeX equation renders as formatted math in proofer").
 - Each item **MUST** include parenthetical references to the related **Scenario ID(s)** and/or **Test Case ID(s)** (e.g., `Item 15: Create Multiple Choice question with exactly one correct answer (SC-QUESTION-01, TC-QUESTION-001)`).
 - The checklist **MUST** collectively cover every Scenario and Test Case defined in the specification; gaps **MUST** be explicitly noted as out-of-scope or covered elsewhere.
@@ -278,12 +307,14 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
   **Rationale**: Maintains bidirectional traceability between the testing request, scenarios, and execution status.
 
 #### 10.4 Formulation standards
+
 - Items **MUST** be written in active voice with observable outcomes (e.g., "Confirm", "Verify", "Ensure").
 - Items **MUST NOT** use subjective qualifiers ("looks correct", "works as expected"); they **MUST** specify the concrete UI state or system response to check.
 - Security-sensitive checks (e.g., content injection validation) **MUST** be explicitly listed with the exact input strings or conditions to be tested.
   **Rationale**: Ensures that any tester can execute the checklist consistently without ambiguity or need for domain interpretation.
 
 #### 10.5 Completion criteria
+
 - The specification **SHOULD** include a note that the checklist is considered complete only when all items are checked and any failures are documented with defect IDs.
 - Exploratory testing items (if included) **MUST** be clearly marked as exploratory and **MAY** use partial completion states.
   **Rationale**: Distinguishes between scripted verification (pass/fail) and exploratory discovery (notes/observations).
@@ -291,30 +322,34 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 ### 11. Accessibility and multi-platform standards
 
 #### 11.1 WCAG baseline
+
 - For UI surfaces under test, coverage **MUST** address:
   - Keyboard operability and logical focus order
   - Visible focus indicator
   - Programmatic names/labels for inputs and controls (observable via screen reader or inspector)
   - Error identification and suggestions (visible in UI)
   - Color contrast and non-color cues for status/errors
-  **Rationale**: These are common high-impact failures and align to WCAG 2.2 AA expectations.
+    **Rationale**: These are common high-impact failures and align to WCAG 2.2 AA expectations.
 
 #### 11.2 Responsive design
+
 - The specification **MUST** define viewport breakpoints (e.g., $375\text{px}$, $768\text{px}$, $1920\text{px}$) and devices required for validation.
   **Rationale**: Ensures consistent user experience across devices and prevents responsive layout regressions.
 
 ### 12. Maintenance and versioning
 
 #### 12.1 Change management
+
 - The document **MUST** include a changelog section (date, author, summary) or link to version control history.
   **Rationale**: Supports review, audit, and rollback decisions in agile environments where requirements evolve rapidly.
 
 #### 12.2 Review requirements
+
 - When reviewing existing specifications, you **MUST** produce:
   - A compliance checklist (**MUST** items first)
   - Violations with location, rationale, and concrete fix
   - Minimal proposed patch as unified diff when edits are straightforward
-  **Rationale**: Makes review actionable and consistent across tools.
+    **Rationale**: Makes review actionable and consistent across tools.
 
 ---
 
@@ -348,8 +383,9 @@ This document **MUST NOT** cover (and generated specifications **MUST NOT** incl
 4. If security violations exist (exposed credentials, unsafe copy-paste examples), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Use Markdown for structure; use tables for scenario indexes and risk assessment.
-- Use ```code fences``` for:
+- Use `code fences` for:
   - The full specification (if requested as a single block)
   - Diffs showing corrections
   - Test data tables
@@ -379,32 +415,38 @@ Critical **MUST** items for quick validation:
 #### Example 1: Test case clarity and atomicity (Revised for Frontend-Only Testing)
 
 **Non-Compliant**
+
 ```markdown
 **Test Case: Login**
+
 1. Go to the site and log in with your account.
 2. Check if it works.
 3. Verify the user record in the database has last_login timestamp updated.
 4. Make sure the layout looks good on mobile.
 ```
-*Violations*: Steps not atomic (multiple actions per step); "your account" implies unmanaged data; "works" and "looks good" are subjective; requires database access to verify (Step 3); missing ID, preconditions, expected results.
+
+_Violations_: Steps not atomic (multiple actions per step); "your account" implies unmanaged data; "works" and "looks good" are subjective; requires database access to verify (Step 3); missing ID, preconditions, expected results.
 
 **Compliant**
+
 ```markdown
 ### Test Case ID: TC-AUTH-LOGIN-001
+
 **Title**: Valid user login redirects to dashboard and displays welcome message
 **Related Scenario**: SC-AUTH-LOGIN-001
 **Preconditions**:
+
 - User account `TD-USER-VALID-01` is registered with role "Member" (pre-configured test data)
 - User is logged out (no active session cookie; "Sign In" link visible in header)
 
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Navigate to `/login` | Login form displays with Email, Password fields, and "Sign In" button |
-| 2 | Enter `testuser@example.com` in Email field | Text appears in field; screen reader announces label |
-| 3 | Enter `SecureP@ss123` in Password field | Text masked; focus visible |
-| 4 | Click "Sign In" button | User redirected to `/dashboard` within $3$s; welcome message "Hello, Test User" displays in header |
-| 5 | Verify keyboard navigation | All interactive elements reachable via Tab; focus order matches visual layout |
-| 6 | Verify session persistence | Refresh browser; user remains on dashboard (session cookie active) |
+| Step | Action                                      | Expected Result                                                                                    |
+| ---- | ------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 1    | Navigate to `/login`                        | Login form displays with Email, Password fields, and "Sign In" button                              |
+| 2    | Enter `testuser@example.com` in Email field | Text appears in field; screen reader announces label                                               |
+| 3    | Enter `SecureP@ss123` in Password field     | Text masked; focus visible                                                                         |
+| 4    | Click "Sign In" button                      | User redirected to `/dashboard` within $3$s; welcome message "Hello, Test User" displays in header |
+| 5    | Verify keyboard navigation                  | All interactive elements reachable via Tab; focus order matches visual layout                      |
+| 6    | Verify session persistence                  | Refresh browser; user remains on dashboard (session cookie active)                                 |
 
 **Postconditions**: User session active; "Logout" button visible in header; "Sign In" link no longer displayed.
 ```
@@ -412,51 +454,61 @@ Critical **MUST** items for quick validation:
 #### Example 2: Risk assessment with traceability
 
 **Non-Compliant**
+
 ```markdown
 ## Risks
+
 - Security issues might occur.
 - The app might be slow on mobile.
 - Database corruption during checkout.
 ```
 
 **Compliant**
+
 ```markdown
 ## Risk Assessment
 
-| ID | Description | Category | Likelihood | Impact | Priority | Mitigation (Scenario/Case IDs) | Residual Risk |
-|:---|:---|:---|:---:|:---:|:---:|:---|:---|
-| R-SEC-001 | SQL injection via search input (threat: malicious SQL in search field) | Security | Low | High | **High** | SC-SEC-INPUT-01; TC-SEC-SQL-001, TC-SEC-SQL-002 (verify via UI error handling, no DB query required) | Low (after input validation) |
-| R-PERF-001 | Checkout latency >$5$s on 3G | Performance | Medium | Medium | **Medium** | SC-PERF-CHECKOUT-01; TC-PERF-LOAD-001 | Medium (requires CDN) |
-| R-ACC-001 | Color contrast fails WCAG AA for error messages | Accessibility | Medium | High | **High** | SC-ACC-FORM-01; TC-ACC-CONTRAST-001 | Low (after design remediation) |
+| ID         | Description                                                            | Category      | Likelihood | Impact |  Priority  | Mitigation (Scenario/Case IDs)                                                                       | Residual Risk                  |
+| :--------- | :--------------------------------------------------------------------- | :------------ | :--------: | :----: | :--------: | :--------------------------------------------------------------------------------------------------- | :----------------------------- |
+| R-SEC-001  | SQL injection via search input (threat: malicious SQL in search field) | Security      |    Low     |  High  |  **High**  | SC-SEC-INPUT-01; TC-SEC-SQL-001, TC-SEC-SQL-002 (verify via UI error handling, no DB query required) | Low (after input validation)   |
+| R-PERF-001 | Checkout latency >$5$s on 3G                                           | Performance   |   Medium   | Medium | **Medium** | SC-PERF-CHECKOUT-01; TC-PERF-LOAD-001                                                                | Medium (requires CDN)          |
+| R-ACC-001  | Color contrast fails WCAG AA for error messages                        | Accessibility |   Medium   |  High  |  **High**  | SC-ACC-FORM-01; TC-ACC-CONTRAST-001                                                                  | Low (after design remediation) |
 ```
 
 #### Example 3: Scope with explicit exclusions
 
 **Non-Compliant**
+
 ```markdown
 ## Scope
+
 We will test the login feature. Testers will verify database entries.
 ```
 
 **Compliant**
+
 ```markdown
 ## Overview & Scope
 
 ### Goals
+
 Validate secure user authentication for the customer portal Sprint 23, ensuring WCAG 2.2 AA compliance through UI interaction only.
 
 ### Key User Scenarios
+
 - User registration with email verification (`US-1201`)
 - User login with MFA support (`US-1202`)
 - Password reset via secure token (`US-1203`)
 
 ### In-Scope
+
 - Client-side validation (UI error messages, field highlighting)
 - Session management and timeout handling (observable via UI cookies/session expiry)
 - Cross-browser testing: Chrome 120+, Safari 17+
 - Responsive design: $375\text{px}$, $768\text{px}$, $1920\text{px}$
 
 ### Out-of-Scope (Explicit Exclusions)
+
 - Social login integration (OAuth) — deferred to Sprint 24
 - Biometric authentication — not planned
 - **Database validation or backend API testing — testers lack DB access; all verification via UI only**
@@ -465,6 +517,7 @@ Validate secure user authentication for the customer portal Sprint 23, ensuring 
 - Firefox testing
 
 ### Dependencies
+
 - Email service API (SendGrid v3) operational in Staging (verification emails received in test mailbox)
 - SSL certificates configured for `https://staging.example.com`
 - Pre-configured test accounts provided (no ability to create accounts via DB)

@@ -4,6 +4,7 @@ description: Guidelines document for Python project setup
 version: 1.0.0
 modified: 2026-02-20
 ---
+
 # Python project setup guide
 
 Complete setup instructions for Python 3.12+ projects following engineering best practices and documentation standards.
@@ -199,17 +200,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """Application configuration.
-    
+
     Attributes:
         environment: Deployment environment (local, staging, prod).
         log_level: Python logging level name.
     """
-    
+
     model_config = SettingsConfigDict(
         env_prefix="MY_PROJECT_",
         extra="forbid",  # Prevent undefined env vars
     )
-    
+
     environment: str = Field(default="local")
     log_level: str = Field(default="INFO")
 ```
@@ -227,21 +228,21 @@ import sys
 
 def configure_logging(*, level: str) -> None:
     """Configure application logging.
-    
+
     Args:
         level: Logging level name (DEBUG, INFO, WARNING, ERROR).
-        
+
     Raises:
         ValueError: If level is invalid.
     """
     numeric_level = logging.getLevelNamesMapping().get(level.upper())
     if numeric_level is None:
         raise ValueError(f"Invalid log level: {level}")
-    
+
     root = logging.getLogger()
     root.handlers.clear()
     root.setLevel(numeric_level)
-    
+
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(numeric_level)
     formatter = logging.Formatter(
@@ -279,7 +280,7 @@ repos:
     rev: v0.9.0
     hooks:
       - id: ruff
-        args: ["--fix"]
+        args: ['--fix']
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -451,19 +452,19 @@ app = typer.Typer(no_args_is_help=True)
 def main(
     name: Annotated[str, typer.Argument(help="Name to greet")],
     no_color: Annotated[
-        bool, 
+        bool,
         typer.Option("--no-color", help="Disable color output")
     ] = False,
 ) -> None:
     """Greet the user.
-    
+
     Args:
         name: Name to include in greeting.
         no_color: Disable colored output for accessibility.
     """
     settings = Settings()
     configure_logging(level=settings.log_level)
-    
+
     # Output must work without color (Standard 12.1)
     message = f"Hello, {name}!"
     if no_color:
@@ -526,7 +527,7 @@ app = FastAPI(
 @app.get("/health")
 async def health_check() -> dict[str, str]:
     """Health check endpoint.
-    
+
     Returns:
         Status object for load balancers.
     """
@@ -620,7 +621,7 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """Provide database session for dependency injection."""
     engine = create_engine()
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     async with session_factory() as session:
         try:
             yield session
@@ -698,13 +699,13 @@ uv lock
 
 Run these before committing:
 
-| Command | Purpose |
-|:--------|:--------|
-| `uv run ruff format .` | Format code |
-| `uv run ruff check .` | Lint code |
-| `uv run mypy src` | Type check |
-| `uv run pytest` | Run tests |
-| `uv run pip-audit` | Security audit |
+| Command                | Purpose        |
+| :--------------------- | :------------- |
+| `uv run ruff format .` | Format code    |
+| `uv run ruff check .`  | Lint code      |
+| `uv run mypy src`      | Type check     |
+| `uv run pytest`        | Run tests      |
+| `uv run pip-audit`     | Security audit |
 
 ### CI/CD pipeline
 
@@ -720,30 +721,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install uv
         uses: astral-sh/setup-uv@v1
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      
+          python-version: '3.12'
+
       - name: Install dependencies
         run: uv sync --all-extras --dev
-      
+
       - name: Check formatting
         run: uv run ruff format --check .
-      
+
       - name: Lint
         run: uv run ruff check .
-      
+
       - name: Type check
         run: uv run mypy src
-      
+
       - name: Test
         run: uv run pytest
-      
+
       - name: Security audit
         run: uv run pip-audit
 ```
@@ -768,15 +769,19 @@ last_reviewed: 2026-02-08
 # Documentation
 
 ## Tutorials
+
 - [Set up your environment](./tutorials/setup.md)
 
 ## How-to guides
+
 - [Run tests](./how-to/testing.md)
 
 ## Reference
+
 - [API documentation](./reference/api.md)
 
 ## Explanation
+
 - [Architecture decisions](./explanation/adr-001.md)
 ```
 
@@ -808,7 +813,7 @@ You should see all checks pass.
 
 **`docs/how-to/testing.md`** (task-oriented):
 
-```markdown
+````markdown
 ---
 title: Run tests
 description: How to run the test suite
@@ -821,13 +826,15 @@ description: How to run the test suite
 ```bash
 uv run pytest -m "not integration"
 ```
+````
 
 ## All tests with coverage
 
 ```bash
 uv run pytest --cov
 ```
-```
+
+````
 
 ---
 
@@ -866,7 +873,7 @@ Before committing, verify:
 ```bash
 # Ensure package is installed in editable mode
 uv pip install -e ".[dev]"
-```
+````
 
 **mypy missing imports:**
 

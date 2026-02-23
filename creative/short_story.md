@@ -4,6 +4,7 @@ description: Standards document for short story writing
 version: 1.0.0
 modified: 2026-02-20
 ---
+
 # Short Story Writing Standards for Consistent, High-Quality Fiction
 
 ## 1. Scope and Purpose
@@ -19,7 +20,7 @@ This standard applies to flash fiction, short stories, and novelettes. It priori
 The following terms have precise, normative meanings:
 
 - **MUST** / **MUST NOT** / **REQUIRED** / **SHALL**: Absolute requirements. If unmet, you MUST state the exception explicitly and provide a remediation plan.  
-  *Rationale:* Short fiction fails quickly when constraints are fuzzy; "almost coherent" is still incoherent.
+  _Rationale:_ Short fiction fails quickly when constraints are fuzzy; "almost coherent" is still incoherent.
 
 - **SHOULD** / **RECOMMENDED**: Strong recommendations; deviations MUST be documented with justification and a consequence note identifying the quality risk.
 
@@ -31,11 +32,11 @@ The following terms have precise, normative meanings:
 
 You MUST declare the target length band before outlining. **Rationale:** Pacing, cast size, and complexity must scale to length.
 
-| Band | Word Count | Scene Guidance | Cast Limit | Structural Expectation |
-|------|------------|----------------|------------|------------------------|
-| **Flash fiction** | 300–1,000 | 1–2 scenes | 1–3 named | Single moment/image; one emotional turn |
-| **Short story** | 1,000–7,500 | 2–5 scenes | ≤5 named | One central conflict; 2+ escalations |
-| **Novelette** | 7,500–17,500 | 3–8 scenes | ≤6 named | Multi-scene arc; one subplot allowed |
+| Band              | Word Count   | Scene Guidance | Cast Limit | Structural Expectation                  |
+| ----------------- | ------------ | -------------- | ---------- | --------------------------------------- |
+| **Flash fiction** | 300–1,000    | 1–2 scenes     | 1–3 named  | Single moment/image; one emotional turn |
+| **Short story**   | 1,000–7,500  | 2–5 scenes     | ≤5 named   | One central conflict; 2+ escalations    |
+| **Novelette**     | 7,500–17,500 | 3–8 scenes     | ≤6 named   | Multi-scene arc; one subplot allowed    |
 
 Deviations from scene count ranges SHOULD be justified. Flash fiction MAY compress or merge structural beats but MUST contain at minimum an inciting incident and resolution.
 
@@ -55,17 +56,19 @@ You MUST produce a **Story Brief** before outlining. **Rationale:** Short fictio
 - **Theme** (1 sentence) + **theme question** (1 interrogative)
 - **Setting snapshot** (time/place/social order) + **3 sensory anchors** (concrete, recurring)
 - **Core conflict** (who wants what, what opposes them, stakes)
-- **Ending type** (closed, open-but-resonant, twist, reversal, tragic, quiet illumination). If *twist*, define what is reinterpreted.
+- **Ending type** (closed, open-but-resonant, twist, reversal, tragic, quiet illumination). If _twist_, define what is reinterpreted.
 - **Constraints**: tone rating, content boundaries, taboos
 - **Research obligations**: topics requiring accuracy + confidence level
 
 ### 4.2 Character Standards
 
 **Protagonist Profile** (REQUIRED):
+
 - Name, Want (external), Need (internal), Flaw, Strength, Fear, Moral Line (what they won't do)
 - **Arc statement**: "Starts as $X$, ends as $Y$, because of $Z$."
 
 **Supporting Cast**:
+
 - **Flash fiction**: 0–1 others
 - **Short story**: 1–2 others (SHOULD be ≤2; MUST NOT exceed 4)
 - **Novelette**: ≤4 others
@@ -73,6 +76,7 @@ You MUST produce a **Story Brief** before outlining. **Rationale:** Short fictio
 Each MUST have: Role, Want, Relationship vector to protagonist.
 
 **Antagonistic Force** (REQUIRED):
+
 - Type (person/system/nature/self), Motive, Leverage (how it applies pressure)
 - Characters MUST be capable of being wrong; MUST NOT be omniscient or conveniently correct.
 
@@ -152,7 +156,7 @@ The Beat Sheet MUST use factual, declarative language (events/actions only; no l
 - **Escalation 1**: Cost or constraint increases
 - **Escalation 2**: Options narrow (SHOULD; REQUIRED for >2,500 words)
 - **Crisis/Turning point**: Forced decision or revelation
-- **Climactic action**: What the protagonist *does*
+- **Climactic action**: What the protagonist _does_
 - **Aftermath**: What changed
 - **Final line intent**: Emotional landing
 
@@ -187,13 +191,15 @@ Stakes escalation points:
 ### 6.1 Scene List (Step 3)
 
 Break the story into scene summaries:
+
 - Flash: 1–2 scenes
-- Short: 2–5 scenes  
+- Short: 2–5 scenes
 - Novelette: 3–8 scenes
 
 Each scene summary MUST be written as short, declarative sentences (one event per line). Each sentence SHOULD be under 8 words; if longer, document why.
 
 **Template**:
+
 ```text
 SCENE LIST
 Scene 1 — [Location, time]:
@@ -213,6 +219,7 @@ For each scene, you MUST produce:
 **BEATS**: Bulleted chronological actions, specific enough to execute without invention.
 
 **Template**:
+
 ```text
 SCENE OUTLINE — Scene [N]
 SCENE GOAL:
@@ -239,6 +246,7 @@ BEATS:
 ### 7.2 Opening Requirements (MUST NOT)
 
 The opening MUST NOT feature:
+
 - Weather as mood-setter
 - A character waking from sleep
 - Broad philosophical statements
@@ -249,11 +257,13 @@ The opening paragraph MUST establish at least two of: protagonist, setting, conf
 ### 7.3 Compliance Rules
 
 You MUST:
+
 - Follow scene outline beats in order (micro-actions MAY be added if they don't alter plot).
 - Maintain continuity of time, objects, knowledge, and location.
 - End scenes at the resolution defined in the outline (no cliffhangers unless requested; no foreshadowing future events).
 
 You MUST NOT:
+
 - Introduce characters, items, powers, or plot events not in the Story Brief or outline.
 - Resolve conflicts by coincidence, external rescue, or deus ex machina.
 - End with explicit authorial foreshadowing (e.g., "She didn't know how much worse it would get").
@@ -273,10 +283,12 @@ Prose labeled `DRAFT v1 — Scene [N]` or `DRAFT v1 — Full` (for flash), follo
 ### 8.1 Assembly (Step 6)
 
 Compile scenes and verify:
+
 - **Seam Check**: Time, location, object, knowledge, and motivation continuity across all transitions.
 - **Word Count**: Verify against target range; document deviation and revision plan if outside.
 
 **Template**:
+
 ```text
 ASSEMBLY CHECK
 Word count: [Actual/Target]
@@ -302,6 +314,7 @@ CONTINUITY LEDGER UPDATE (v2):
 ### 8.2 Full Audit Checklist (Step 7)
 
 Verify:
+
 - **Unity of Effect**: Every element serves the single dominant impression.
 - **Arc completion**: Protagonist reaches state specified in arc statement.
 - **Unresolved promises**: No Chekhov's guns left unfired; no dangling subplots.
@@ -310,18 +323,21 @@ Verify:
 ### 8.3 Revision Passes (Step 8)
 
 You MUST perform passes in order:
+
 1. **Structure**: Verify escalation, crisis, climax, aftermath beats.
 2. **Clarity**: Remove confusion about who/where/when/why.
 3. **Compression**: Cut redundancy, repeated information, backstory not changing decisions, "warm-up" paragraphs.
 4. **Line**: Sharpen verbs, remove filler, tune rhythm.
 
 **Word Economy Rules** (MUST apply):
+
 - Remove adverbial dialogue tags.
 - Eliminate repetitive phrasing and excessive adjectives.
 - Cut exposition that could be implied through action.
 - Target at least one meaningful cut per page-equivalent unless already tight.
 
 **Constraints**:
+
 - MUST NOT introduce new plot elements, characters, or twists in revision.
 - Permitted changes: Sentence-level clarity, continuity fixes, dialogue tightening, accidental foreshadowing removal, grammatical correction (Chicago Manual [US] or New Oxford [UK]).
 
@@ -332,6 +348,7 @@ You MUST perform passes in order:
 ### 9.1 Mode Selection
 
 You MUST support:
+
 1. **Generate mode**: Create requested artifacts (Brief, Beat Sheet, scenes, etc.).
 2. **Review mode**: Audit user material for compliance.
 
@@ -340,6 +357,7 @@ If unclear, ask which mode before proceeding.
 ### 9.2 Review Mode Output Structure
 
 You MUST return:
+
 - **Compliance summary**: Pass/Fail with 3–7 key findings.
 - **Violations list**: Each tagged as MUST/SHOULD, with rule reference (e.g., §7.2), offending text quote, and explanation.
 - **Suggested fixes**: Unified diff format or checklist of exact edits.
@@ -364,6 +382,7 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 <summary><strong>Appendix A: Recommended Workflow</strong></summary>
 
 **Standard Workflow** (do not skip steps):
+
 1. **Step 1**: Story Brief (confirm all fields)
 2. **Step 2**: Beat Sheet (verify 2+ escalations for longer works)
 3. **Step 3**: Scene List (declarative event sentences)
@@ -374,6 +393,7 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 8. **Step 8**: Revision Passes (structure → clarity → compression → line)
 
 **Flash Fiction Workflow** (compressed):
+
 1. Flash Brief: Premise, theme question, arc statement, 3 sensory anchors, 5–10 beat action list.
 2. Draft v1 (prose).
 3. Revision with explicit word count target.
@@ -384,6 +404,7 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 <summary><strong>Appendix B: Enforcement Checklist</strong></summary>
 
 **Foundation**
+
 - [ ] Story Brief exists with all required fields (§4)
 - [ ] Length band declared before outlining (§3)
 - [ ] Protagonist arc statement present (§4.2)
@@ -394,16 +415,19 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 - [ ] Research obligations flagged with confidence (§4.4)
 
 **Structure**
+
 - [ ] Beat Sheet completed before prose (§5)
 - [ ] At least 2 escalation points for >2,500 words (§5)
 - [ ] Crisis choice explicit (§5)
 - [ ] Scene count within band limits (§6)
 
 **Scene Planning**
+
 - [ ] Scene lists use factual, single-event sentences (§6)
 - [ ] Each scene outline has Goal, Emotional Shift, Context, Beats (§6.2)
 
 **Prose**
+
 - [ ] Opening avoids prohibited patterns (weather/waking/philosophy/dream) (§7.2)
 - [ ] Opening paragraph establishes 2+ of protagonist/setting/conflict/tone (§7.2)
 - [ ] Perspective/tense consistent and documented (§7.1)
@@ -415,6 +439,7 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 - [ ] Dialogue serves narrative function per exchange (§7.4)
 
 **Assembly and Revision**
+
 - [ ] Word count verified against target (§8.1)
 - [ ] All seams checked for continuity (§8.1)
 - [ ] Continuity Ledger maintained (§8.1)
@@ -430,10 +455,12 @@ Ask at most 3 at a time. If more info needed, proceed with sensible defaults and
 
 **C1: Factual Scene Summary (Compliant vs. Non-Compliant)**
 
-*Non-compliant* (literary, multi-event, emotional telling):
+_Non-compliant_ (literary, multi-event, emotional telling):
+
 > Elias looks at the broken watch and feels a deep sense of dread wash over him, knowing that if he doesn't fix it before the train arrives in ten minutes, his brother will never forgive him for losing their father's heirloom.
 
-*Compliant* (atomic, factual, single-event):
+_Compliant_ (atomic, factual, single-event):
+
 ```text
 Scene 1:
 - Elias sits on the platform bench.
@@ -445,15 +472,18 @@ Scene 1:
 
 **C2: Opening Requirements**
 
-*Non-compliant* (weather/mood):
+_Non-compliant_ (weather/mood):
+
 > The rain came down in sheets the night she finally opened the envelope, as if the sky itself had been waiting to grieve.
 
-*Compliant* (immediate situation):
+_Compliant_ (immediate situation):
+
 > She put the envelope in her bag on the night of the funeral and drove home without opening it.
 
 **C3: Structured Scene Outline**
 
-*Compliant*:
+_Compliant_:
+
 ```text
 SCENE OUTLINE — Scene 2
 SCENE GOAL: Force Delia to admit she has read the will and lied about it.
@@ -483,11 +513,15 @@ Violation: "I can't believe you did this," she said angrily, her voice shaking w
 
 **C5: Ending Integrity**
 
-*Non-compliant* (defers consequence):
+_Non-compliant_ (defers consequence):
+
 > She didn't know yet how much worse things were about to get.
 
-*Compliant* (observable action closing scene):
+_Compliant_ (observable action closing scene):
+
 > She folded the letter once and put it in her coat pocket.
+
 ```
 
 </details>
+```

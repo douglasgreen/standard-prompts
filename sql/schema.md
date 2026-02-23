@@ -4,8 +4,8 @@ description: Standards document for SQL schema development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# SQL schema design and migration standards
 
+# SQL schema design and migration standards
 
 ## Role definition
 
@@ -22,9 +22,11 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Oracle 19c+, SQLite 3.30+, BigQuery, Snowflake) unless specified otherwise. Default to **portable ANSI/ISO SQL** when dialect is unspecified.
 
 ### Context
+
 - Relational database schema design and DDL (tables, constraints, indexes)
 - Data integrity and normalization strategy
 - Database migrations and change management
@@ -32,6 +34,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 - Stored procedure and function signatures (schema interface)
 
 ### Exclusions
+
 - DML query optimization and writing patterns (SELECT, INSERT, UPDATE, DELETE syntax)
 - Application-level connection management and query execution
 - Specific NoSQL database patterns (document stores, key-value, wide-column, graph databases)
@@ -43,6 +46,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 ### 1. Core philosophy and architecture
 
 #### 1.1 Design principles
+
 1.1.1. **MUST** confirm the target SQL dialect before generating dialect-specific DDL. Default to **portable ANSI/ISO SQL** when unspecified.
 
 > **Rationale**: Dialect-specific syntax improves performance and feature utilization but reduces portability. Explicit confirmation prevents syntax errors when moving between database systems.
@@ -58,10 +62,8 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 1.1.4. **SHOULD** design schemas for future evolution. Prefer additive changes (new columns, tables) over destructive modifications (drops, renames) where possible.
 
 #### 1.2 Modularity and physical design
-1.2.1. **MUST** separate concerns physically or logically:
-    - **Schema/DDL** (tables, constraints, indexes)
-    - **Data interface definitions** (views, stored procedure signatures)
-    - **Migrations** (version-controlled, incremental, reversible)
+
+1.2.1. **MUST** separate concerns physically or logically: - **Schema/DDL** (tables, constraints, indexes) - **Data interface definitions** (views, stored procedure signatures) - **Migrations** (version-controlled, incremental, reversible)
 
 > **Rationale**: Separation enables independent testing, deployment, and maintenance of database components without unintended side effects.
 
@@ -69,22 +71,20 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 
 ### 2. Naming conventions
 
-*All identifiers **MUST** use `snake_case` (lowercase with underscores). Identifiers **MUST NOT** exceed 63 characters (PostgreSQL limit for portability) or use SQL reserved words.*
+_All identifiers **MUST** use `snake_case` (lowercase with underscores). Identifiers **MUST NOT** exceed 63 characters (PostgreSQL limit for portability) or use SQL reserved words._
 
 #### 2.1 Tables and columns
+
 2.1.1. **Tables** — **MUST** use singular nouns (`customer`, `order_item`, not `customers`). Join tables **MUST** concatenate entity names alphabetically (`actor_film`).
 
 > **Rationale**: Singular nouns represent the entity type; pluralization rules vary by language and create inconsistency. Alphabetical ordering in join tables prevents arbitrary ordering decisions.
 
-2.1.2. **Columns** — **MUST** be semantic and fully spelled out (avoid abbreviations except universally understood ones: `id`, `url`, `sku`, `utc`).
-    - Booleans — **MUST** use prefix `is_`, `has_`, or `can_` (e.g., `is_active`, `has_permission`).
-    - Timestamps — **MUST** suffix with `_at` (e.g., `created_at`, `updated_at`). Dates **MAY** use `_date` or `_on`.
-    - Foreign Keys — **MUST** use `{referenced_table}_id` (e.g., `user_id` referencing `user.id`). If multiple FKs reference the same table, prefix with role (`shipping_address_id`, `billing_address_id`).
-    - Currency — **MUST** include currency code or use `{amount}_usd` pattern. Never use `FLOAT` for money.
+2.1.2. **Columns** — **MUST** be semantic and fully spelled out (avoid abbreviations except universally understood ones: `id`, `url`, `sku`, `utc`). - Booleans — **MUST** use prefix `is_`, `has_`, or `can_` (e.g., `is_active`, `has_permission`). - Timestamps — **MUST** suffix with `_at` (e.g., `created_at`, `updated_at`). Dates **MAY** use `_date` or `_on`. - Foreign Keys — **MUST** use `{referenced_table}_id` (e.g., `user_id` referencing `user.id`). If multiple FKs reference the same table, prefix with role (`shipping_address_id`, `billing_address_id`). - Currency — **MUST** include currency code or use `{amount}_usd` pattern. Never use `FLOAT` for money.
 
 > **Rationale**: Semantic naming reduces cognitive load and onboarding time. Boolean prefixes create natural language readability. Timestamp suffixes distinguish point-in-time data from dates. FK naming establishes clear referential intent.
 
 #### 2.2 Database objects
+
 2.2.1. **Indexes** — **MUST** use pattern `ix_<table>_<column>[_<column>...]` (e.g., `ix_user_email`).
 
 2.2.2. **Unique constraints** — **MUST** use pattern `uq_<table>_<column>` (e.g., `uq_user_email`).
@@ -108,6 +108,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 ### 3. Schema design and data integrity
 
 #### 3.1 Normalization and keys
+
 3.1.1. **Normalization** — Tables **MUST** be in at least Third Normal Form (3NF) by default. Deliberate denormalization **SHOULD** be documented with justification and refresh strategy.
 
 > **Rationale**: 3NF eliminates update anomalies and ensures data integrity. Denormalization improves read performance but introduces maintenance costs that require explicit management.
@@ -121,6 +122,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 > **Rationale**: Foreign keys enforce referential integrity at the database level, preventing orphaned records. Explicit delete/update policies document and enforce intended relationship lifecycle behaviors.
 
 #### 3.2 Constraints and integrity
+
 3.2.1. **NOT NULL** — Columns **SHOULD** be `NOT NULL` unless missing data is a valid business state.
 
 > **Rationale**: NULLs complicate querying (three-valued logic) and often indicate incomplete data. Explicit NULL allowance documents valid absence states.
@@ -132,6 +134,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 3.2.4. **Defaults** — **SHOULD** provide sensible defaults to avoid `NULL` where appropriate, using `DEFAULT` clauses.
 
 #### 3.3 Indexing strategy
+
 3.3.1. **Foreign keys** — **MUST** be indexed (unless table has fewer than 1,000 rows and is documented as an exception).
 
 > **Rationale**: FK columns are frequently used in JOINs and WHERE clauses; indexing prevents table locks during referential integrity checks and improves join performance.
@@ -141,6 +144,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 3.3.3. **Over-indexing** — Avoid over-indexing; each index adds write overhead. Document the access pattern each non-PK/FK index supports.
 
 #### 3.4 Data types and time handling
+
 3.4.1. **Currency** — **MUST** use `DECIMAL`/`NUMERIC`, never `FLOAT`/`REAL`.
 
 > **Rationale**: Floating-point types introduce rounding errors in financial calculations, violating accounting precision requirements.
@@ -167,12 +171,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 
 > **Rationale**: Failed deployments require rapid rollback to maintain service availability. Down migrations enable automatic recovery from bad schema changes.
 
-4.4. **Backward compatibility** — Schema changes **MUST** use expand-and-contract pattern for zero-downtime deployments:
-    1. Add new column (nullable/with default).
-    2. Deploy code to write to both old and new columns.
-    3. Backfill data.
-    4. Deploy code reading from new column.
-    5. Drop old column in later migration.
+4.4. **Backward compatibility** — Schema changes **MUST** use expand-and-contract pattern for zero-downtime deployments: 1. Add new column (nullable/with default). 2. Deploy code to write to both old and new columns. 3. Backfill data. 4. Deploy code reading from new column. 5. Drop old column in later migration.
 
 > **Rationale**: Expand-and-contract allows rolling deployments without service interruption. Immediate column drops or renames break running application instances.
 
@@ -183,6 +182,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 ### 5. Security and compliance
 
 #### 5.1 Access control and encryption
+
 5.1.1. **Least privilege schema design** — Design schemas to support role-based access. Create separate schemas for sensitive data if cross-tenant access must be physically prevented.
 
 5.1.2. **Row-level security (RLS)** — Multi-tenant databases **SHOULD** implement RLS policies at the schema level rather than relying solely on application-level filtering.
@@ -192,6 +192,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 5.1.3. **Data masking and encryption** — PII/PHI **MUST** be identified in schema documentation. Sensitive columns **SHOULD** use column-level encryption (at rest) and Dynamic Data Masking for non-privileged access.
 
 #### 5.2 Auditing and regulatory compliance
+
 5.2.1. **Audit fields** — **SHOULD** include `created_at`, `updated_at`, `created_by` for traceability on business entities.
 
 5.2.2. **Audit logging** — DDL changes **MUST** be logged (who, what, when). DML on sensitive tables **SHOULD** be logged via audit triggers or Change Data Capture (CDC).
@@ -213,6 +214,7 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 ### Appendix A: Application instructions
 
 **When generating schema DDL:**
+
 1. Confirm target dialect (or default to ANSI SQL).
 2. Silently apply **ALL** standards above.
 3. Start with a short "Assumptions" list (dialect, existing schema dependencies).
@@ -222,14 +224,15 @@ Applicable to all SQL dialects (PostgreSQL 14+, MySQL 8.0+, SQL Server 2019+, Or
 7. Document security classification and RLS policies if applicable.
 
 **When reviewing schema designs:**
+
 1. Parse DDL against **MUST** and **SHOULD** rules.
 2. Produce a **Compliance Report** formatted as:
 
-| Category | Rule (Section) | Severity | Status | Finding | Suggested Fix |
-|:---|:---|:---:|:---:|:---|:---|
-| Design | §3.1.2 Primary Keys | **MUST** | 🔴 FAIL | Table `invoice` missing primary key. | Add `invoice_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY`. |
-| Naming | §2.1.1 Table Names | **MUST** | 🟡 WARN | Table name `Users` is plural and mixed case. | Rename to `user`. |
-| Integrity | §3.1.3 Foreign Keys | **SHOULD** | 🟢 PASS | — | — |
+| Category  | Rule (Section)      |  Severity  | Status  | Finding                                      | Suggested Fix                                                     |
+| :-------- | :------------------ | :--------: | :-----: | :------------------------------------------- | :---------------------------------------------------------------- |
+| Design    | §3.1.2 Primary Keys |  **MUST**  | 🔴 FAIL | Table `invoice` missing primary key.         | Add `invoice_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY`. |
+| Naming    | §2.1.1 Table Names  |  **MUST**  | 🟡 WARN | Table name `Users` is plural and mixed case. | Rename to `user`.                                                 |
+| Integrity | §3.1.3 Foreign Keys | **SHOULD** | 🟢 PASS | —                                            | —                                                                 |
 
 3. Provide a **Summary**: "X of Y rules passed. Z blocking violations."
 4. Provide a **Refactored DDL** in a code block (or a `diff` for large scripts).
@@ -251,7 +254,9 @@ Critical **MUST** items for quick validation:
 ### Appendix C: Examples
 
 #### Example 1: Schema design and constraints
+
 **Non-compliant:**
+
 ```sql
 -- Violations: §2.1.1 (plural), §2.1.2 (mixed case, no FK naming), §3.1.2 (no PK), §3.4.1 (float), §3.1.3 (no FK constraint)
 CREATE TABLE Orders (
@@ -263,6 +268,7 @@ CREATE TABLE Orders (
 ```
 
 **Compliant:**
+
 ```sql
 CREATE TABLE order (
     order_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -285,17 +291,19 @@ CREATE INDEX ix_order_user_id ON order(user_id);
 ```
 
 #### Example 2: Migration with expand-and-contract
+
 **Migration (add column):**
+
 ```sql
 /* Migration: V004__add_order_status_code.sql */
 /* Adds new status code column for legacy code migration */
 
-ALTER TABLE order 
-ADD COLUMN status_code VARCHAR(10) 
+ALTER TABLE order
+ADD COLUMN status_code VARCHAR(10)
     CONSTRAINT chk_order_status_code CHECK (status_code IN ('PND', 'CNF', 'SHP', 'CNC'));
 
 -- Backfill existing data
-UPDATE order SET status_code = 
+UPDATE order SET status_code =
     CASE status
         WHEN 'pending' THEN 'PND'
         WHEN 'confirmed' THEN 'CNF'

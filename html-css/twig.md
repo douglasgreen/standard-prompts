@@ -4,8 +4,8 @@ description: Standards document for Twig development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Twig templating engineering standards
 
+# Twig templating engineering standards
 
 ## Role definition
 
@@ -22,18 +22,22 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
-- **Twig**: **3.0+** (current stable branch)  
-- **PHP**: **8.1+** (minimum runtime for modern Twig features and type safety)  
+
+- **Twig**: **3.0+** (current stable branch)
+- **PHP**: **8.1+** (minimum runtime for modern Twig features and type safety)
 - **Environment**: Server-side rendering contexts (Symfony, Drupal, standalone, or framework-integrated)
 
 ### Context
+
 These standards apply to:
+
 - HTML page templates, layout inheritance chains, and component partials
 - Email templates (text and HTML formats)
 - XML or JSON generation via Twig
 - Reusable macro libraries and embeddable components
 
 ### Exclusions
+
 - **Backend logic**: PHP controller, service, or repository patterns (except where data preparation affects template contracts)
 - **Frontend build systems**: Webpack, Vite, or asset pipeline configuration
 - **Custom Twig extensions**: PHP implementation of filters, functions, or tags (usage guidelines only are included here)
@@ -57,7 +61,8 @@ These standards apply to:
 
 #### 1.2 Template organization
 
-1.2.1. **MUST** organize templates using a consistent directory structure:  
+1.2.1. **MUST** organize templates using a consistent directory structure:
+
 ```
 templates/
 ├── base/           # Root layouts (base.html.twig)
@@ -65,7 +70,8 @@ templates/
 ├── components/     # Reusable UI components (card.html.twig)
 ├── partials/       # Small fragments (header.html.twig)
 └── macros/         # Macro libraries (forms.html.twig)
-```  
+```
+
 **Rationale**: Predictable locations reduce cognitive load and enable automated tooling to locate templates correctly.
 
 1.2.2. **MUST** use descriptive, kebab-case filenames (e.g., `user-profile-card.html.twig`).  
@@ -76,10 +82,12 @@ templates/
 
 #### 1.3 Composition and reuse
 
-1.3.1. **MUST** use `include` with explicit context isolation when full parent context is not required:  
+1.3.1. **MUST** use `include` with explicit context isolation when full parent context is not required:
+
 ```twig
 {{ include('partials/card.html.twig', {title: title, body: body}, with_context = false) }}
-```  
+```
+
 **Rationale**: Prevents accidental variable leakage and makes dependencies explicit for maintainers.
 
 1.3.2. **MUST** allow-list dynamic template names when the template path originates from user input or CMS content.  
@@ -95,12 +103,13 @@ templates/
 2.1.1. **MUST** enforce style via automation using `twig-cs-fixer` or `twigcs` rather than manual review.  
 **Rationale**: Eliminates subjective formatting debates, reduces merge conflicts, and ensures consistency across developer environments and LLM generations.
 
-2.1.2. **MUST** follow official Twig coding standards (key rules summarized below):  
-- One space after opening and before closing delimiters: `{{ variable }}`, `{% if %}`  
-- No spaces around whitespace control dashes: `{{- foo -}}`  
-- One space around binary operators (`+`, `==`, `and`, `~`), **no spaces** around `|`, `.`, `[]`, `..`  
-- Named arguments use `:` with one space after: `{foo: 'bar'}`  
-- snake_case for variables, filters, functions, and arguments  
+2.1.2. **MUST** follow official Twig coding standards (key rules summarized below):
+
+- One space after opening and before closing delimiters: `{{ variable }}`, `{% if %}`
+- No spaces around whitespace control dashes: `{{- foo -}}`
+- One space around binary operators (`+`, `==`, `and`, `~`), **no spaces** around `|`, `.`, `[]`, `..`
+- Named arguments use `:` with one space after: `{foo: 'bar'}`
+- snake_case for variables, filters, functions, and arguments
 - Indent Twig control structures to match the output language indentation (typically 2 spaces for HTML)
 
 **Rationale**: Alignment with upstream Twig project conventions ensures tooling compatibility and reduces friction for developers switching between projects.
@@ -115,20 +124,22 @@ templates/
 3.1.1. **MUST** maintain auto-escaping enabled globally for HTML templates; **MUST NOT** disable globally.  
 **Rationale**: Auto-escaping is the primary defense against XSS; disabling it creates systemic vulnerabilities.
 
-3.1.2. **MUST** use context-aware escaping when outputting to non-HTML contexts:  
-- HTML attributes: `|escape('html_attr')`  
-- JavaScript: `|escape('js')` or render from `.js.twig`  
-- CSS: `|escape('css')`  
+3.1.2. **MUST** use context-aware escaping when outputting to non-HTML contexts:
+
+- HTML attributes: `|escape('html_attr')`
+- JavaScript: `|escape('js')` or render from `.js.twig`
+- CSS: `|escape('css')`
 - URLs: `|url_encode`  
-**Rationale**: HTML entity encoding does not protect against injection in JavaScript, CSS, or URL contexts.
+  **Rationale**: HTML entity encoding does not protect against injection in JavaScript, CSS, or URL contexts.
 
-3.1.3. **MUST** treat `|raw` as a security exception requiring justification:  
-- Only use on data provably safe (sanitized HTML from trusted library, or generated by server-side code)  
+  3.1.3. **MUST** treat `|raw` as a security exception requiring justification:
+
+- Only use on data provably safe (sanitized HTML from trusted library, or generated by server-side code)
 - **MUST** include inline comment stating the safety contract  
-**Rationale**: `|raw` bypasses all escaping; misuse directly enables XSS attacks.
+  **Rationale**: `|raw` bypasses all escaping; misuse directly enables XSS attacks.
 
-3.1.4. **MUST NOT** build inline event handlers (`onclick="{{ ... }}"`) from dynamic strings.  
-**Rationale**: Inline JavaScript contexts are XSS-prone and difficult to escape correctly; use data attributes and external scripts instead.
+  3.1.4. **MUST NOT** build inline event handlers (`onclick="{{ ... }}"`) from dynamic strings.  
+  **Rationale**: Inline JavaScript contexts are XSS-prone and difficult to escape correctly; use data attributes and external scripts instead.
 
 #### 3.2 Sandboxing
 
@@ -203,14 +214,15 @@ templates/
 8.1. **MUST** lint templates in CI/CD using automated tools (`twig-cs-fixer`, `djlint`, or Symfony `lint:twig`).  
 **Rationale**: Automated validation prevents style drift and syntax errors from reaching production.
 
-8.2. **SHOULD** document "template APIs" via DocBlock comments at the top of each public template:  
-- Purpose and expected context variables (names and types)  
-- Optional vs. required variables  
-- Security contracts (e.g., "content must be pre-sanitized if rendered raw")  
-**Rationale**: Reduces onboarding time and prevents misuse across teams.
+8.2. **SHOULD** document "template APIs" via DocBlock comments at the top of each public template:
 
-8.3. **SHOULD** include integration tests for critical templates verifying rendered HTML structure and accessibility attributes.  
-**Rationale**: Prevents regressions in semantic markup and security escaping that visual review misses.
+- Purpose and expected context variables (names and types)
+- Optional vs. required variables
+- Security contracts (e.g., "content must be pre-sanitized if rendered raw")  
+  **Rationale**: Reduces onboarding time and prevents misuse across teams.
+
+  8.3. **SHOULD** include integration tests for critical templates verifying rendered HTML structure and accessibility attributes.  
+  **Rationale**: Prevents regressions in semantic markup and security escaping that visual review misses.
 
 ## Appendices
 
@@ -261,6 +273,7 @@ Critical **MUST** items for quick validation:
 #### C.1 Security: Escaping and `raw` usage
 
 **Non-compliant** (XSS vulnerability, no justification):
+
 ```twig
 <div class="content">
   {{ article.body|raw }}
@@ -272,6 +285,7 @@ Critical **MUST** items for quick validation:
 ```
 
 **Compliant** (context-aware, documented):
+
 ```twig
 <div class="content">
   {# SAFE: article.body_html sanitized server-side via HTMLPurifier #}
@@ -287,6 +301,7 @@ Critical **MUST** items for quick validation:
 #### C.2 Architecture: Separation of concerns
 
 **Non-compliant** (business logic in template, $N+1$ queries):
+
 ```twig
 {% for category in categories %}
   <h2>{{ category.name }}</h2>
@@ -299,6 +314,7 @@ Critical **MUST** items for quick validation:
 ```
 
 **Compliant** (prepared view model):
+
 ```php
 // Controller
 $productsByCategory = [];
@@ -323,6 +339,7 @@ foreach ($categories as $cat) {
 #### C.3 Syntax: Spacing and naming
 
 **Non-compliant**:
+
 ```twig
 {{variable|upper}}
 {%if user.isActive%}
@@ -331,6 +348,7 @@ foreach ($categories as $cat) {
 ```
 
 **Compliant** (per official standards):
+
 ```twig
 {{ variable|upper }}
 {% if user.is_active %}
@@ -341,6 +359,7 @@ foreach ($categories as $cat) {
 #### C.4 Accessibility: Forms and ARIA
 
 **Non-compliant**:
+
 ```twig
 <input type="email" name="email" placeholder="Email">
 <div onclick="submit()">Submit</div>
@@ -348,6 +367,7 @@ foreach ($categories as $cat) {
 ```
 
 **Compliant**:
+
 ```twig
 <label for="email">Email Address</label>
 <input type="email" id="email" name="email" autocomplete="email" required>

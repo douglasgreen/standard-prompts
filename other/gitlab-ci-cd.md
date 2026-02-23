@@ -4,8 +4,8 @@ description: Standards document for Gitlab CI/CD development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# GitLab CI/CD engineering standards for consistent pipeline configuration and automation
 
+# GitLab CI/CD engineering standards for consistent pipeline configuration and automation
 
 ## Role definition
 
@@ -34,6 +34,7 @@ These standards apply when the toolchain meets or exceeds the following versions
 ### Context
 
 These standards apply to:
+
 - GitLab CI/CD pipeline configuration files (`.gitlab-ci.yml` and included files under `.gitlab/ci/`)
 - Job definitions for build, test, security checks, packaging, and deployment
 - CI/CD usage patterns that improve maintainability, speed, correctness, and secure-by-default behavior
@@ -42,6 +43,7 @@ These standards apply to:
 ### Exclusions
 
 This document does **not** cover:
+
 - GitLab Runner installation, infrastructure configuration, or administration
 - Organization-wide network architecture or IAM design (except as they affect CI job safety)
 - Application-specific build tools or testing frameworks (see language-specific standards)
@@ -362,15 +364,17 @@ Critical **MUST** items for quick validation:
 #### Example 1: Mixing `only/except` with `rules` (non-compliant)
 
 **Non-compliant** (violates 3.1.2):
+
 ```yaml
 test:unit:
-  script: ["npm test"]
-  only: ["merge_requests"]
+  script: ['npm test']
+  only: ['merge_requests']
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 ```
 
 **Compliant**:
+
 ```yaml
 test:unit:
   script:
@@ -385,6 +389,7 @@ test:unit:
 #### Example 2: Secret leakage (non-compliant)
 
 **Non-compliant** (violates 7.1, 10.5):
+
 ```yaml
 deploy:prod:
   script:
@@ -393,6 +398,7 @@ deploy:prod:
 ```
 
 **Compliant**:
+
 ```yaml
 deploy:prod:
   script:
@@ -411,6 +417,7 @@ deploy:prod:
 #### Example 3: Unsafe cache key (non-compliant)
 
 **Non-compliant** (violates 6.1.2):
+
 ```yaml
 build:
   script:
@@ -421,6 +428,7 @@ build:
 ```
 
 **Compliant**:
+
 ```yaml
 build:
   stage: build
@@ -444,6 +452,7 @@ build:
 #### Example 4: Missing strict mode (non-compliant)
 
 **Non-compliant** (violates 4.1):
+
 ```yaml
 test:unit:
   script:
@@ -452,6 +461,7 @@ test:unit:
 ```
 
 **Compliant**:
+
 ```yaml
 test:unit:
   script:

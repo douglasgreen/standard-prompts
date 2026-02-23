@@ -4,8 +4,8 @@ description: Standards document for Playwright development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Playwright testing engineering standards
 
+# Playwright testing engineering standards
 
 ## Role definition
 
@@ -22,16 +22,19 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **Playwright Test (@playwright/test)**: 1.58.x or later (pin exact patch in `package.json` / lockfile; upgrade intentionally).
 - **Node.js**: 20.x LTS or 22.x LTS (ensure CI matches local development).
 - **TypeScript**: 5.x (run `tsc --noEmit` in CI; Playwright will not enforce type correctness at runtime).
 - **OS support baseline**: Windows 11+/Server 2019+, macOS 14+, Ubuntu 22.04/24.04.
 
 ### Context
+
 - Applies to end-to-end (E2E) and UI integration testing of web applications using Playwright Test with TypeScript on Node.js.
 - Includes: test architecture, fixtures, configuration, selectors/locators, assertions/waits, test data, reporting/artifacts, CI execution, security/privacy of artifacts, accessibility verification, and cross-browser/device responsiveness.
 
 ### Exclusions
+
 - Unit testing frameworks (Vitest/Jest unit tests) are out of scope except where they support Playwright (e.g., shared utilities).
 - Native mobile app automation is out of scope.
 - Visual design/styling correctness is out of scope except where it impacts usability/accessibility (layout breakpoints, readable contrast, focus visibility).
@@ -42,7 +45,9 @@ The following requirement levels are defined per RFC 2119:
 ### 1. Architecture and project structure
 
 #### 1.1 Test suite layering
+
 1.1.1. **MUST** separate tests into logical directories:
+
 - `tests/e2e/**` for user journeys,
 - `tests/components/**` for component testing (if applicable),
 - `tests/api/**` for APIRequestContext-focused tests,
@@ -58,6 +63,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale (SHOULD)**: Minimizes hidden side effects that cause flakiness and makes dependencies explicit.
 
 #### 1.2 Page Object Model (POM) usage
+
 1.2.1. **MAY** use POM for complex, reusable screens or flows.
 
 1.2.2. **MUST NOT** hide assertions and waiting logic deep inside POM methods unless the method name clearly communicates the expectation (e.g., `expectSignedInHeaderVisible()`).
@@ -67,11 +73,13 @@ The following requirement levels are defined per RFC 2119:
 ### 2. Test philosophy, isolation, and determinism
 
 #### 2.1 User-visible behavior
+
 2.1.1. **MUST** test user-visible behavior, not implementation details (e.g., avoid assertions tied to CSS class names unless they are a public contract).
 
 > **Rationale**: DOM/implementation evolves frequently; user-facing contracts (accessible names, visible text) are more stable and reflect actual user experience.
 
 #### 2.2 Test isolation
+
 2.2.1. **MUST** keep tests independent (no order dependencies; no shared mutated state across tests).
 
 > **Rationale**: Enables parallelism, prevents cascading failures, and improves reproducibility. Interdependent tests create debugging nightmares and prevent CI optimization.
@@ -79,6 +87,7 @@ The following requirement levels are defined per RFC 2119:
 2.2.2. **MUST NOT** share mutable variables between tests in the same file.
 
 #### 2.3 Third-party dependencies
+
 2.3.1. **MUST NOT** rely on third-party sites/services you do not control for test correctness.
 
 2.3.2. **MUST** mock/stub external dependencies via routing or controlled test environments.
@@ -88,6 +97,7 @@ The following requirement levels are defined per RFC 2119:
 ### 3. Playwright Test runner configuration
 
 #### 3.1 Fixtures and isolation
+
 3.1.1. **MUST** rely on Playwright's per-test `context`/`page` fixtures for isolation (avoid manual sharing of `Page` across tests).
 
 > **Rationale**: Shared `Page` instances introduce cross-test coupling and race conditions. Playwright's fixture system ensures clean state for each test.
@@ -97,6 +107,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Fixtures provide better setup/teardown lifecycle management, enable dependency injection, and reduce boilerplate.
 
 #### 3.2 Configuration management
+
 3.2.1. **MUST** keep suite-wide defaults in `playwright.config.ts` (timeouts, retries, tracing, baseURL, projects).
 
 > **Rationale**: Centralized policy prevents drift between files and developers, ensuring consistent behavior across local and CI environments.
@@ -106,7 +117,9 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Prevents hard-coded hostnames and simplifies running tests against staging, production-like, or local environments.
 
 #### 3.3 Project configuration
+
 3.3.1. **SHOULD** define projects for:
+
 - Chromium, Firefox, WebKit,
 - At least one mobile emulation profile (device descriptor) if the product claims mobile support,
 - Optionally a "smoke" subset (tag/grep).
@@ -116,6 +129,7 @@ The following requirement levels are defined per RFC 2119:
 3.3.2. **SHOULD** use projects to separate test categories with different requirements (e.g., setup projects, API tests, E2E tests).
 
 #### 3.4 Retries and tracing policy
+
 3.4.1. **MUST** configure retries and traces so CI failures produce actionable artifacts without excessive overhead (e.g., `trace: 'on-first-retry'`).
 
 > **Rationale**: Always-on tracing is expensive in storage and execution time; no tracing makes CI failures hard to debug. First-retry captures flakes without penalizing stable tests.
@@ -123,7 +137,9 @@ The following requirement levels are defined per RFC 2119:
 ### 4. Locators and selector strategy
 
 #### 4.1 Preferred locator hierarchy
+
 4.1.1. **MUST** prioritize locators in the following order:
+
 1. `page.getByRole()` with accessible name (best for accessibility and resilience),
 2. `page.getByLabel()` for form elements,
 3. `page.getByPlaceholder()` for inputs,
@@ -142,6 +158,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: CSS classes change frequently during refactoring; deep chains break with minor DOM adjustments.
 
 #### 4.2 Locator strictness and chaining
+
 4.2.1. **MUST** ensure locators resolve to a unique element when performing actions; use chaining/filtering where ambiguity exists.
 
 > **Rationale**: Ambiguous locators yield nondeterministic actions and flaky tests. Playwright's strict mode catches these, but proactive locator design prevents issues.
@@ -153,6 +170,7 @@ The following requirement levels are defined per RFC 2119:
 ### 5. Assertions, waiting, and flake resistance
 
 #### 5.1 Web-first assertions
+
 5.1.1. **MUST** use Playwright's web-first `expect()` assertions (e.g., `toBeVisible()`, `toHaveText()`) rather than manual boolean polling (`isVisible()` then `toBe(true)`).
 
 > **Rationale**: Web-first assertions auto-wait and retry, handling async UI updates gracefully without manual waits. Manual polling is prone to race conditions.
@@ -160,6 +178,7 @@ The following requirement levels are defined per RFC 2119:
 5.1.2. **MUST NOT** use generic `expect(value).toBe()` assertions on locator properties without awaiting them properly.
 
 #### 5.2 Synchronization strategy
+
 5.2.1. **MUST NOT** use `waitForTimeout()` as a primary synchronization mechanism.
 
 > **Rationale**: Fixed sleeps slow suites and still fail under variable latency. They mask race conditions rather than solving them. Use explicit conditions or assertions instead.
@@ -169,6 +188,7 @@ The following requirement levels are defined per RFC 2119:
 5.2.3. **SHOULD** use explicit waiting methods (`waitForLoadState`, `waitForResponse`) only when necessary, paired with comments explaining the specific condition.
 
 #### 5.3 Actionability and forcing
+
 5.3.1. **SHOULD** let Playwright's actionability checks (visibility, stability, enabled state) do their job.
 
 5.3.2. **SHOULD NOT** use `force: true` on actions except when the UX truly requires it (e.g., hidden drag handles) and the reason is documented.
@@ -176,11 +196,13 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale (SHOULD)**: Forcing clicks masks real usability bugs (overlays, disabled controls, off-screen elements).
 
 #### 5.4 Soft assertions
+
 5.4.1. **MAY** use `expect.soft()` for non-critical checks where test execution should continue even if validation fails (e.g., verifying optional UI elements).
 
 ### 6. Test data, environments, and secrets
 
 #### 6.1 Secrets management
+
 6.1.1. **MUST** read credentials/tokens from environment variables or secret stores.
 
 6.1.2. **MUST NOT** hard-code secrets in repository or test files.
@@ -188,6 +210,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Prevents credential leakage, supports secure CI rotation, and complies with security audit requirements.
 
 #### 6.2 Authentication state
+
 6.2.1. **MUST** encapsulate authentication logic in a global setup script or project dependencies.
 
 6.2.2. **MUST** use `storageState` to save cookies/local storage after login and reuse this state across tests.
@@ -203,6 +226,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Storage state can contain sensitive cookies/headers and enables impersonation if exposed.
 
 #### 6.3 Test data management
+
 6.3.1. **SHOULD** use dynamic data generation (factories, faker libraries) for form inputs to avoid collision errors during parallel execution.
 
 6.3.2. **SHOULD** decouple test data from test logic using external JSON files, data builder patterns, or fixtures.
@@ -212,6 +236,7 @@ The following requirement levels are defined per RFC 2119:
 ### 7. Performance, parallelism, and suite health
 
 #### 7.1 Parallel execution
+
 7.1.1. **MUST** ensure tests can run in parallel (no shared accounts without partitioning, no global mutable server state without isolation).
 
 > **Rationale**: Parallelism is essential for fast feedback; non-parallel-safe suites become CI bottlenecks as they grow.
@@ -221,6 +246,7 @@ The following requirement levels are defined per RFC 2119:
 7.1.3. **SHOULD** use `test.describe.configure({ mode: 'serial' })` sparingly for test groups that must run sequentially.
 
 #### 7.2 Sharding and optimization
+
 7.2.1. **SHOULD** support sharding for CI scalability when the suite grows.
 
 > **Rationale (SHOULD)**: Enables linear speed-ups and stable build times as the test suite expands.
@@ -230,6 +256,7 @@ The following requirement levels are defined per RFC 2119:
 7.2.3. **SHOULD** reuse authenticated setup via a setup project or storage state rather than logging in on every test.
 
 #### 7.3 Resource cleanup
+
 7.3.1. **SHOULD** implement cleanup in `afterEach` hooks or use explicit resource management when creating multiple pages/contexts.
 
 > **Rationale**: Proper cleanup prevents resource leaks that degrade performance in long-running test suites.
@@ -237,16 +264,19 @@ The following requirement levels are defined per RFC 2119:
 ### 8. Accessibility and inclusive testing
 
 #### 8.1 Accessibility-first locators
+
 8.1.1. **MUST** prefer `getByRole` with accessible name for interactive controls.
 
 > **Rationale**: Encourages semantic markup and improves both test stability and accessibility coverage. If a role locator fails, it often indicates missing semantic HTML that impacts real users.
 
 #### 8.2 Automated accessibility checks
+
 8.2.1. **SHOULD** integrate `@axe-core/playwright` for automated WCAG compliance scanning on critical flows and key pages (auth, checkout, forms).
 
 > **Rationale (SHOULD)**: Catches common WCAG issues early; complements manual audits and ensures inclusive software.
 
 #### 8.3 Keyboard and focus
+
 8.3.1. **SHOULD** include at least one keyboard-only test per critical workflow (Tab order, Enter/Space activation, visible focus indicators).
 
 > **Rationale (SHOULD)**: Prevents regressions affecting keyboard and assistive technology users.
@@ -254,11 +284,13 @@ The following requirement levels are defined per RFC 2119:
 ### 9. Cross-browser, responsiveness, and compatibility
 
 #### 9.1 Engine coverage
+
 9.1.1. **SHOULD** run smoke coverage on all three engines (Chromium/Firefox/WebKit) and full coverage at least on Chromium (or per product risk profile).
 
 > **Rationale (SHOULD)**: Browser engine differences cause real production bugs. Each engine has unique rendering and JavaScript behavior.
 
 #### 9.2 Responsive breakpoints
+
 9.2.1. **SHOULD** validate key pages at representative viewports (mobile, tablet, desktop) using projects/emulation.
 
 > **Rationale (SHOULD)**: Layout regressions often appear only at specific widths, and mobile traffic is significant for most applications.
@@ -266,6 +298,7 @@ The following requirement levels are defined per RFC 2119:
 ### 10. Network, API, and deterministic stubbing
 
 #### 10.1 Network control
+
 10.1.1. **SHOULD** stub unstable endpoints (analytics, third-party embeds) and assert on your app's behavior, not the vendor's uptime.
 
 > **Rationale (SHOULD)**: Stabilizes tests and reduces noise from external dependencies.
@@ -273,6 +306,7 @@ The following requirement levels are defined per RFC 2119:
 10.1.2. **MUST** sanitize API mocks to prevent injection simulations that could mask security issues.
 
 #### 10.2 API setup
+
 10.2.1. **MAY** use `request` fixture for faster state setup (create users/orders via API) when it reduces UI steps and is a supported product workflow.
 
 > **Rationale (MAY)**: Speeds tests while keeping UI assertions focused on what matters to the user experience.
@@ -280,16 +314,19 @@ The following requirement levels are defined per RFC 2119:
 ### 11. Debugging artifacts, reporting, and privacy
 
 #### 11.1 Trace configuration
+
 11.1.1. **MUST** configure trace capture on first retry (or retain-on-failure) and keep trace artifacts for CI failure triage.
 
 > **Rationale**: Traces are the fastest path to root cause for CI-only flakes, providing DOM snapshots, network logs, and console output.
 
 #### 11.2 Privacy in artifacts
+
 11.2.1. **MUST** avoid capturing real user PII in screenshots/videos/traces; use test accounts and sanitized data.
 
 > **Rationale**: Artifacts are widely shared and retained; leaking PII creates compliance and security risks (GDPR, CCPA, etc.).
 
 #### 11.3 Trace sharing
+
 11.3.1. **SHOULD** use `trace.playwright.dev` when sharing traces externally.
 
 > **Rationale (SHOULD)**: Client-side trace viewer minimizes accidental data exfiltration risk compared to uploading to third-party services.
@@ -297,6 +334,7 @@ The following requirement levels are defined per RFC 2119:
 ### 12. Code quality, typing, and automation tooling
 
 #### 12.1 Type checking
+
 12.1.1. **MUST** run `tsc --noEmit` in CI and/or pre-commit to catch signature/type issues early.
 
 > **Rationale**: Playwright will run tests even with non-critical TS errors; CI must enforce correctness to prevent runtime surprises.
@@ -304,6 +342,7 @@ The following requirement levels are defined per RFC 2119:
 12.1.2. **MUST** type custom fixtures and helper functions; avoid `any` types.
 
 #### 12.2 Linting
+
 12.2.1. **MUST** enforce `@typescript-eslint/no-floating-promises` to prevent missing `await` on async Playwright calls.
 
 > **Rationale**: Missing awaits cause nondeterministic behavior and false positives/negatives, making tests silently unreliable.
@@ -311,6 +350,7 @@ The following requirement levels are defined per RFC 2119:
 12.2.2. **MUST** use `eslint-plugin-playwright` for Playwright-specific rules.
 
 #### 12.3 Formatting
+
 12.3.1. **SHOULD** use Prettier (or equivalent) and enforce via CI rather than manual formatting rules.
 
 > **Rationale (SHOULD)**: Reduces stylistic diff noise and review friction, ensuring consistent formatting without debate.
@@ -318,6 +358,7 @@ The following requirement levels are defined per RFC 2119:
 ### 13. Documentation and reviewability
 
 #### 13.1 Test naming
+
 13.1.1. **MUST** use descriptive test names that state intent and expected outcome (not implementation steps).
 
 > **Rationale**: Failures become self-explanatory in reports and CI logs, reducing debugging time.
@@ -325,11 +366,13 @@ The following requirement levels are defined per RFC 2119:
 13.1.2. **SHOULD** use BDD-style naming for complex scenarios: "given [state], when [action], then [outcome]".
 
 #### 13.2 Step annotations
+
 13.2.1. **SHOULD** use `test.step()` for multi-stage flows (login → action → verification) to improve trace/report readability.
 
 > **Rationale (SHOULD)**: Faster debugging and clearer ownership of specific failure points.
 
 #### 13.3 Developer documentation
+
 13.3.1. **SHOULD** document how to run: single tests, tagged subsets, headed/debug mode, update snapshots, view reports/traces.
 
 > **Rationale (SHOULD)**: Reduces onboarding time and "works on my machine" variance.
@@ -339,7 +382,9 @@ The following requirement levels are defined per RFC 2119:
 ### Appendix A: Application instructions
 
 #### When generating new code
+
 You **MUST**:
+
 1. Ask for missing constraints only if they materially affect correctness (auth method, baseURL, CI provider, supported browsers).
 2. Propose a minimal, scalable structure (config + fixtures + example spec).
 3. Output:
@@ -349,7 +394,9 @@ You **MUST**:
 4. Default to TypeScript + Playwright Test unless explicitly requested otherwise.
 
 #### When reviewing existing code
+
 You **MUST**:
+
 1. Produce a **Compliance Report** with this structure:
    - **Summary** (pass/fail + top 3 risks).
    - **Findings Table**: `Severity | Rule | File:Line | Problem | Fix`.
@@ -362,6 +409,7 @@ You **MUST**:
 4. If security violations exist (exposed credentials, unsafe copy-paste examples), prepend a ⚠️ **SECURITY WARNING** banner.
 
 #### Response style requirements
+
 - Be concise and structured.
 - Prefer checklists and diffs over long prose.
 - Bold all **MUST**/**SHOULD**/**MAY** references for emphasis.
@@ -388,14 +436,18 @@ Critical **MUST** items for quick validation:
 #### C1. Locators: user-facing vs brittle CSS
 
 **Non-compliant:**
+
 ```typescript
 // Brittle selectors tied to implementation
 await page.locator('.btn.btn-primary.submit-button').click();
-await page.locator('div.form-container > form > input[name="email"]').fill('test@example.com');
+await page
+  .locator('div.form-container > form > input[name="email"]')
+  .fill('test@example.com');
 await page.locator('//div[@class="header"]/nav/ul/li[3]/a').click();
 ```
 
 **Compliant:**
+
 ```typescript
 // User-centric, semantic locators
 await page.getByRole('button', { name: 'Submit' }).click();
@@ -406,6 +458,7 @@ await page.getByRole('navigation').getByRole('link', { name: 'About' }).click();
 #### C2. Assertions: web-first auto-wait vs manual polling
 
 **Non-compliant:**
+
 ```typescript
 // Manual polling - race condition prone
 const isVisible = await page.locator('.message').isVisible();
@@ -416,6 +469,7 @@ expect(await page.getByText('Welcome').textContent()).toBe('Welcome');
 ```
 
 **Compliant:**
+
 ```typescript
 // Web-first assertions with automatic retrying
 await expect(page.getByText('Welcome')).toBeVisible();
@@ -426,6 +480,7 @@ await expect(page.getByRole('button', { name: 'Submit' })).toBeEnabled();
 #### C3. Synchronization: fixed sleep vs condition-based wait
 
 **Non-compliant:**
+
 ```typescript
 await page.getByRole('button', { name: 'Save' }).click();
 await page.waitForTimeout(2000); // Arbitrary delay
@@ -433,6 +488,7 @@ await expect(page.getByText('Saved')).toBeVisible();
 ```
 
 **Compliant:**
+
 ```typescript
 await page.getByRole('button', { name: 'Save' }).click();
 // Web-first assertion auto-waits for the condition
@@ -442,6 +498,7 @@ await expect(page.getByText('Saved')).toBeVisible();
 #### C4. Authentication: setup project vs repeated UI login
 
 **Non-compliant:**
+
 ```typescript
 // Slow, flaky, repeated in every test
 test.beforeEach(async ({ page }) => {
@@ -454,6 +511,7 @@ test.beforeEach(async ({ page }) => {
 ```
 
 **Compliant:**
+
 ```typescript
 // tests/auth.setup.ts
 import { test as setup, expect } from '@playwright/test';
@@ -489,6 +547,7 @@ test('user can view dashboard', async ({ page }) => {
 #### C5. Test isolation: shared state vs independent tests
 
 **Non-compliant:**
+
 ```typescript
 // Shared mutable state between tests
 let userId: string;
@@ -505,6 +564,7 @@ test('edit user', async ({ page }) => {
 ```
 
 **Compliant:**
+
 ```typescript
 // Each test independent with setup helper
 async function createTestUser(request: APIRequestContext) {

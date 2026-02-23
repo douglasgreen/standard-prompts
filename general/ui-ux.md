@@ -4,8 +4,8 @@ description: Standards document for user interface and user experience design
 version: 1.0.0
 modified: 2026-02-20
 ---
-# User experience engineering standards for web applications
 
+# User experience engineering standards for web applications
 
 ## Role definition
 
@@ -22,6 +22,7 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **HTML**: HTML Living Standard (current mainstream browser support).
 - **CSS**: CSS3+ with modern layout features (Flexbox, Grid, Container Queries).
 - **JavaScript**: ECMAScript 2023+ (ES14).
@@ -30,10 +31,12 @@ The following requirement levels are defined per RFC 2119:
 - **Testing**: Playwright 1.40+ (E2E), Testing Library 14+ (component/unit).
 
 ### Context
+
 - Applies to **frontend web applications**, **single-page applications (SPAs)**, **server-side rendered (SSR)** pages, **progressive web applications (PWAs)**, and **component libraries/design systems**.
 - Governs **code generation**, **code review**, **UI behavior**, **accessibility conformance**, **performance budgeting**, **security/privacy UX**, and **documentation** as they affect user outcomes.
 
 ### Exclusions
+
 - **Backend business logic** (database queries, API controller logic) except where required for UX guarantees (latency budgets, error semantics, safe retries).
 - **Brand/visual identity** (color palette selection, illustration style, typography brand choices) except where they impact accessibility (contrast ratios, legibility).
 - **Legacy browser support** (Internet Explorer 11 and earlier); if required, the user must specify targeted legacy environments.
@@ -46,6 +49,7 @@ The following requirement levels are defined per RFC 2119:
 ### 1. Architecture and separation of concerns
 
 #### 1.1 Component boundaries
+
 1.1.1. **MUST** separate concerns between **structure** (semantic HTML), **presentation** (CSS), and **behavior** (JavaScript/TypeScript). Avoid generating markup driven solely by JavaScript when static HTML suffices.
 
 > **Rationale**: Maintains accessibility tree integrity, improves maintainability, and prevents performance degradation from hydration-heavy patterns. Semantic HTML provides built-in accessibility behaviors that JavaScript implementations often break.
@@ -65,6 +69,7 @@ The following requirement levels are defined per RFC 2119:
 1.1.5. **SHOULD** centralize shared UI patterns (buttons, form controls, dialogs, alerts) in a versioned design system with documented accessibility behaviors.
 
 #### 1.2 Design tokens and theming
+
 1.2.1. **MUST** define all visual design properties (colors, spacing, typography, elevation) as design tokens in a centralized, themeable configuration.
 
 > **Rationale**: Enables systematic theming (including dark mode/high contrast), maintains visual consistency across platforms, and allows global updates without component code changes.
@@ -76,6 +81,7 @@ The following requirement levels are defined per RFC 2119:
 ### 2. Accessibility and inclusive design
 
 #### 2.1 Semantic structure
+
 2.1.1. **MUST** use semantic HTML elements (`<main>`, `<nav>`, `<article>`, `<button>`, `<a>`) rather than generic `<div>` or `<span>` elements for interactive or structural purposes.
 
 > **Rationale**: Semantic elements provide built-in keyboard support, focus management, and roles that assistive technologies rely on; generic elements require error-prone ARIA polyfills.
@@ -93,6 +99,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Motor-impaired users, power users, and those with temporary disabilities (broken mouse) rely on keyboard navigation; mouse-only functionality excludes these users.
 
 #### 2.2 Visual accessibility
+
 2.2.1. **MUST** maintain minimum contrast ratios: 4.5:1 for normal text, 3:1 for large text (18pt+), and 3:1 for UI components (borders, form fields).
 
 > **Rationale**: Low contrast text is illegible for users with low vision, color vision deficiencies, or using devices in bright sunlight; WCAG 2.2 Level AA mandates these ratios.
@@ -106,6 +113,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Color blindness affects approximately 8% of the male population; relying solely on color creates barriers for these users and fails WCAG 1.4.1 Use of Color.
 
 #### 2.3 Screen reader and assistive technology support
+
 2.3.1. **MUST** associate form labels with inputs using `<label for="id">` or implicit nesting; placeholder text must not substitute for labels.
 
 > **Rationale**: Placeholders disappear on input, lack sufficient contrast, and are inconsistently announced by screen readers; persistent labels provide necessary context.
@@ -121,6 +129,7 @@ The following requirement levels are defined per RFC 2119:
 ### 3. Responsive and cross-device UX
 
 #### 3.1 Mobile-first architecture
+
 3.1.1. **MUST** implement layouts using a mobile-first approach: base styles target the smallest viewport ($320$px), with progressive enhancement via `min-width` media queries.
 
 > **Rationale**: Mobile devices account for the majority of global web traffic; mobile-first ensures core functionality works on constrained devices and prevents desktop-centric assumptions that break mobile experiences.
@@ -134,6 +143,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Fixed units fail to scale with user browser preferences (zoom text only) and diverse screen densities, creating accessibility barriers for users requiring larger text.
 
 #### 3.2 Input adaptation
+
 3.2.1. **MUST** use appropriate HTML5 input types (`type="email"`, `type="tel"`, `type="date"`) to trigger contextual keyboards on mobile devices.
 
 > **Rationale**: Improves input accuracy and reduces friction by providing optimized keyboards (e.g., `@` and `.` visible for email) without requiring custom JavaScript.
@@ -145,6 +155,7 @@ The following requirement levels are defined per RFC 2119:
 ### 4. Performance and perceived performance
 
 #### 4.1 Core Web Vitals
+
 4.1.1. **MUST** optimize for user-perceived speed: Largest Contentful Paint (LCP) $\leq 2.5$s, Interaction to Next Paint (INP) $\leq 200$ms, Cumulative Layout Shift (CLS) $\leq 0.1$.
 
 > **Rationale**: These metrics directly impact user engagement, conversion rates, and SEO rankings; they measure real-world loading performance, interactivity, and visual stability.
@@ -154,6 +165,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Unexpected layout shifts cause users to click wrong elements, lose reading position, and experience frustration; CLS measures this visual instability.
 
 #### 4.2 Loading and interaction states
+
 4.2.1. **MUST** provide immediate visual feedback (skeleton screens, progress indicators, or loading spinners) for user actions exceeding $200$ms.
 
 > **Rationale**: Delays beyond human perception thresholds ($100$-$200$ms) cause users to believe the system is unresponsive; immediate feedback maintains trust and prevents duplicate submissions.
@@ -165,6 +177,7 @@ The following requirement levels are defined per RFC 2119:
 ### 5. Forms, validation, and data entry
 
 #### 5.1 Form structure
+
 5.1.1. **MUST** validate input both client-side (for immediate feedback) and server-side (for security), never relying solely on client-side validation.
 
 > **Rationale**: Client-side validation improves UX by providing immediate feedback, but server-side validation is required for security; relying only on client-side creates vulnerabilities.
@@ -174,6 +187,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Prevents duplicate data entry, duplicate charges, and confusing error states caused by network latency leading users to believe submissions failed.
 
 #### 5.2 Error presentation
+
 5.2.1. **MUST** display error messages adjacent to the relevant field using `aria-describedby` association, and provide a form-level error summary for complex forms.
 
 > **Rationale**: Screen readers require explicit field associations to announce errors in context; color-only indication fails color-blind users.
@@ -189,6 +203,7 @@ The following requirement levels are defined per RFC 2119:
 ### 6. Error handling and system feedback
 
 #### 6.1 System status visibility
+
 6.1.1. **MUST** maintain clear system status: indicate loading states, success confirmations, and error states explicitly without relying solely on color.
 
 > **Rationale**: Users require confirmation that actions succeeded; lack of feedback leads to repeated actions (double-clicks, duplicate submissions) and anxiety.
@@ -202,6 +217,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Empty states are teachable moments and prevent user confusion about whether content failed to load or truly does not exist.
 
 #### 6.2 Destructive actions
+
 6.2.1. **MUST** require confirmation or provide undo capability for destructive actions (deletion, irreversible updates) proportional to the impact.
 
 > **Rationale**: Prevents data loss from accidental clicks; the severity of confirmation should match the consequence (e.g., simple confirmation for deleting a draft, typed confirmation for account deletion).
@@ -209,6 +225,7 @@ The following requirement levels are defined per RFC 2119:
 ### 7. Security and privacy UX
 
 #### 7.1 Input sanitization and security
+
 7.1.1. **MUST** sanitize all user-generated content rendered in the DOM to prevent XSS attacks; never use `innerHTML` with untrusted data.
 
 > **Rationale**: XSS vulnerabilities compromise user sessions and data; safe templating and text content insertion prevent script injection.
@@ -222,6 +239,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Information leakage assists attackers; generic user-facing messages with specific error codes for support logs balance security with debuggability.
 
 #### 7.2 Data protection
+
 7.2.1. **MUST** avoid storing sensitive data (PII, authentication tokens, financial data) in `localStorage` or unencrypted client storage.
 
 > **Rationale**: Client storage is accessible to JavaScript and vulnerable to XSS exfiltration; secure, `httpOnly` cookies or secure storage APIs are required for sensitive data.
@@ -233,6 +251,7 @@ The following requirement levels are defined per RFC 2119:
 ### 8. Navigation and information architecture
 
 #### 8.1 Wayfinding and orientation
+
 8.1.1. **MUST** provide clear indication of current location (active navigation states, breadcrumbs when nested $>2$ levels deep).
 
 > **Rationale**: Reduces disorientation and cognitive load; users must understand "where am I" and "where can I go" to complete tasks efficiently.
@@ -242,6 +261,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Landmarks enable screen reader users to navigate page regions efficiently; skip links provide keyboard access to main content.
 
 #### 8.2 URLs and routing
+
 8.2.1. **MUST** use stable, shareable URLs for meaningful application states (filters, search, pagination, selected items) when the application behaves as discrete pages.
 
 > **Rationale**: Supports bookmarking, sharing, back/forward expectations, and analytics; broken back buttons violate user trust and mental models.
@@ -249,6 +269,7 @@ The following requirement levels are defined per RFC 2119:
 ### 9. Content and visual design
 
 #### 9.1 Typography and readability
+
 9.1.1. **MUST** set base font size to minimum $16$px ($1$rem) to ensure readability without browser zoom.
 
 > **Rationale**: Smaller fonts require zooming for legibility, particularly for users with low vision; $16$px is the browser default and prevents iOS zoom-on-input-focus issues.
@@ -262,6 +283,7 @@ The following requirement levels are defined per RFC 2119:
 > **Rationale**: Tight line heights reduce reading speed and accuracy; adequate spacing improves comprehension for all users, critical for those with reading disabilities.
 
 #### 9.2 Animation and motion
+
 9.2.1. **MUST** respect `prefers-reduced-motion` by disabling or reducing animations for users who request it.
 
 > **Rationale**: Motion can trigger vestibular disorders, migraines, and seizures; respecting this preference is an accessibility requirement and legal mandate in some jurisdictions.
@@ -358,49 +380,63 @@ Critical **MUST** items for rapid validation:
 ### Appendix C: Examples
 
 #### C1. Semantic buttons vs. div buttons
+
 **Non-compliant**:
+
 ```html
 <div class="btn" onclick="submitForm()">Submit</div>
 ```
-*Violations*: Not keyboard accessible; no focus indicator; screen reader announces as "text" not "button"; missing `type` attribute.
+
+_Violations_: Not keyboard accessible; no focus indicator; screen reader announces as "text" not "button"; missing `type` attribute.
 
 **Compliant**:
+
 ```html
 <button type="submit" onclick="submitForm()">Submit</button>
 ```
 
 #### C2. Form error handling
+
 **Non-compliant**:
+
 ```html
-<input type="email" style="border: 1px solid red;">
+<input type="email" style="border: 1px solid red;" />
 <span style="color: red;">Invalid</span>
 ```
-*Violations*: Color-only indication; not announced to screen readers; no label association.
+
+_Violations_: Color-only indication; not announced to screen readers; no label association.
 
 **Compliant**:
+
 ```html
 <label for="user-email">Email Address</label>
-<input 
-  type="email" 
-  id="user-email" 
+<input
+  type="email"
+  id="user-email"
   name="email"
   aria-required="true"
   aria-invalid="true"
   aria-describedby="email-error"
->
-<p id="email-error" role="alert">Enter a valid email address, such as name@example.com</p>
+/>
+<p id="email-error" role="alert">
+  Enter a valid email address, such as name@example.com
+</p>
 ```
 
 #### C3. Image optimization and accessibility
+
 **Non-compliant**:
+
 ```html
-<img src="photo.jpg" alt="image">
+<img src="photo.jpg" alt="image" />
 ```
-*Violations*: Non-descriptive alt text; no dimensions (causes CLS); no responsive sizing.
+
+_Violations_: Non-descriptive alt text; no dimensions (causes CLS); no responsive sizing.
 
 **Compliant**:
+
 ```html
-<img 
+<img
   src="hero-800.jpg"
   srcset="hero-400.jpg 400w, hero-800.jpg 800w, hero-1200.jpg 1200w"
   sizes="(max-width: 600px) 100vw, 50vw"
@@ -408,11 +444,13 @@ Critical **MUST** items for rapid validation:
   width="800"
   height="600"
   loading="lazy"
->
+/>
 ```
 
 #### C4. Modal dialog focus management
+
 **Non-compliant**:
+
 ```javascript
 // Opens modal but focus remains on background
 function openModal() {
@@ -421,21 +459,22 @@ function openModal() {
 ```
 
 **Compliant**:
+
 ```javascript
 function openModal() {
   const modal = document.getElementById('modal');
   const trigger = document.activeElement;
-  
+
   modal.style.display = 'block';
   modal.setAttribute('aria-hidden', 'false');
-  
+
   // Trap focus within modal
   const focusableElements = modal.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
   );
   const firstFocusable = focusableElements[0];
   firstFocusable.focus();
-  
+
   // Store trigger for later
   modal.dataset.triggerId = trigger.id || 'trigger';
 }
@@ -444,7 +483,7 @@ function closeModal() {
   const modal = document.getElementById('modal');
   modal.style.display = 'none';
   modal.setAttribute('aria-hidden', 'true');
-  
+
   // Return focus to trigger
   const triggerId = modal.dataset.triggerId;
   document.getElementById(triggerId)?.focus();
@@ -452,32 +491,42 @@ function closeModal() {
 ```
 
 #### C5. Skeleton loading vs. layout shift
+
 **Non-compliant**:
+
 ```html
 <div id="content"></div>
 <script>
   // Content injected without reserved space
-  fetch('/data').then(r => r.json()).then(data => {
-    content.innerHTML = `<img src="${data.image}"><h2>${data.title}</h2>`;
-  });
+  fetch('/data')
+    .then((r) => r.json())
+    .then((data) => {
+      content.innerHTML = `<img src="${data.image}"><h2>${data.title}</h2>`;
+    });
 </script>
 ```
 
 **Compliant**:
+
 ```html
 <article aria-busy="true" aria-live="polite">
   <div class="skeleton" style="height: 200px; aspect-ratio: 16/9;"></div>
-  <div class="skeleton" style="height: 1.5rem; width: 80%; margin-top: 1rem;"></div>
+  <div
+    class="skeleton"
+    style="height: 1.5rem; width: 80%; margin-top: 1rem;"
+  ></div>
 </article>
 
 <script>
-  fetch('/data').then(r => r.json()).then(data => {
-    const article = document.querySelector('article');
-    article.innerHTML = `
+  fetch('/data')
+    .then((r) => r.json())
+    .then((data) => {
+      const article = document.querySelector('article');
+      article.innerHTML = `
       <img src="${data.image}" alt="" width="800" height="450">
       <h2>${data.title}</h2>
     `;
-    article.setAttribute('aria-busy', 'false');
-  });
+      article.setAttribute('aria-busy', 'false');
+    });
 </script>
 ```

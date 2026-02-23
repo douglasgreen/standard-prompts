@@ -4,8 +4,8 @@ description: Standards document for software project documentation
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Software documentation standards
 
+# Software documentation standards
 
 ## Role definition
 
@@ -84,6 +84,7 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 > **Rationale**: Treating documentation as code ensures version control, collaborative review, and automated quality checks, preventing documentation drift from implementation.
 
 2.1.2. **MUST** categorize documentation by audience (end users vs. developers) and lifecycle stage (planning vs. maintenance), following the Diátaxis taxonomy:
+
 - **Tutorials**: Learning-oriented, for beginners
 - **How-to Guides**: Task-oriented, for specific problems
 - **Reference**: Information-oriented, for lookup
@@ -113,30 +114,30 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 
 2.3.1. **MUST** maintain the following repository-level documents in the repository root:
 
-| Question to answer | Document | Diátaxis type |
-|:---|:---|:---|
-| What does this project do and why does it exist? | `README.md` | Explanation |
-| How do I install and configure this project? | `README.md` | How-to guide |
-| What has changed since the last version? | `CHANGELOG.md` | Reference |
-| Under what legal terms can I use this code? | `LICENSE` | Reference |
+| Question to answer                               | Document       | Diátaxis type |
+| :----------------------------------------------- | :------------- | :------------ |
+| What does this project do and why does it exist? | `README.md`    | Explanation   |
+| How do I install and configure this project?     | `README.md`    | How-to guide  |
+| What has changed since the last version?         | `CHANGELOG.md` | Reference     |
+| Under what legal terms can I use this code?      | `LICENSE`      | Reference     |
 
 2.3.2. **MUST** maintain the following development documentation in `/docs/development/`:
 
-| Question to answer | Document | Diátaxis type |
-|:---|:---|:---|
-| How do I set up my IDE and development environment? | `docs/development/setup.md` | Tutorial |
-| How do I run unit and integration tests? | `docs/development/testing.md` | How-to guide |
-| How is the source code organized? | `docs/architecture.md` | Explanation |
-| What are known technical debt items? | `docs/adr/` or GitHub Issues | Explanation |
+| Question to answer                                  | Document                      | Diátaxis type |
+| :-------------------------------------------------- | :---------------------------- | :------------ |
+| How do I set up my IDE and development environment? | `docs/development/setup.md`   | Tutorial      |
+| How do I run unit and integration tests?            | `docs/development/testing.md` | How-to guide  |
+| How is the source code organized?                   | `docs/architecture.md`        | Explanation   |
+| What are known technical debt items?                | `docs/adr/` or GitHub Issues  | Explanation   |
 
 2.3.3. **MUST** maintain the following architecture documentation in `/docs/architecture/` and `/docs/adr/`:
 
-| Question to answer | Document | Diátaxis type |
-|:---|:---|:---|
-| What is the high-level system architecture? | `docs/architecture.md` | Explanation |
-| Why did we choose this database or framework? | `docs/adr/NNNN-decision-title.md` | Explanation |
-| How do services communicate? | `docs/architecture.md` (C4/Mermaid) | Reference |
-| What does the database schema look like? | `docs/database/schema.md` | Reference |
+| Question to answer                            | Document                            | Diátaxis type |
+| :-------------------------------------------- | :---------------------------------- | :------------ |
+| What is the high-level system architecture?   | `docs/architecture.md`              | Explanation   |
+| Why did we choose this database or framework? | `docs/adr/NNNN-decision-title.md`   | Explanation   |
+| How do services communicate?                  | `docs/architecture.md` (C4/Mermaid) | Reference     |
+| What does the database schema look like?      | `docs/database/schema.md`           | Reference     |
 
 > **Rationale**: Mandatory inventory ensures critical knowledge is captured and discoverable, reducing bus factor and onboarding friction.
 
@@ -208,13 +209,13 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 
 > **Rationale**: Reduces onboarding time and API misuse by providing complete contract information at point of use.
 
-4.1.3. **MUST** keep comments adjacent to code (line-level) focused on *why* the code exists; update comments when code changes (DRY applies to comments too).
+4.1.3. **MUST** keep comments adjacent to code (line-level) focused on _why_ the code exists; update comments when code changes (DRY applies to comments too).
 
 > **Rationale**: Outdated comments create maintenance hazards and mislead developers during debugging.
 
 4.1.4. **MUST** include documentation comments for public APIs following this template:
 
-```typescript
+````typescript
 /**
  * Retrieves a user by their unique identifier.
  *
@@ -230,7 +231,7 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 async getById(userId: string): Promise<User> {
   // Implementation explains why, not what
 }
-```
+````
 
 #### 4.2 Code block standards
 
@@ -238,11 +239,11 @@ async getById(userId: string): Promise<User> {
 
 > **Rationale**: Non-working examples erode user trust, increase support burden, and lead to implementation errors.
 
-4.2.2. **MUST** include syntax highlighting language tags on all fenced code blocks (```python, ```json, ```bash); never leave untagged.
+4.2.2. **MUST** include syntax highlighting language tags on all fenced code blocks (`python, `json, ```bash); never leave untagged.
 
 > **Rationale**: Syntax highlighting reduces parsing errors, improves code comprehension, and enables automated linting.
 
-4.2.3. **MUST** annotate code examples with inline comments explaining *why* not *what* (code shows what, comments show intent); avoid stating the obvious (`x = 5 // Set x to 5`).
+4.2.3. **MUST** annotate code examples with inline comments explaining _why_ not _what_ (code shows what, comments show intent); avoid stating the obvious (`x = 5 // Set x to 5`).
 
 > **Rationale**: Explains intent for maintenance and debugging contexts; "what" comments duplicate code and drift out of sync.
 
@@ -288,12 +289,13 @@ docs/api/
 > **Rationale**: Structured LLM context enables AI-assisted development tools to provide accurate, context-aware assistance without hallucination.
 
 5.2.2. **MUST** include in LLM context files:
+
 - Quick index of all public APIs
 - Parameters, return types, and exceptions
 - Usage examples
 - File size under 50KB when possible
 
-5.2.3. **MUST** regenerate LLM context automatically in CI/CD on every push to main.
+  5.2.3. **MUST** regenerate LLM context automatically in CI/CD on every push to main.
 
 > **Rationale**: Ensures LLM context remains synchronized with code changes, preventing stale or incorrect AI assistance.
 
@@ -477,12 +479,12 @@ docs/api/
 
 10.1.2. **MUST** include formatter configurations in version control:
 
-| Language | Formatter | Linter | Config |
-|----------|-----------|--------|--------|
-| TypeScript | Prettier | ESLint | `.prettierrc`, `.eslintrc` |
-| Python | Black | Ruff | `pyproject.toml` |
-| Go | gofmt | golangci-lint | `.golangci.yml` |
-| PHP | (built-in) | PHP_CodeSniffer | `.phpcs.xml` |
+| Language   | Formatter  | Linter          | Config                     |
+| ---------- | ---------- | --------------- | -------------------------- |
+| TypeScript | Prettier   | ESLint          | `.prettierrc`, `.eslintrc` |
+| Python     | Black      | Ruff            | `pyproject.toml`           |
+| Go         | gofmt      | golangci-lint   | `.golangci.yml`            |
+| PHP        | (built-in) | PHP_CodeSniffer | `.phpcs.xml`               |
 
 10.1.3. **MUST** run formatters in CI with `--check` flag and fail builds on formatting violations.
 
@@ -538,6 +540,7 @@ docs/api/
 4. If security violations exist (exposed credentials, unsafe copy-paste examples), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Bold all **MUST**/**SHOULD**/**MAY** references for emphasis.
 - Use Markdown for examples; show before/after diffs for style corrections.
 - Keep explanations concise; demonstrate plain language principles in explanations.
@@ -589,7 +592,8 @@ docs/
 ### Appendix D: Examples
 
 **Non-compliant (passive, unclear, insecure):**
-```markdown
+
+````markdown
 # Configuration of The Database Settings
 
 In order to simply configure the database, it is recommended that the
@@ -603,11 +607,13 @@ must be set.
   "api_key": "sk-1234567890abcdef"
 }
 ```
+````
 
 Click here to see the documentation.
 
 Note: Some stuff might break if you do this wrong.
-```
+
+````
 
 **Compliant (active, clear, secure, accessible):**
 ```markdown
@@ -642,11 +648,11 @@ have installed PostgreSQL 14+ and created a database.
      "username": "db_user",
      "password": "<YOUR_DB_PASSWORD>"
    }
-   ```
+````
 
-   > **WARNING:**
-   > Never commit passwords to version control. Use environment variables
-   > or a secrets manager in production.
+> **WARNING:**
+> Never commit passwords to version control. Use environment variables
+> or a secrets manager in production.
 
 3. Save the file and restart the application.
 
@@ -669,4 +675,7 @@ If you see connection errors, see [Troubleshoot database connections](./troubles
 ---
 
 **Next:** [Configure caching](./caching.md)
+
+```
+
 ```

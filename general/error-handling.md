@@ -4,8 +4,8 @@ description: Standards document for error handling
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Engineering standards for data validation, sanitization, and error/exception handling
 
+# Engineering standards for data validation, sanitization, and error/exception handling
 
 ## Role definition
 
@@ -22,7 +22,9 @@ These requirement levels are defined per RFC 2119 to ensure consistent interpret
 ## Scope and limitations
 
 ### Target versions
+
 Standards apply to modern Long-Term Support (LTS) environments and later:
+
 - **Python**: 3.12+
 - **Node.js**: 20 LTS+
 - **TypeScript**: 5.4+
@@ -35,7 +37,9 @@ Standards apply to modern Long-Term Support (LTS) environments and later:
 - **Protocols**: HTTP (RFC 9110), TLS 1.3 (RFC 8446), JSON (RFC 8259)
 
 ### Context
+
 These standards govern:
+
 - RESTful/GraphQL API input handling and response formatting
 - Frontend form validation and error feedback (accessibility requirements)
 - Database persistence layers and query construction
@@ -43,6 +47,7 @@ These standards govern:
 - File upload handling and binary data processing
 
 ### Exclusions
+
 - Business logic implementation beyond validation constraints (e.g., specific pricing calculations after validation succeeds)
 - UI visual styling and CSS theming (though semantic markup and ARIA requirements apply)
 - Infrastructure-as-code and deployment pipeline configuration
@@ -56,6 +61,7 @@ These standards govern:
 ### 1. Architecture and trust boundaries
 
 #### 1.1 Validation layering
+
 1.1.1 **MUST** implement validation as a distinct layer separated from business logic and persistence, following the sequence: ingress schema validation → domain model validation → database constraint enforcement.
 
 > **Rationale**: Reduces cognitive load, prevents inconsistent checks across endpoints, and ensures defense-in-depth against bypass attempts.
@@ -69,6 +75,7 @@ These standards govern:
 > **Rationale**: Prevents confused-deputy scenarios and ensures no single bypass compromises the system.
 
 #### 1.2 Centralization and reuse
+
 1.2.1 **MUST** centralize reusable validation rules (email formats, identifier patterns, pagination limits) into shared modules with single sources of truth.
 
 > **Rationale**: Prevents drift and contradictory behavior across endpoints; simplifies security audits.
@@ -78,6 +85,7 @@ These standards govern:
 ### 2. Input validation standards
 
 #### 2.1 Canonicalization and normalization
+
 2.1.1 **MUST** canonicalize data before validation: decode character encodings (UTF-8), apply Unicode normalization (NFC), and resolve path sequences.
 
 > **Rationale**: Prevents encoding-based bypasses where attackers use overlong UTF-8 sequences or mixed normalization forms to evade filters.
@@ -87,6 +95,7 @@ These standards govern:
 > **Rationale**: Prevents duplicate-account creation and lookup inconsistencies while preserving user intent.
 
 #### 2.2 Constraint enforcement
+
 2.2.1 **MUST** define explicit constraints for every field: data type, presence, allowed range/length, format regex, and semantic rules (e.g., `$start_date \leq end_date$`).
 
 > **Rationale**: Eliminates silent acceptance of malformed data and reduces downstream exceptions and type-coercion vulnerabilities.
@@ -100,6 +109,7 @@ These standards govern:
 > **Rationale**: Prevents bypasses and user harm for international inputs; supports global accessibility.
 
 #### 2.3 Fail-fast behavior
+
 2.3.1 **MUST** reject invalid input immediately upon detection; do not attempt to "sanitize to make valid" for security decisions.
 
 > **Rationale**: Silent mutation creates privilege escalation risks, audit gaps, and unpredictable system states.
@@ -109,7 +119,9 @@ These standards govern:
 ### 3. Output encoding and sanitization
 
 #### 3.1 Context-aware encoding
+
 3.1.1 **MUST** apply contextual output encoding at the sink (not the source):
+
 - **HTML body**: HTML entity encode
 - **HTML attributes**: Attribute-specific encoding
 - **JavaScript context**: Unicode escapes or safe JSON serialization
@@ -124,6 +136,7 @@ These standards govern:
 > **Rationale**: Hand-rolled escaping is frequently incomplete (e.g., missing attribute contexts or JavaScript hex escapes).
 
 #### 3.2 Content sanitization
+
 3.2.1 **MUST** use well-maintained sanitization libraries (e.g., DOMPurify, Bleach, OWASP Java HTML Sanitizer) configured with strict allowlists of tags/attributes and safe URL protocols (`http:`, `https:`, `mailto:` only).
 
 > **Rationale**: Prevents stored XSS and protocol-based attacks (e.g., `javascript:`, `data:` URLs).
@@ -131,6 +144,7 @@ These standards govern:
 3.2.2 **MUST** strip event handlers and dangerous attributes; forbid `javascript:` URLs; restrict `data:` URLs unless explicitly required and sandboxed.
 
 #### 3.3 Database interaction
+
 3.3.1 **MUST** use parameterized queries or prepared statements for all database interactions; string concatenation into SQL is prohibited.
 
 > **Rationale**: Completely prevents SQL injection regardless of input content by separating code from data.
@@ -140,6 +154,7 @@ These standards govern:
 ### 4. Error and exception handling
 
 #### 4.1 Exception boundaries and taxonomy
+
 4.1.1 **MUST** define clear exception boundaries per layer: validation layer returns structured failures; domain layer throws typed domain errors; infrastructure layer maps external errors to internal types; API layer maps to stable response shapes.
 
 > **Rationale**: Prevents information leakage and inconsistent client behavior; enables proper fault isolation.
@@ -153,7 +168,9 @@ These standards govern:
 > **Rationale**: Enables reliable client logic, backward compatibility, and automated alerting.
 
 #### 4.2 Safe error responses
+
 4.2.1 **MUST** classify errors into:
+
 - **4xx** (client/actionable): validation failures, authentication/authorization errors, not found, conflicts
 - **5xx** (server/non-actionable): bugs, dependency failures, timeouts
 
@@ -172,6 +189,7 @@ These standards govern:
 > **Rationale**: Users must perceive and correct errors regardless of assistive technology.
 
 #### 4.3 Fail-safe principles
+
 4.3.1 **MUST** fail closed for security decisions (authorization, feature flags, tenant isolation).
 
 > **Rationale**: Fail-open creates data exposure when error conditions occur (timeouts, resource exhaustion).
@@ -209,6 +227,7 @@ These standards govern:
 ### 7. API and protocol correctness
 
 7.1 **MUST** use correct HTTP status codes:
+
 - `400` invalid syntax/shape
 - `422` semantically invalid (optional but consistent)
 - `401` unauthenticated, `403` unauthorized
@@ -216,9 +235,9 @@ These standards govern:
 - `429` rate limited
 - `500/502/503/504` server/upstream issues
 
-7.2 **MUST** validate and emit JSON conforming to RFC 8259 (no trailing commas, no `NaN`/`Infinity`).
+  7.2 **MUST** validate and emit JSON conforming to RFC 8259 (no trailing commas, no `NaN`/`Infinity`).
 
-7.3 **SHOULD** publish OpenAPI 3.1 specifications and validate requests/responses against them in tests.
+  7.3 **SHOULD** publish OpenAPI 3.1 specifications and validate requests/responses against them in tests.
 
 ### 8. Database integrity
 
@@ -233,6 +252,7 @@ These standards govern:
 ### 9. Testing standards
 
 9.1 **MUST** test validation and error handling for:
+
 - Boundary values (min/max/empty/null)
 - Malformed types and unexpected fields
 - Unicode edge cases (normalization, confusables, RTL)
@@ -252,6 +272,7 @@ These standards govern:
 > **Rationale**: Reduces variability across tools/developers and prevents bikeshedding; ensures consistent application of rules.
 
 10.2 **MUST** provide or follow repository-standard configurations for:
+
 - Formatter (e.g., Black, Prettier, rustfmt)
 - Linter with security rules (e.g., Ruff, ESLint with `security` plugin, Semgrep)
 - Type checker (e.g., mypy, TypeScript strict mode)
@@ -266,28 +287,33 @@ Use this document as a **system prompt** for any LLM session involving data proc
 
 **A.1 Generating new code**
 Provide:
+
 - Language/framework and versions
 - Input sources (HTTP, UI, files, queues) and sinks (DB, APIs, HTML)
 - Data classification (PII/PCI/PHI), tenancy model, threat constraints
 - Expected error response format
 
 The LLM must return:
+
 - Implementation with distinct validation layer, safe encoding, and error mapping
 - Tests for boundary/injection/error paths
 - Brief list of security assumptions
 
 **A.2 Reviewing existing code**
 Provide:
+
 - Code snippet or repository access
 - Current error response examples and logging expectations
 
 The LLM must return:
+
 - **Compliance summary** (pass/partial/fail)
 - **Findings** (Critical/High/Medium severity with standard references)
 - **Suggested fixes** (unified diff patches prioritized by severity)
 - **Tests to add** (specific scenarios to prevent regression)
 
 **Response format**:
+
 - Use fenced code blocks for all code and diffs
 - Bold all **MUST**/**SHOULD**/**MAY** references
 - Keep explanations concise; demonstrate clarity principles

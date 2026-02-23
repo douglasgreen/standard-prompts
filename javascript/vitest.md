@@ -4,8 +4,8 @@ description: Standards document for Vitest development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# Vitest engineering standards for consistent code generation and review
 
+# Vitest engineering standards for consistent code generation and review
 
 ## Role definition
 
@@ -22,6 +22,7 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 ## Scope and limitations
 
 **Target versions**
+
 - **Vitest**: **2.0.0+** (standards validated against current stable; observe migration guides for major upgrades).
 - **Node.js**: **20.0.0+** (LTS required for CI and local development).
 - **TypeScript**: **5.0.0+** (when applicable).
@@ -29,11 +30,13 @@ The following requirement levels are defined per [RFC 2119](https://www.rfc-edit
 
 **Context**
 These standards apply to:
+
 - Unit tests, integration tests, and component tests executed via Vitest in Node.js, jsdom, happy-dom, or Vitest Browser Mode environments.
 - Monorepos and multi-project test setups using `test.projects`.
 - Testing of pure functions, API integrations, React/Vue/Svelte components, and asynchronous workflows.
 
 **Exclusions**
+
 - This document excludes end-to-end testing policy for dedicated E2E frameworks (e.g., Cypress, Playwright outside Vitest Browser Mode).
 - Visual regression testing and UI styling implementation details are out of scope except where they affect testability or accessibility assertions.
 - Production runtime security hardening is excluded; only test-time security and privacy requirements are covered.
@@ -70,6 +73,7 @@ These standards apply to:
 > **Rationale**: Case mismatches cause confusion in case-sensitive file systems and complicate automated refactoring tools.
 
 1.2.4. **SHOULD** encode test scope in filenames for specialized suites:
+
 - `*.int.test.ts` for integration tests
 - `*.browser.test.ts` for Browser Mode tests
 - `*.perf.test.ts` for performance-critical paths
@@ -103,6 +107,7 @@ These standards apply to:
 #### 2.3 Setup lifecycle and hooks
 
 2.3.1. **MUST** distinguish correctly between initialization layers:
+
 - Use `test.setupFiles` for per-file initialization (e.g., importing matchers, configuring test utilities).
 - Use `test.globalSetup` for once-per-run orchestration (e.g., databases, servers) with data sharing via `provide`/`inject`.
 
@@ -155,6 +160,7 @@ These standards apply to:
 > **Rationale**: Implementation-coupled tests block refactoring and create maintenance burden when internal structures change.
 
 4.1.2. **MUST** use the most specific matcher available:
+
 - Use `toBe()` for primitive equality
 - Use `toEqual()` for deep object equality
 - Use `toMatchObject()` for partial matching
@@ -173,6 +179,7 @@ These standards apply to:
 > **Rationale**: Async/await improves readability, integrates with type checking, and prevents unhandled promise rejections.
 
 4.2.2. **MUST** `await` all asynchronous operations under test, including expectations on promises:
+
 ```typescript
 await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 ```
@@ -202,10 +209,11 @@ await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 #### 5.2 Mock hygiene and reset
 
 5.2.1. **MUST** standardize one reset strategy repository-wide via `vitest.config.ts`:
+
 - `restoreMocks: true` (restores spy implementations), or
 - `mockReset: true` (resets implementation to `vi.fn()`)
 
-5.2.2. **MUST** include `afterEach(() => { vi.restoreAllMocks(); })` in setup files if not using global configuration, or document the deviation.
+  5.2.2. **MUST** include `afterEach(() => { vi.restoreAllMocks(); })` in setup files if not using global configuration, or document the deviation.
 
 > **Rationale**: Inconsistent reset rules cause order-dependent failures and "works on my machine" inconsistencies across environments.
 
@@ -262,6 +270,7 @@ await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 > **Rationale**: Thresholds prevent gradual regression and make quality expectations explicit and enforceable.
 
 7.1.3. **SHOULD** avoid mandating 100% coverage; instead prioritize:
+
 - Branch-heavy logic (conditional complexity)
 - Error handling paths
 - Security-sensitive parsing and validation
@@ -272,12 +281,13 @@ await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 #### 7.2 Coverage exclusions
 
 7.2.1. **MUST** exclude from coverage:
+
 - Type definition files (`*.d.ts`)
 - Configuration files (`vitest.config.*`, `vite.config.*`)
 - Test utilities and fixture factories
 - Third-party code
 
-7.2.2. **MAY** mark intentionally unreachable code with `/* v8 ignore next */` comments accompanied by explanatory text.
+  7.2.2. **MAY** mark intentionally unreachable code with `/* v8 ignore next */` comments accompanied by explanatory text.
 
 ### 8. Performance and optimization
 
@@ -334,6 +344,7 @@ await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 #### 10.2 Edge case coverage
 
 10.2.1. **MUST** test edge cases including:
+
 - Empty states (null, undefined, empty arrays)
 - Boundary values (maximum/minimum lengths, numeric limits)
 - Error conditions and exception paths
@@ -410,6 +421,7 @@ await expect(fetchUser('invalid')).rejects.toThrow(/404/);
 5. If security violations exist (exposed credentials, real API keys), prepend a ⚠️ **SECURITY WARNING** banner.
 
 **Response formatting:**
+
 - Use Markdown for structure with hierarchical headings.
 - Use ` ``` ` code fences with language tags for all code blocks.
 - Format file names, paths, and function names with `inline code` backticks.
@@ -437,7 +449,8 @@ Critical **MUST** items for quick validation:
 
 **Compliant vs. non-compliant: Async rejection assertion**
 
-*Non-compliant (missing await):*
+_Non-compliant (missing await):_
+
 ```typescript
 import { it, expect } from 'vitest';
 import { fetchUser } from './api';
@@ -448,7 +461,8 @@ it('throws on 404', () => {
 });
 ```
 
-*Compliant (properly awaited):*
+_Compliant (properly awaited):_
+
 ```typescript
 import { it, expect } from 'vitest';
 import { fetchUser } from './api';
@@ -460,7 +474,8 @@ it('throws on 404', async () => {
 
 **Compliant vs. non-compliant: Mock hygiene**
 
-*Non-compliant (state leakage risk):*
+_Non-compliant (state leakage risk):_
+
 ```typescript
 import { it, expect, vi } from 'vitest';
 import { logger } from './logger';
@@ -475,7 +490,8 @@ it('logs on error', () => {
 });
 ```
 
-*Compliant (explicit cleanup):*
+_Compliant (explicit cleanup):_
+
 ```typescript
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { logger } from './logger';
@@ -494,20 +510,24 @@ it('logs on error', () => {
 
 **Compliant vs. non-compliant: Test structure**
 
-*Non-compliant (deep nesting, vague naming):*
+_Non-compliant (deep nesting, vague naming):_
+
 ```typescript
 describe('Utils', () => {
   describe('Math', () => {
-    describe('Basic', () => { // Too deep
-      it('works', () => { // Vague description
-        expect(add(1,2)).toBe(3);
+    describe('Basic', () => {
+      // Too deep
+      it('works', () => {
+        // Vague description
+        expect(add(1, 2)).toBe(3);
       });
     });
   });
 });
 ```
 
-*Compliant (flat structure, specific naming):*
+_Compliant (flat structure, specific naming):_
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { add } from './math';
@@ -517,14 +537,14 @@ describe('Math utilities', () => {
     // Arrange
     const a = 1;
     const b = 2;
-    
+
     // Act
     const result = add(a, b);
-    
+
     // Assert
     expect(result).toBe(3);
   });
-  
+
   it('should handle negative numbers correctly', () => {
     expect(add(-1, -2)).toBe(-3);
   });

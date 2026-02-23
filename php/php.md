@@ -4,8 +4,8 @@ description: Standards document for PHP programming
 version: 1.0.1
 modified: 2026-02-22
 ---
-# PHP engineering standards for consistent LLM code generation and review
 
+# PHP engineering standards for consistent LLM code generation and review
 
 ## Role definition
 
@@ -35,6 +35,7 @@ The key words in this document are to be interpreted as described in RFC 2119:
 ### Context
 
 These standards apply to:
+
 - Backend PHP for REST/JSON APIs, server-rendered web applications, CLI tools, and background jobs.
 - Integration with SQL databases (via PDO/DBAL), HTTP clients/servers, message queues, and caching layers.
 - Framework-agnostic implementations (Laravel, Symfony, or vanilla PHP) where PSR standards ensure interoperability.
@@ -42,6 +43,7 @@ These standards apply to:
 ### Exclusions
 
 This document explicitly excludes:
+
 - **Legacy PHP** (<8.3) compatibility strategies or polyfills.
 - **Infrastructure provisioning** (Docker, Kubernetes, Terraform) except where directly affecting PHP runtime security configuration.
 - **Visual design systems** and CSS framework specifics (Bootstrap, Tailwind).
@@ -263,7 +265,7 @@ This document explicitly excludes:
 
 > **Rationale**: Reduces onboarding friction and enables IDE tooltips that prevent misuse.
 
-9.2. Complex business logic **SHOULD** include inline comments explaining *why* decisions are made, not *what* the code does.
+9.2. Complex business logic **SHOULD** include inline comments explaining _why_ decisions are made, not _what_ the code does.
 
 > **Rationale**: Code shows what happens; comments preserve intent for future refactoring.
 
@@ -335,6 +337,7 @@ Critical **MUST** items for quick validation:
 ### C.1 Non-compliant vs compliant repository implementation
 
 **Non-compliant (SQL injection, no types, global state):**
+
 ```php
 <?php
 
@@ -348,6 +351,7 @@ class UserRepo {
 ```
 
 **Compliant (dependency injection, prepared statements, strict types):**
+
 ```php
 <?php
 
@@ -387,6 +391,7 @@ final readonly class PdoUserRepository implements UserRepository
 ### C.2 Non-compliant vs compliant error handling
 
 **Non-compliant (silent failures, error suppression):**
+
 ```php
 <?php
 
@@ -398,6 +403,7 @@ function processPayment($amount) {
 ```
 
 **Compliant (explicit exceptions, structured logging):**
+
 ```php
 <?php
 
@@ -426,12 +432,13 @@ function processPayment(float $amount): PaymentResult
 
 When reviewing code, structure output as:
 
-```markdown
+````markdown
 ## Compliance Report
 
 **Compliance Score**: 73% (11/15 MUST items passing)
 
 ### Critical Violations (MUST fix)
+
 - [ ] **SQL Injection Risk** (src/Repository.php:45)
   ```diff
   --- // Non-compliant
@@ -441,13 +448,19 @@ When reviewing code, structure output as:
   + $stmt = $db->prepare('SELECT * FROM users WHERE id = :id');
   + $stmt->execute(['id' => $id]);
   ```
+````
 
 ### Recommendations (SHOULD fix)
+
 - [ ] **Missing strict_types** in src/Utility.php
 - [ ] **Property types missing** in src/Entity/Order.php
 
 ### Passed
+
 - [x] PSR-4 autoloading structure
 - [x] Dependency injection usage
 - [x] PSR-3 logging implementation
+
+```
+
 ```

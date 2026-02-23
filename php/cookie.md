@@ -4,8 +4,8 @@ description: Standards document for cookie development
 version: 1.0.0
 modified: 2026-02-20
 ---
-# HTTP cookie management engineering standards
 
+# HTTP cookie management engineering standards
 
 ## Role definition
 
@@ -22,6 +22,7 @@ The following requirement levels are defined per RFC 2119:
 ## Scope and limitations
 
 ### Target versions
+
 - **HTTP Specifications**: RFC 6265bis (Cookies: HTTP State Management Mechanism)
 - **PHP**: 8.2+ (modern options array syntax)
 - **JavaScript**: ECMAScript 2023 (ES2023) or newer
@@ -29,7 +30,9 @@ The following requirement levels are defined per RFC 2119:
 - **Privacy Regulations**: GDPR (EU), CCPA (California), ePrivacy Directive
 
 ### Context
+
 These standards apply to:
+
 - HTTP `Set-Cookie` header generation and validation
 - Cookie attributes (`Secure`, `HttpOnly`, `SameSite`, `Domain`, `Path`, `Expires/Max-Age`)
 - Client-side cookie access patterns via JavaScript
@@ -39,6 +42,7 @@ These standards apply to:
 - CSRF protection mechanisms relying on cookie attributes
 
 ### Exclusions
+
 - Server-side session implementation details (session ID generation, server-side storage backends; see Web Session Management Standards)
 - Stateless authentication via `Authorization` headers (Bearer JWTs not transported via cookies)
 - Client-side storage mechanisms (`localStorage`, `sessionStorage`, `IndexedDB`) except where contrasted with cookies
@@ -89,28 +93,31 @@ These standards apply to:
 **Rationale**: Mitigates token theft via XSS by preventing JavaScript access; essential defense for authentication cookies (OWASP Top 10 A03:2021).
 
 2.1.4 **MUST** set `SameSite` attribute intentionally based on cross-site requirements:
+
 - `SameSite=Strict` for highly sensitive operations where no cross-site context exists
 - `SameSite=Lax` as default for session cookies in typical same-site applications (allows top-level navigation GET)
 - `SameSite=None` **only** when cross-site usage is explicitly required, and then **MUST** also set `Secure`  
-**Rationale**: SameSite is a primary CSRF mitigation layer; misconfiguration creates CSRF vulnerabilities or broken authentication flows (OWASP ASVS 4.0).
+  **Rationale**: SameSite is a primary CSRF mitigation layer; misconfiguration creates CSRF vulnerabilities or broken authentication flows (OWASP ASVS 4.0).
 
-2.1.5 **MUST** use standardized secure prefixes when applicable:
+  2.1.5 **MUST** use standardized secure prefixes when applicable:
+
 - Use `__Host-` prefix for highest assurance cookies (requires `Secure`, no `Domain` attribute, `Path=/`)
 - Use `__Secure-` prefix when `__Host-` is not feasible but `Secure` is enforced  
-**Rationale**: Browser-enforced constraints provide defense-in-depth against configuration errors and cookie tossing attacks (RFC 6265bis).
+  **Rationale**: Browser-enforced constraints provide defense-in-depth against configuration errors and cookie tossing attacks (RFC 6265bis).
 
 #### 2.2 Domain and path restrictions
 
 2.2.1 **MUST** choose cookie `Domain` narrowly:
+
 - Prefer host-only cookies (omit `Domain` attribute entirely) unless cross-subdomain sharing is explicitly required
 - If sharing required, document and minimize shared scope (e.g., `.example.com` only when necessary)  
-**Rationale**: Wider domain scope increases exposure to subdomain compromise (XSS on `blog.example.com` affecting `app.example.com`) and cookie injection attacks (OWASP ASVS 3.4.1).
+  **Rationale**: Wider domain scope increases exposure to subdomain compromise (XSS on `blog.example.com` affecting `app.example.com`) and cookie injection attacks (OWASP ASVS 3.4.1).
 
-2.2.2 **MUST** choose cookie `Path` narrowly when possible (e.g., `/admin`), otherwise `/`.  
-**Rationale**: Reduces unintended cookie exposure across application routes and limits attack surface for path-based vulnerabilities.
+  2.2.2 **MUST** choose cookie `Path` narrowly when possible (e.g., `/admin`), otherwise `/`.  
+  **Rationale**: Reduces unintended cookie exposure across application routes and limits attack surface for path-based vulnerabilities.
 
-2.2.3 **MUST** match exact `Domain` and `Path` attributes when deleting cookies to prevent "zombie cookies" that persist despite invalidation attempts.  
-**Rationale**: Mismatched attributes during deletion cause cookies to persist, potentially maintaining authentication state after logout.
+  2.2.3 **MUST** match exact `Domain` and `Path` attributes when deleting cookies to prevent "zombie cookies" that persist despite invalidation attempts.  
+  **Rationale**: Mismatched attributes during deletion cause cookies to persist, potentially maintaining authentication state after logout.
 
 ### 3. Cookie metadata and constraints
 
@@ -149,21 +156,23 @@ These standards apply to:
 #### 4.2 Transparency
 
 4.2.1 **MUST** maintain a Cookie Registry (privacy documentation) detailing:
+
 - Name, purpose, classification (Necessary/Functional/Analytics/Marketing)
 - Domain/path scope, security attributes
 - Retention period, data controller identity, third-party recipients  
-**Rationale**: Enables privacy audits, transparency requirements (GDPR Article 13/14), and incident response.
+  **Rationale**: Enables privacy audits, transparency requirements (GDPR Article 13/14), and incident response.
 
 ### 5. CSRF and XSS mitigation
 
 #### 5.1 Cross-Site Request Forgery
 
 5.1.1 **MUST** protect state-changing requests (POST, PUT, PATCH, DELETE) against CSRF using:
+
 - `SameSite=Lax` or `SameSite=Strict` cookies as primary defense
 - Additional synchronizer tokens for sensitive operations or when `SameSite=None` is required for cross-site functionality  
-**Rationale**: SameSite alone may not cover all edge cases (cross-site GET requests, legacy browsers); layered defense prevents account takeover via CSRF (OWASP ASVS 4.0).
+  **Rationale**: SameSite alone may not cover all edge cases (cross-site GET requests, legacy browsers); layered defense prevents account takeover via CSRF (OWASP ASVS 4.0).
 
-5.1.2 **MUST** validate CSRF tokens (if used) on all state-changing requests, comparing against session-stored or double-submit cookie values with constant-time comparison.
+  5.1.2 **MUST** validate CSRF tokens (if used) on all state-changing requests, comparing against session-stored or double-submit cookie values with constant-time comparison.
 
 #### 5.2 Cross-Site Scripting impact reduction
 
@@ -199,15 +208,17 @@ These standards apply to:
 #### 7.2 Cache control
 
 7.2.1 **MUST** ensure authenticated responses relying on cookies are not publicly cacheable:
+
 - Set `Cache-Control: no-store, no-cache, must-revalidate, private` for authenticated content
 - Avoid caching pages that vary by user without proper `Vary: Cookie` controls  
-**Rationale**: Prevents sensitive data leakage via shared browser or proxy caches.
+  **Rationale**: Prevents sensitive data leakage via shared browser or proxy caches.
 
 ### 8. Language-specific implementation
 
 #### 8.1 PHP (RFC 6265bis aligned)
 
 8.1.1 **MUST** use modern `setcookie()` options array syntax (PHP 7.3+) for all attributes including `samesite`:
+
 ```php
 setcookie('name', 'value', [
     'expires' => time() + 3600,
@@ -217,7 +228,8 @@ setcookie('name', 'value', [
     'httponly' => true,
     'samesite' => 'Strict',
 ]);
-```  
+```
+
 **Rationale**: Legacy positional parameters do not support `SameSite`, leading to security gaps and framework dependency.
 
 8.1.2 **MUST** use `declare(strict_types=1);` for all cookie handling code.  
@@ -233,17 +245,19 @@ setcookie('name', 'value', [
 #### 9.1 Automated testing
 
 9.1.1 **MUST** implement automated tests asserting:
+
 - Presence of `Secure`, `HttpOnly`, and `SameSite` attributes on sensitive cookies
 - Cookie deletion with matching `Domain`/`Path` attributes on logout
 - CSRF token enforcement on state-changing requests
 - Consent blocking of non-essential cookies before user interaction  
-**Rationale**: Cookie attribute regressions are common and high-impact; tests prevent silent security degradation.
+  **Rationale**: Cookie attribute regressions are common and high-impact; tests prevent silent security degradation.
 
-9.1.2 **MUST** include negative tests:
+  9.1.2 **MUST** include negative tests:
+
 - Missing cookies
 - Tampered cookie values (integrity checks)
 - Cross-origin requests with credentials (CORS policy validation)  
-**Rationale**: Attackers exploit negative paths; security requires proving failures are handled safely.
+  **Rationale**: Attackers exploit negative paths; security requires proving failures are handled safely.
 
 #### 9.2 Static analysis
 
@@ -321,32 +335,34 @@ Critical **MUST** items for quick validation:
 #### C.1 Compliant vs. Non-Compliant: Secure Cookie Setting (PHP)
 
 **Non-Compliant (Legacy syntax, missing attributes):**
+
 ```php
 // Positional parameters, missing SameSite, no error handling
 setcookie('user_prefs', json_encode($prefs), time() + 3600, "/");
 ```
 
 **Compliant (Modern options array, strict validation):**
+
 ```php
 <?php
 declare(strict_types=1);
 
-final class CookieManager 
+final class CookieManager
 {
     private const MAX_SIZE = 4096;
     private const PREFIX = '__Host-';
-    
-    public function setConsentCookie(array $consents): void 
+
+    public function setConsentCookie(array $consents): void
     {
         if (headers_sent()) {
             throw new RuntimeException('Headers already sent');
         }
-        
+
         $json = json_encode($consents, JSON_THROW_ON_ERROR);
         if (strlen($json) > self::MAX_SIZE) {
             throw new InvalidArgumentException('Cookie exceeds 4KB limit');
         }
-        
+
         $name = self::PREFIX . 'consent';
         $success = setcookie($name, $json, [
             'expires' => time() + (365 * 86400),
@@ -356,7 +372,7 @@ final class CookieManager
             'httponly' => true,
             'samesite' => 'Strict',
         ]);
-        
+
         if (!$success) {
             throw new RuntimeException('Failed to set cookie (check output buffering)');
         }
@@ -370,11 +386,11 @@ final class CookieManager
 <?php
 declare(strict_types=1);
 
-final class ConsentManager 
+final class ConsentManager
 {
     private const CONSENT_COOKIE = '__Host-app_consent';
-    
-    public function setAnalyticsConsent(bool $granted): void 
+
+    public function setAnalyticsConsent(bool $granted): void
     {
         // Classify and document
         $this->registry->logCookie(
@@ -382,7 +398,7 @@ final class ConsentManager
             purpose: 'analytics',
             retention: 365 * 86400
         );
-        
+
         // Only set if granted and valid consent flow
         if ($granted && $this->hasValidConsent()) {
             setcookie('_ga', $this->generateId(), [
@@ -394,8 +410,8 @@ final class ConsentManager
             ]);
         }
     }
-    
-    public function canSetAnalytics(): bool 
+
+    public function canSetAnalytics(): bool
     {
         $consent = json_decode($_COOKIE[self::CONSENT_COOKIE] ?? '{}', true);
         return ($consent['analytics'] ?? false) === true;
@@ -406,19 +422,21 @@ final class ConsentManager
 #### C.3 JavaScript: Proper fetch with credentials
 
 **Non-Compliant (Attempting to read HttpOnly cookie):**
+
 ```javascript
 // Anti-pattern: HttpOnly cookies are inaccessible to JS
 const sessionId = document.cookie
   .split('; ')
-  .find(row => row.startsWith('session'))
+  .find((row) => row.startsWith('session'))
   ?.split('=')[1];
 
-fetch('/api', { 
-  headers: { 'X-Session': sessionId } // Leaks to logs, XSS vulnerable
+fetch('/api', {
+  headers: { 'X-Session': sessionId }, // Leaks to logs, XSS vulnerable
 });
 ```
 
 **Compliant (Credentials sent automatically by browser):**
+
 ```javascript
 export async function apiRequest(path, options = {}) {
   const res = await fetch(path, {
@@ -429,12 +447,12 @@ export async function apiRequest(path, options = {}) {
       ...options.headers,
     },
   });
-  
+
   if (res.status === 401) {
     // Handle session expiry gracefully
     window.location.href = '/login?expired=1';
   }
-  
+
   return res;
 }
 ```
@@ -443,11 +461,11 @@ export async function apiRequest(path, options = {}) {
 
 ```php
 <?php
-public function deleteCookie(string $name): void 
+public function deleteCookie(string $name): void
 {
     // Must match exact path/domain used during creation
     $params = $this->getCookieParams($name); // From registry
-    
+
     setcookie($name, '', [
         'expires' => time() - 3600, // Past expiration
         'path' => $params['path'],   // Exact match required
@@ -457,3 +475,4 @@ public function deleteCookie(string $name): void
         'samesite' => $params['samesite'],
     ]);
 }
+```
