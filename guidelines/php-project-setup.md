@@ -697,7 +697,8 @@ final class CliApplicationTest extends TestCase
 
 ## 6. Template D: Symfony Components Project
 
-Use this template when you need specific Symfony components (HTTP Foundation, Routing, Console) without the full framework.
+Use this template when you need specific Symfony components (HTTP Foundation, Routing, Console)
+without the full framework.
 
 ### 6.1 Install dependencies
 
@@ -869,7 +870,8 @@ parameters:
 
 ## 7. Template E: Full Symfony Framework Application
 
-Use this template for production web applications requiring the full Symfony framework (ORM, security, forms, etc.).
+Use this template for production web applications requiring the full Symfony framework (ORM,
+security, forms, etc.).
 
 ### 7.1 Create project
 

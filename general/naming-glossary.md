@@ -9,7 +9,12 @@ modified: 2026-02-20
 
 ## Role definition
 
-You are an expert software engineer tasked with maintaining API and architectural clarity and developer ergonomics. The following glossary establishes a standardized verb taxonomy for function and method naming and standard noun and adjective taxonomies for naming objects and conditions. By adhering to these semantic signals, you create self-documenting code where the verb alone communicates intent, side effects, return types, and computational complexity. Use this as a definitive reference for naming decisions to ensure consistency across modules and teams.
+You are an expert software engineer tasked with maintaining API and architectural clarity and
+developer ergonomics. The following glossary establishes a standardized verb taxonomy for function
+and method naming and standard noun and adjective taxonomies for naming objects and conditions. By
+adhering to these semantic signals, you create self-documenting code where the verb alone
+communicates intent, side effects, return types, and computational complexity. Use this as a
+definitive reference for naming decisions to ensure consistency across modules and teams.
 
 ---
 
@@ -294,19 +299,28 @@ Verbs for verification and test construction.
 
 ## Anti-Patterns to Avoid
 
-1. **Ambiguous Synonym Mixing**: Don't use both `remove` and `delete` interchangeably; establish distinct semantics (e.g., `remove` from collection vs `delete` from database).
+1. **Ambiguous Synonym Mixing**: Don't use both `remove` and `delete` interchangeably; establish
+   distinct semantics (e.g., `remove` from collection vs `delete` from database).
 
-2. **Getter Side Effects**: Never use `get` for operations that modify state. Use `fetch`, `load`, or `create` instead.
+2. **Getter Side Effects**: Never use `get` for operations that modify state. Use `fetch`, `load`,
+   or `create` instead.
 
-3. **Boolean without Prefix**: Functions returning booleans should use `is`, `has`, `can`, or `should` prefixes, not bare adjectives (use `isEmpty()` not `empty()`).
+3. **Boolean without Prefix**: Functions returning booleans should use `is`, `has`, `can`, or
+   `should` prefixes, not bare adjectives (use `isEmpty()` not `empty()`).
 
-4. **Noun-Verbing**: Avoid turning nouns into verbs (e.g., `componentize`, `objectify`) when standard alternatives exist.
+4. **Noun-Verbing**: Avoid turning nouns into verbs (e.g., `componentize`, `objectify`) when
+   standard alternatives exist.
 
-5. **Overloaded Context**: Avoid `process` when a more specific verb (transform, validate, parse) applies.
+5. **Overloaded Context**: Avoid `process` when a more specific verb (transform, validate, parse)
+   applies.
 
-Apply these verbs as semantic contracts: once a verb signals a specific behavior in your codebase, maintain that contract consistently across all modules.
+Apply these verbs as semantic contracts: once a verb signals a specific behavior in your codebase,
+maintain that contract consistently across all modules.
 
-I'll create a comprehensive naming standards document that establishes standardized vocabularies for adjectives and nouns across namespaces, classes, variables, and arguments. This will complement your verb taxonomy with precise semantic categories for data types, domains, architectural patterns, and state descriptors.
+I'll create a comprehensive naming standards document that establishes standardized vocabularies for
+adjectives and nouns across namespaces, classes, variables, and arguments. This will complement your
+verb taxonomy with precise semantic categories for data types, domains, architectural patterns, and
+state descriptors.
 
 ---
 
@@ -957,7 +971,7 @@ Nouns describing operations, workflows, and execution contexts.
 | **reconfiguration**          | New arrangement                            | `systemReconfiguration`, `networkReconfiguration`, `molecularReconfiguration`                          |
 | **reset**                    | Return to default                          | `factoryReset`, `passwordReset`, `hardReset`, `systemReset`                                            |
 | **restart**                  | Begin again                                | `computerRestart`, `careerRestart`, `freshRestart`, `serviceRestart`                                   |
-| **reboot**                   | System restart or footwear                 | `systemReboot`, `seriesReboot`, `fashionReboot`, ` rebootYourLife`                                     |
+| **reboot**                   | System restart or footwear                 | `systemReboot`, `seriesReboot`, `fashionReboot`, `rebootYourLife`                                     |
 | **refresh**                  | Update or revitalize                       | `pageRefresh`, `tokenRefresh`, `refreshRate`, `refreshYourMemory`                                      |
 | **renewal**                  | Making new again                           | `contractRenewal`, `licenseRenewal`, `urbanRenewal`, `spiritualRenewal`                                |
 | **revival**                  | Bringing back to life                      | `economicRevival`, `religiousRevival`, `artisticRevival`, `speciesRevival`                             |
@@ -1560,7 +1574,7 @@ Adjectives describing execution characteristics.
 | **obstructionFree**                   | Progress if solo               | `obstructionFreeAlgorithm`, `ObstructionFreePrinciple`                        |
 | **threadSafe**                        | Safe concurrent access         | `threadSafeQueue`, `ThreadSafeSingleton`, `ThreadSafeCollection`              |
 | **reentrant**                         | Safe recursive entry           | `reentrantLock`, `ReentrantFunction`, `ReentrantReadWriteLock`                |
-| ** preemptive**                       | Can be interrupted             | `preemptiveMultitasking`, `PreemptiveScheduling`                              |
+| **preemptive**                       | Can be interrupted             | `preemptiveMultitasking`, `PreemptiveScheduling`                              |
 | **cooperative** / **coop**            | Yields control voluntarily     | `cooperativeMultitasking`, `CooperativeScheduling`                            |
 | **realtime** / **real-time**          | Time-constrained               | `realtimeSystem`, `HardRealTime`, `SoftRealTime`, `RealTimeOS`                |
 | **softRealtime**                      | Occasional deadline miss OK    | `softRealtimeSystem`, `SoftRealtimeVideo`                                     |
@@ -1795,7 +1809,8 @@ Adjectives describing meaning and classification.
 Avoid nouns that communicate nothing specific:
 
 - ❌ `data`, `info`, `stuff`, `thing`, `object` (when used as generic suffixes without context)
-- ✅ `userProfileData`, `paymentInfo`, `sessionStuff` → `sessionContext`, `unknownObject` → `unclassifiedEntity`
+- ✅ `userProfileData`, `paymentInfo`, `sessionStuff` → `sessionContext`, `unknownObject` →
+  `unclassifiedEntity`
 
 #### 2. **Hungarian Notation Remnants**
 
@@ -1864,10 +1879,16 @@ Boolean variables must be predicative adjectives:
 
 ### Semantic Contracts
 
-Apply these adjectives and nouns as **semantic contracts**: once an identifier establishes a specific meaning in your codebase, maintain that meaning consistently across all modules. A `Cache` is always a fast-access storage layer; an `Immutable` object never mutates after creation; a `Service` always represents a business capability boundary.
+Apply these adjectives and nouns as **semantic contracts**: once an identifier establishes a
+specific meaning in your codebase, maintain that meaning consistently across all modules. A `Cache`
+is always a fast-access storage layer; an `Immutable` object never mutates after creation; a
+`Service` always represents a business capability boundary.
 
-By standardizing this vocabulary, you enable **semantic grep**—the ability to search for patterns by meaning rather than by string matching—and create a **ubiquitous language** that bridges technical implementation and domain expertise.
+By standardizing this vocabulary, you enable **semantic grep**—the ability to search for patterns by
+meaning rather than by string matching—and create a **ubiquitous language** that bridges technical
+implementation and domain expertise.
 
 ---
 
-_This standard works in conjunction with The Programmer's Verb Taxonomy to provide complete naming coverage for identifiers, parameters, types, and architectural components._
+_This standard works in conjunction with The Programmer's Verb Taxonomy to provide complete naming
+coverage for identifiers, parameters, types, and architectural components._

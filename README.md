@@ -1,13 +1,20 @@
 # Standard prompts
 
-The standard prompts project is a set of LLM prompts developed using chatbots with reasoning and web search enabled.
+The standard prompts project is a set of LLM prompts developed using chatbots with reasoning and web
+search enabled.
 
-Prompts were written using the [prompt.md](prompt template) to make the requests. When using the template:
+Prompts were written using the [prompt.md](prompt template) to make the requests. When using the
+template:
 
-1. Replace [technology] with the brief name of the technology. Expand the first use of the term with a more detailed description if needed for clarity.
-2. Replace [questions] with a list of questions about the technology. For example, I ask Grok, "Make a list of questions to be answered in a definition of standards or best practices for [technology]".
-3. Describe the Exclusions line in the Scope and Limitations section to exclude other related documents so they don't get repeated.
-4. Include a copy of our [general/technical-writing.md](technical writing) standards to produce the correct style.
+1. Replace [technology] with the brief name of the technology. Expand the first use of the term with
+   a more detailed description if needed for clarity.
+2. Replace [questions] with a list of questions about the technology. For example, I ask Grok, "Make
+   a list of questions to be answered in a definition of standards or best practices for
+   [technology]".
+3. Describe the Exclusions line in the Scope and Limitations section to exclude other related
+   documents so they don't get repeated.
+4. Include a copy of our [general/technical-writing.md](technical writing) standards to produce the
+   correct style.
 
 ## Project organization
 

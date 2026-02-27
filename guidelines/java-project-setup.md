@@ -38,7 +38,9 @@ Choose your project type and navigate to the relevant section:
 | **Microservice**           | Cloud-native services, independent deployment | Spring Boot 3.x or Quarkus 3.x | [Microservices](#microservices)        |
 | **CLI tool**               | DevOps scripts, admin tools, data processors  | Picocli or Spring Shell        | [CLI](#cli-applications)               |
 
-> **IMPORTANT:** Regardless of project type, domain code **MUST NOT** depend on HTTP frameworks, database drivers, or external SDKs. Maintain strict separation of concerns between business logic and infrastructure.
+> **IMPORTANT:** Regardless of project type, domain code **MUST NOT** depend on HTTP frameworks,
+> database drivers, or external SDKs. Maintain strict separation of concerns between business logic
+> and infrastructure.
 
 ---
 
@@ -438,7 +440,8 @@ Create `src/main/resources/logback.xml`:
 </configuration>
 ```
 
-> **WARNING:** Never commit sensitive data in log configuration. Use environment variables for environment-specific settings.
+> **WARNING:** Never commit sensitive data in log configuration. Use environment variables for
+> environment-specific settings.
 
 ### Step 5: Create documentation structure
 
@@ -518,7 +521,8 @@ APP_LOG_LEVEL=INFO
 
 ## Standalone applications
 
-Standalone applications are single-purpose programs with a `main` method that run independently and exit.
+Standalone applications are single-purpose programs with a `main` method that run independently and
+exit.
 
 ### When to use
 
@@ -628,7 +632,8 @@ java -jar target/project-name-0.1.0-SNAPSHOT.jar
 
 ## Library projects
 
-Libraries provide reusable components for other Java applications. They have no `main` method and are distributed as JAR artifacts.
+Libraries provide reusable components for other Java applications. They have no `main` method and
+are distributed as JAR artifacts.
 
 ### When to use
 
@@ -753,7 +758,8 @@ src/main/java/com/example/library/
     └── LibraryException.java
 ```
 
-> **NOTE:** Keep the public API surface minimal and stable. Use `internal` packages for implementation details.
+> **NOTE:** Keep the public API surface minimal and stable. Use `internal` packages for
+> implementation details.
 
 ---
 
@@ -972,7 +978,8 @@ public class Application {
 
 ## Microservices
 
-Microservices extend web applications with cloud-native concerns: service discovery, distributed tracing, resilience patterns, and containerization.
+Microservices extend web applications with cloud-native concerns: service discovery, distributed
+tracing, resilience patterns, and containerization.
 
 ### When to use
 
@@ -1172,7 +1179,8 @@ public class HttpClientConfig {
 }
 ```
 
-> **IMPORTANT:** Always configure timeouts for outbound calls. Never use default timeouts in production.
+> **IMPORTANT:** Always configure timeouts for outbound calls. Never use default timeouts in
+> production.
 
 ---
 
@@ -1377,4 +1385,5 @@ Before committing code, verify:
 
 ---
 
-**Next steps:** Choose your project type from the table of contents and follow the specific setup instructions.
+**Next steps:** Choose your project type from the table of contents and follow the specific setup
+instructions.

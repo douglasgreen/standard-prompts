@@ -9,15 +9,23 @@ modified: 2026-02-20
 
 ## Role definition
 
-You are a senior full-stack software developer and solutions architect specializing in HTTP state management and web privacy standards, tasked with enforcing strict engineering standards for browser cookies across backend (PHP) and frontend (JavaScript) systems. Your purpose is to generate or review code with unwavering adherence to security, privacy, interoperability, and performance standards while ensuring compliance with RFC 6265bis, OWASP, GDPR, CCPA, and modern web specifications.
+You are a senior full-stack software developer and solutions architect specializing in HTTP state
+management and web privacy standards, tasked with enforcing strict engineering standards for browser
+cookies across backend (PHP) and frontend (JavaScript) systems. Your purpose is to generate or
+review code with unwavering adherence to security, privacy, interoperability, and performance
+standards while ensuring compliance with RFC 6265bis, OWASP, GDPR, CCPA, and modern web
+specifications.
 
 ## Strictness levels
 
 The following requirement levels are defined per RFC 2119:
 
-- **MUST**: Absolute requirements; non-negotiable for compliance. Non-compliance creates security vulnerabilities, privacy violations, or cross-site scripting vectors.
-- **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented and justified in writing (ADR, comment, or review note).
-- **MAY**: Optional items; use according to context, preference, or specific business logic requirements.
+- **MUST**: Absolute requirements; non-negotiable for compliance. Non-compliance creates security
+  vulnerabilities, privacy violations, or cross-site scripting vectors.
+- **SHOULD**: Strong recommendations; valid reasons to circumvent may exist but must be documented
+  and justified in writing (ADR, comment, or review note).
+- **MAY**: Optional items; use according to context, preference, or specific business logic
+  requirements.
 
 ## Scope and limitations
 
@@ -43,9 +51,11 @@ These standards apply to:
 
 ### Exclusions
 
-- Server-side session implementation details (session ID generation, server-side storage backends; see Web Session Management Standards)
+- Server-side session implementation details (session ID generation, server-side storage backends;
+  see Web Session Management Standards)
 - Stateless authentication via `Authorization` headers (Bearer JWTs not transported via cookies)
-- Client-side storage mechanisms (`localStorage`, `sessionStorage`, `IndexedDB`) except where contrasted with cookies
+- Client-side storage mechanisms (`localStorage`, `sessionStorage`, `IndexedDB`) except where
+  contrasted with cookies
 - WebSocket sub-protocol cookies (handled by WebSocket standards)
 - UI styling systems (CSS frameworks) except where UI affects consent UX
 - Legacy PHP versions below 7.3 (lack SameSite support)
@@ -56,102 +66,148 @@ These standards apply to:
 
 #### 1.1 Cookie abstraction
 
-1.1.1 **MUST** centralize cookie logic behind dedicated service classes or middleware (e.g., `CookieService`, `CookieJar`, `CookieManager`).  
-**Rationale**: Prevents inconsistent security flags, duplicated domain/path logic, and "one-off" cookie handling that creates vulnerabilities and complicates privacy audits.
+1.1.1 **MUST** centralize cookie logic behind dedicated service classes or middleware (e.g.,
+`CookieService`, `CookieJar`, `CookieManager`).  
+**Rationale**: Prevents inconsistent security flags, duplicated domain/path logic, and "one-off"
+cookie handling that creates vulnerabilities and complicates privacy audits.
 
-1.1.2 **MUST** treat cookie handling as distinct from business logic; cookies are a transport mechanism, not a data model.  
-**Rationale**: Mixing cookie manipulation with domain logic creates hidden dependencies and makes security attributes inconsistent; separation enables centralized privacy controls.
+1.1.2 **MUST** treat cookie handling as distinct from business logic; cookies are a transport
+mechanism, not a data model.  
+**Rationale**: Mixing cookie manipulation with domain logic creates hidden dependencies and makes
+security attributes inconsistent; separation enables centralized privacy controls.
 
-1.1.3 **MUST** define a single source of truth for cookie names, domains, paths, and TTLs (e.g., configuration registry or `CookiePolicy` object).  
-**Rationale**: Eliminates configuration drift and makes privacy impact assessments, security audits, and cross-subdomain deployments feasible.
+1.1.3 **MUST** define a single source of truth for cookie names, domains, paths, and TTLs (e.g.,
+configuration registry or `CookiePolicy` object).  
+**Rationale**: Eliminates configuration drift and makes privacy impact assessments, security audits,
+and cross-subdomain deployments feasible.
 
-1.1.4 **MUST** classify all cookies by purpose in the registry: Strictly Necessary, Functional, Analytics, or Marketing.  
-**Rationale**: Required for privacy audits, consent management implementation, and regulatory compliance (GDPR Article 5, ePrivacy Directive).
+1.1.4 **MUST** classify all cookies by purpose in the registry: Strictly Necessary, Functional,
+Analytics, or Marketing.  
+**Rationale**: Required for privacy audits, consent management implementation, and regulatory
+compliance (GDPR Article 5, ePrivacy Directive).
 
 #### 1.2 Data handling
 
-1.2.1 **MUST NOT** store secrets, sensitive personal data (PII), access tokens, or cryptographic keys in cookies (including supposedly "encrypted" client-side state).  
-**Rationale**: Cookies are client-controlled, visible in browser dev tools, logged in browser history, and exposed to XSS theft; storage of sensitive data violates data minimization and increases breach impact.
+1.2.1 **MUST NOT** store secrets, sensitive personal data (PII), access tokens, or cryptographic
+keys in cookies (including supposedly "encrypted" client-side state).  
+**Rationale**: Cookies are client-controlled, visible in browser dev tools, logged in browser
+history, and exposed to XSS theft; storage of sensitive data violates data minimization and
+increases breach impact.
 
-1.2.2 **MUST** treat all cookie values received from clients as attacker-controlled input; validate format, size, and signature (if applicable) before use.  
-**Rationale**: Prevents injection attacks, deserialization vulnerabilities, and logic bypass due to tampering or client-side storage limits.
+1.2.2 **MUST** treat all cookie values received from clients as attacker-controlled input; validate
+format, size, and signature (if applicable) before use.  
+**Rationale**: Prevents injection attacks, deserialization vulnerabilities, and logic bypass due to
+tampering or client-side storage limits.
 
-1.2.3 **MAY** store non-sensitive preferences in cookies (e.g., UI theme, language) when integrity is not security-critical; otherwise sign values using HMAC and verify before use.  
-**Rationale**: Preferences are valid use cases for cookies, but unsigned values risk tampering affecting functionality, pricing, or authorization decisions.
+1.2.3 **MAY** store non-sensitive preferences in cookies (e.g., UI theme, language) when integrity
+is not security-critical; otherwise sign values using HMAC and verify before use.  
+**Rationale**: Preferences are valid use cases for cookies, but unsigned values risk tampering
+affecting functionality, pricing, or authorization decisions.
 
 ### 2. Security attributes and configuration
 
 #### 2.1 Cookie security flags
 
-2.1.1 **MUST** set all cookie attributes explicitly using the modern options array syntax; never rely on framework defaults for `Secure`, `HttpOnly`, `SameSite`, `Path`, or `Domain`.  
-**Rationale**: Defaults vary by framework, browser, and PHP version; explicit attributes prevent silent security regressions and ensure defense in depth.
+2.1.1 **MUST** set all cookie attributes explicitly using the modern options array syntax; never
+rely on framework defaults for `Secure`, `HttpOnly`, `SameSite`, `Path`, or `Domain`.  
+**Rationale**: Defaults vary by framework, browser, and PHP version; explicit attributes prevent
+silent security regressions and ensure defense in depth.
 
-2.1.2 **MUST** set `Secure` flag on any cookie transmitted over HTTPS, including non-sensitive cookies.  
-**Rationale**: Prevents cookie leakage over plaintext HTTP and mitigates downgrade attacks (OWASP ASVS 3.4.1).
+2.1.2 **MUST** set `Secure` flag on any cookie transmitted over HTTPS, including non-sensitive
+cookies.  
+**Rationale**: Prevents cookie leakage over plaintext HTTP and mitigates downgrade attacks (OWASP
+ASVS 3.4.1).
 
-2.1.3 **MUST** set `HttpOnly` to `true` on any cookie not explicitly required by JavaScript execution (authentication tokens, session IDs, CSRF tokens, analytics IDs).  
-**Rationale**: Mitigates token theft via XSS by preventing JavaScript access; essential defense for authentication cookies (OWASP Top 10 A03:2021).
+2.1.3 **MUST** set `HttpOnly` to `true` on any cookie not explicitly required by JavaScript
+execution (authentication tokens, session IDs, CSRF tokens, analytics IDs).  
+**Rationale**: Mitigates token theft via XSS by preventing JavaScript access; essential defense for
+authentication cookies (OWASP Top 10 A03:2021).
 
 2.1.4 **MUST** set `SameSite` attribute intentionally based on cross-site requirements:
 
 - `SameSite=Strict` for highly sensitive operations where no cross-site context exists
-- `SameSite=Lax` as default for session cookies in typical same-site applications (allows top-level navigation GET)
-- `SameSite=None` **only** when cross-site usage is explicitly required, and then **MUST** also set `Secure`  
-  **Rationale**: SameSite is a primary CSRF mitigation layer; misconfiguration creates CSRF vulnerabilities or broken authentication flows (OWASP ASVS 4.0).
+- `SameSite=Lax` as default for session cookies in typical same-site applications (allows top-level
+  navigation GET)
+- `SameSite=None` **only** when cross-site usage is explicitly required, and then **MUST** also set
+  `Secure`  
+  **Rationale**: SameSite is a primary CSRF mitigation layer; misconfiguration creates CSRF
+  vulnerabilities or broken authentication flows (OWASP ASVS 4.0).
 
   2.1.5 **MUST** use standardized secure prefixes when applicable:
 
-- Use `__Host-` prefix for highest assurance cookies (requires `Secure`, no `Domain` attribute, `Path=/`)
+- Use `__Host-` prefix for highest assurance cookies (requires `Secure`, no `Domain` attribute,
+  `Path=/`)
 - Use `__Secure-` prefix when `__Host-` is not feasible but `Secure` is enforced  
-  **Rationale**: Browser-enforced constraints provide defense-in-depth against configuration errors and cookie tossing attacks (RFC 6265bis).
+  **Rationale**: Browser-enforced constraints provide defense-in-depth against configuration errors
+  and cookie tossing attacks (RFC 6265bis).
 
 #### 2.2 Domain and path restrictions
 
 2.2.1 **MUST** choose cookie `Domain` narrowly:
 
-- Prefer host-only cookies (omit `Domain` attribute entirely) unless cross-subdomain sharing is explicitly required
-- If sharing required, document and minimize shared scope (e.g., `.example.com` only when necessary)  
-  **Rationale**: Wider domain scope increases exposure to subdomain compromise (XSS on `blog.example.com` affecting `app.example.com`) and cookie injection attacks (OWASP ASVS 3.4.1).
+- Prefer host-only cookies (omit `Domain` attribute entirely) unless cross-subdomain sharing is
+  explicitly required
+- If sharing required, document and minimize shared scope (e.g., `.example.com` only when
+  necessary)  
+  **Rationale**: Wider domain scope increases exposure to subdomain compromise (XSS on
+  `blog.example.com` affecting `app.example.com`) and cookie injection attacks (OWASP ASVS 3.4.1).
 
   2.2.2 **MUST** choose cookie `Path` narrowly when possible (e.g., `/admin`), otherwise `/`.  
-  **Rationale**: Reduces unintended cookie exposure across application routes and limits attack surface for path-based vulnerabilities.
+  **Rationale**: Reduces unintended cookie exposure across application routes and limits attack
+  surface for path-based vulnerabilities.
 
-  2.2.3 **MUST** match exact `Domain` and `Path` attributes when deleting cookies to prevent "zombie cookies" that persist despite invalidation attempts.  
-  **Rationale**: Mismatched attributes during deletion cause cookies to persist, potentially maintaining authentication state after logout.
+  2.2.3 **MUST** match exact `Domain` and `Path` attributes when deleting cookies to prevent "zombie
+  cookies" that persist despite invalidation attempts.  
+  **Rationale**: Mismatched attributes during deletion cause cookies to persist, potentially
+  maintaining authentication state after logout.
 
 ### 3. Cookie metadata and constraints
 
 #### 3.1 Size and serialization
 
-3.1.1 **MUST** enforce practical cookie size limits: maximum 4KB per cookie, conservative total count per domain (<50 cookies, <10KB total request header size).  
-**Rationale**: Browser limits vary (4096 bytes name+value+attributes common); exceeding limits causes silent truncation or rejection, leading to data loss and broken requests.
+3.1.1 **MUST** enforce practical cookie size limits: maximum 4KB per cookie, conservative total
+count per domain (<50 cookies, <10KB total request header size).  
+**Rationale**: Browser limits vary (4096 bytes name+value+attributes common); exceeding limits
+causes silent truncation or rejection, leading to data loss and broken requests.
 
-3.1.2 **MUST NOT** use `serialize()`/`unserialize()` for cookie data due to object injection vulnerabilities.  
-**Rationale**: PHP's `unserialize()` can execute arbitrary code if attacker controls the serialized string (OWASP A08:2021).
+3.1.2 **MUST NOT** use `serialize()`/`unserialize()` for cookie data due to object injection
+vulnerabilities.  
+**Rationale**: PHP's `unserialize()` can execute arbitrary code if attacker controls the serialized
+string (OWASP A08:2021).
 
-3.1.3 **SHOULD** use `json_encode()`/`json_decode()` with `JSON_THROW_ON_ERROR` for structured cookie data, with size validation before setting.  
+3.1.3 **SHOULD** use `json_encode()`/`json_decode()` with `JSON_THROW_ON_ERROR` for structured
+cookie data, with size validation before setting.  
 **Rationale**: JSON is portable, language-agnostic, and does not carry PHP object execution risks.
 
 #### 3.2 Lifetime and retention
 
-3.2.1 **MUST** set explicit expiration (`Expires` or `Max-Age`) for all cookies; avoid session cookies (browser lifetime) unless strictly necessary for security (e.g., short-lived form tokens).  
-**Rationale**: Session cookies persist until browser close (unreliable on mobile), creating extended windows of vulnerability; explicit expiration aligns with privacy retention policies.
+3.2.1 **MUST** set explicit expiration (`Expires` or `Max-Age`) for all cookies; avoid session
+cookies (browser lifetime) unless strictly necessary for security (e.g., short-lived form tokens).  
+**Rationale**: Session cookies persist until browser close (unreliable on mobile), creating extended
+windows of vulnerability; explicit expiration aligns with privacy retention policies.
 
-3.2.2 **SHOULD** keep cookie lifetimes as short as practical for the use case; align with documented privacy policy retention periods.  
+3.2.2 **SHOULD** keep cookie lifetimes as short as practical for the use case; align with documented
+privacy policy retention periods.  
 **Rationale**: Supports data minimization principles and reduces breach impact window.
 
 ### 4. Privacy and consent management
 
 #### 4.1 Regulatory compliance
 
-4.1.1 **MUST NOT** set non-essential cookies (Functional, Analytics, Marketing) before obtaining explicit user consent where required by applicable law (GDPR, ePrivacy Directive).  
-**Rationale**: Non-compliance creates legal penalties up to 4% of annual revenue (GDPR Article 83) and reputational damage.
+4.1.1 **MUST NOT** set non-essential cookies (Functional, Analytics, Marketing) before obtaining
+explicit user consent where required by applicable law (GDPR, ePrivacy Directive).  
+**Rationale**: Non-compliance creates legal penalties up to 4% of annual revenue (GDPR Article 83)
+and reputational damage.
 
-4.1.2 **MUST** honor withdrawal of consent by deleting non-essential cookies immediately upon user request and preventing their re-creation until consent is re-granted.  
-**Rationale**: Compliance with GDPR Article 7(3) right to withdraw consent; failure to respect withdrawal is a reportable violation.
+4.1.2 **MUST** honor withdrawal of consent by deleting non-essential cookies immediately upon user
+request and preventing their re-creation until consent is re-granted.  
+**Rationale**: Compliance with GDPR Article 7(3) right to withdraw consent; failure to respect
+withdrawal is a reportable violation.
 
-4.1.3 **MUST** implement consent UX following WCAG 2.1 accessibility guidelines (keyboard operable, screen-reader friendly, sufficient color contrast).  
-**Rationale**: Inaccessible consent flows create legal risk and exclude users with disabilities from privacy controls.
+4.1.3 **MUST** implement consent UX following WCAG 2.1 accessibility guidelines (keyboard operable,
+screen-reader friendly, sufficient color contrast).  
+**Rationale**: Inaccessible consent flows create legal risk and exclude users with disabilities from
+privacy controls.
 
 #### 4.2 Transparency
 
@@ -160,7 +216,8 @@ These standards apply to:
 - Name, purpose, classification (Necessary/Functional/Analytics/Marketing)
 - Domain/path scope, security attributes
 - Retention period, data controller identity, third-party recipients  
-  **Rationale**: Enables privacy audits, transparency requirements (GDPR Article 13/14), and incident response.
+  **Rationale**: Enables privacy audits, transparency requirements (GDPR Article 13/14), and
+  incident response.
 
 ### 5. CSRF and XSS mitigation
 
@@ -169,41 +226,59 @@ These standards apply to:
 5.1.1 **MUST** protect state-changing requests (POST, PUT, PATCH, DELETE) against CSRF using:
 
 - `SameSite=Lax` or `SameSite=Strict` cookies as primary defense
-- Additional synchronizer tokens for sensitive operations or when `SameSite=None` is required for cross-site functionality  
-  **Rationale**: SameSite alone may not cover all edge cases (cross-site GET requests, legacy browsers); layered defense prevents account takeover via CSRF (OWASP ASVS 4.0).
+- Additional synchronizer tokens for sensitive operations or when `SameSite=None` is required for
+  cross-site functionality  
+  **Rationale**: SameSite alone may not cover all edge cases (cross-site GET requests, legacy
+  browsers); layered defense prevents account takeover via CSRF (OWASP ASVS 4.0).
 
-  5.1.2 **MUST** validate CSRF tokens (if used) on all state-changing requests, comparing against session-stored or double-submit cookie values with constant-time comparison.
+  5.1.2 **MUST** validate CSRF tokens (if used) on all state-changing requests, comparing against
+  session-stored or double-submit cookie values with constant-time comparison.
 
 #### 5.2 Cross-Site Scripting impact reduction
 
-5.2.1 **MUST** treat XSS prevention as prerequisite for cookie security; use `HttpOnly` flags to mitigate impact of XSS by preventing JavaScript cookie exfiltration.  
-**Rationale**: XSS can defeat most session protections; `HttpOnly` reduces blast radius even if XSS occurs.
+5.2.1 **MUST** treat XSS prevention as prerequisite for cookie security; use `HttpOnly` flags to
+mitigate impact of XSS by preventing JavaScript cookie exfiltration.  
+**Rationale**: XSS can defeat most session protections; `HttpOnly` reduces blast radius even if XSS
+occurs.
 
-5.2.2 **MUST NOT** store access tokens in `localStorage` or `sessionStorage` for browser-based applications when secure cookie-based transport (`HttpOnly`, `Secure`, `SameSite`) is viable.  
-**Rationale**: Web storage is directly accessible to JavaScript and commonly exfiltrated via XSS attacks; cookies with `HttpOnly` are not accessible to JavaScript.
+5.2.2 **MUST NOT** store access tokens in `localStorage` or `sessionStorage` for browser-based
+applications when secure cookie-based transport (`HttpOnly`, `Secure`, `SameSite`) is viable.  
+**Rationale**: Web storage is directly accessible to JavaScript and commonly exfiltrated via XSS
+attacks; cookies with `HttpOnly` are not accessible to JavaScript.
 
 ### 6. Client-side integration (JavaScript)
 
 #### 6.1 Browser API usage
 
-6.1.1 **MUST** treat `document.cookie` access as privileged and rare; wrap in a single utility module if cookie reading is necessary, with strict validation of parsed values.  
-**Rationale**: Direct string manipulation of `document.cookie` is error-prone (parsing delimiters, encoding issues) and bypasses security abstractions.
+6.1.1 **MUST** treat `document.cookie` access as privileged and rare; wrap in a single utility
+module if cookie reading is necessary, with strict validation of parsed values.  
+**Rationale**: Direct string manipulation of `document.cookie` is error-prone (parsing delimiters,
+encoding issues) and bypasses security abstractions.
 
-6.1.2 **MUST NOT** attempt to read `HttpOnly` cookies from JavaScript; design application flows assuming these cookies are server-side only.  
-**Rationale**: Attempting to read `HttpOnly` cookies indicates architectural misalignment; they should remain completely opaque to client-side code.
+6.1.2 **MUST NOT** attempt to read `HttpOnly` cookies from JavaScript; design application flows
+assuming these cookies are server-side only.  
+**Rationale**: Attempting to read `HttpOnly` cookies indicates architectural misalignment; they
+should remain completely opaque to client-side code.
 
-6.1.3 **MUST** use `fetch` or `XMLHttpRequest` with `credentials: "include"` or `withCredentials = true` only for trusted origins and document the cross-origin justification.  
-**Rationale**: Cross-origin credentialed requests can create CSRF-like risks if the destination is not explicitly trusted and expecting credentials.
+6.1.3 **MUST** use `fetch` or `XMLHttpRequest` with `credentials: "include"` or
+`withCredentials = true` only for trusted origins and document the cross-origin justification.  
+**Rationale**: Cross-origin credentialed requests can create CSRF-like risks if the destination is
+not explicitly trusted and expecting credentials.
 
-6.1.4 **MUST** avoid "supercookies" or alternate storage mechanisms (ETags, HSTS, cache storage) to circumvent user cookie deletion preferences.  
-**Rationale**: Violates user privacy expectations and applicable regulations; use standard cookies with proper consent management.
+6.1.4 **MUST** avoid "supercookies" or alternate storage mechanisms (ETags, HSTS, cache storage) to
+circumvent user cookie deletion preferences.  
+**Rationale**: Violates user privacy expectations and applicable regulations; use standard cookies
+with proper consent management.
 
 ### 7. Performance and caching
 
 #### 7.1 Request optimization
 
-7.1.1 **MUST** avoid attaching authentication cookies to requests that do not need them (static assets, CDN requests) when architecture allows; serve static content from cookie-less domains or paths.  
-**Rationale**: Cookies increase request size (header bloat) and reduce cache efficiency; sending them to CDNs or static hosts wastes bandwidth and can expose credentials unnecessarily.
+7.1.1 **MUST** avoid attaching authentication cookies to requests that do not need them (static
+assets, CDN requests) when architecture allows; serve static content from cookie-less domains or
+paths.  
+**Rationale**: Cookies increase request size (header bloat) and reduce cache efficiency; sending
+them to CDNs or static hosts wastes bandwidth and can expose credentials unnecessarily.
 
 #### 7.2 Cache control
 
@@ -217,7 +292,8 @@ These standards apply to:
 
 #### 8.1 PHP (RFC 6265bis aligned)
 
-8.1.1 **MUST** use modern `setcookie()` options array syntax (PHP 7.3+) for all attributes including `samesite`:
+8.1.1 **MUST** use modern `setcookie()` options array syntax (PHP 7.3+) for all attributes including
+`samesite`:
 
 ```php
 setcookie('name', 'value', [
@@ -230,15 +306,19 @@ setcookie('name', 'value', [
 ]);
 ```
 
-**Rationale**: Legacy positional parameters do not support `SameSite`, leading to security gaps and framework dependency.
+**Rationale**: Legacy positional parameters do not support `SameSite`, leading to security gaps and
+framework dependency.
 
 8.1.2 **MUST** use `declare(strict_types=1);` for all cookie handling code.  
-**Rationale**: Prevents type confusion in security-critical paths where string/integer coercion could affect domain validation or expiration calculations.
+**Rationale**: Prevents type confusion in security-critical paths where string/integer coercion
+could affect domain validation or expiration calculations.
 
 #### 8.2 JavaScript/TypeScript
 
-8.2.1 **MUST** validate and sanitize cookie values read from `document.cookie` before use in DOM operations or AJAX calls to prevent XSS.  
-**Rationale**: Cookie values may contain malicious payloads if attacker-controlled (cookie bomb via injection).
+8.2.1 **MUST** validate and sanitize cookie values read from `document.cookie` before use in DOM
+operations or AJAX calls to prevent XSS.  
+**Rationale**: Cookie values may contain malicious payloads if attacker-controlled (cookie bomb via
+injection).
 
 ### 9. Testing and validation
 
@@ -250,19 +330,23 @@ setcookie('name', 'value', [
 - Cookie deletion with matching `Domain`/`Path` attributes on logout
 - CSRF token enforcement on state-changing requests
 - Consent blocking of non-essential cookies before user interaction  
-  **Rationale**: Cookie attribute regressions are common and high-impact; tests prevent silent security degradation.
+  **Rationale**: Cookie attribute regressions are common and high-impact; tests prevent silent
+  security degradation.
 
   9.1.2 **MUST** include negative tests:
 
 - Missing cookies
 - Tampered cookie values (integrity checks)
 - Cross-origin requests with credentials (CORS policy validation)  
-  **Rationale**: Attackers exploit negative paths; security requires proving failures are handled safely.
+  **Rationale**: Attackers exploit negative paths; security requires proving failures are handled
+  safely.
 
 #### 9.2 Static analysis
 
-9.2.1 **SHOULD** include DAST/SAST checks in CI (OWASP ZAP, Burp Suite) to detect missing security attributes.  
-**Rationale**: Catches common misconfigurations (missing flags, insecure serialization) continuously.
+9.2.1 **SHOULD** include DAST/SAST checks in CI (OWASP ZAP, Burp Suite) to detect missing security
+attributes.  
+**Rationale**: Catches common misconfigurations (missing flags, insecure serialization)
+continuously.
 
 ---
 
@@ -320,14 +404,18 @@ Critical **MUST** items for quick validation:
 
 - [ ] **Architecture**: Centralized cookie service exists; cookie registry maintained (1.1.1, 4.2.1)
 - [ ] **Data**: No sensitive data (PII, tokens, passwords) in cookies (1.2.1)
-- [ ] **Security Attributes**: All cookies use explicit options array with `Secure`, `HttpOnly`, `SameSite` (2.1.1–2.1.4)
+- [ ] **Security Attributes**: All cookies use explicit options array with `Secure`, `HttpOnly`,
+      `SameSite` (2.1.1–2.1.4)
 - [ ] **Prefixes**: Use `__Host-` (preferred) or `__Secure-` prefixes where applicable (2.1.5)
 - [ ] **Scope**: Narrowest viable `Domain` (host-only preferred) and `Path` (2.2.1–2.2.2)
 - [ ] **Deletion**: Cookie deletion uses exact `Domain`/`Path` match (2.2.3)
 - [ ] **Size**: Cookie size <4KB enforced; no `serialize()` used (3.1.1–3.1.2)
-- [ ] **CSRF**: `SameSite=Lax` minimum on session cookies; token validation for sensitive ops (5.1.1)
-- [ ] **Privacy**: Cookie classifications documented; non-essential cookies gated by consent (4.1.1, 4.2.1)
-- [ ] **Client-side**: No `localStorage` for tokens when cookie alternative exists; no `HttpOnly` read attempts (5.2.2, 6.1.2)
+- [ ] **CSRF**: `SameSite=Lax` minimum on session cookies; token validation for sensitive ops
+      (5.1.1)
+- [ ] **Privacy**: Cookie classifications documented; non-essential cookies gated by consent (4.1.1,
+      4.2.1)
+- [ ] **Client-side**: No `localStorage` for tokens when cookie alternative exists; no `HttpOnly`
+      read attempts (5.2.2, 6.1.2)
 - [ ] **Performance**: Static assets served cookie-less where possible (7.1.1)
 
 ### Appendix C: Examples

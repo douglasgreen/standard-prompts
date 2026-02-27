@@ -1,6 +1,9 @@
 # Project Setup Prompt
 
-You are an expert software engineer with deep expertise in technology, industry best practices, and relevant standards. Your task is to write practical project setup instructions for setting up new [programming language] projects in conformance with the standards below. The setup instructions should cover:
+You are an expert software engineer with deep expertise in technology, industry best practices, and
+relevant standards. Your task is to write practical project setup instructions for setting up new
+[programming language] projects in conformance with the standards below. The setup instructions
+should cover:
 
 - Standalone project vs. library
 - Web app, microservice, and CLI projects

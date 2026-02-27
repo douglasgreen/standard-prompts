@@ -7,7 +7,8 @@ modified: 2026-02-20
 
 # Python project setup guide
 
-Complete setup instructions for Python 3.12+ projects following engineering best practices and documentation standards.
+Complete setup instructions for Python 3.12+ projects following engineering best practices and
+documentation standards.
 
 **Reading time:** 25 minutes
 
@@ -31,7 +32,8 @@ Complete setup instructions for Python 3.12+ projects following engineering best
 
 ## Overview
 
-This guide provides complete, copy-pasteable project setup templates for Python 3.12+ projects. Each template includes directory structure, configuration files, and automation setup.
+This guide provides complete, copy-pasteable project setup templates for Python 3.12+ projects. Each
+template includes directory structure, configuration files, and automation setup.
 
 **Prerequisites:**
 
@@ -300,23 +302,23 @@ Create `Makefile` for common commands:
 .PHONY: install format lint test check clean
 
 install:
-	uv sync --all-extras
+ uv sync --all-extras
 
 format:
-	uv run ruff format .
-	uv run ruff check --fix .
+ uv run ruff format .
+ uv run ruff check --fix .
 
 lint:
-	uv run ruff check .
-	uv run mypy src
+ uv run ruff check .
+ uv run mypy src
 
 test:
-	uv run pytest
+ uv run pytest
 
 check: format lint test
 
 clean:
-	rm -rf .venv .pytest_cache .ruff_cache .coverage htmlcov dist
+ rm -rf .venv .pytest_cache .ruff_cache .coverage htmlcov dist
 ```
 
 ### 9. Initialize project
@@ -562,7 +564,7 @@ uv run python -m my_project
 
 **Access API documentation:**
 
-Open http://localhost:8000/docs when running locally.
+Open <http://localhost:8000/docs> when running locally.
 
 ---
 
