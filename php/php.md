@@ -175,17 +175,12 @@ shapes `array<string, int>`, or complex `@throws` documentation).
 
 #### 4.1 Exceptions and control flow
 
-4.1.1. Code **MUST NOT** use `@` error suppression under any circumstances.
-
-> **Rationale**: Error suppression hides failures, breaks observability, and can mask security
-> vulnerabilities or data corruption.
-
-4.1.2. Recoverable business conditions **SHOULD** be modeled as domain results (e.g., `Result` type,
+4.1.1. Recoverable business conditions **SHOULD** be modeled as domain results (e.g., `Result` type,
 `Either` monad, or specific domain exceptions) rather than returning `false` or `null`.
 
 > **Rationale**: Forces explicit handling of failure modes and prevents null reference errors.
 
-4.1.3. Infrastructure failures (database timeouts, network failures) **MUST** trigger specific
+4.1.2. Infrastructure failures (database timeouts, network failures) **MUST** trigger specific
 exceptions with retry logic where appropriate.
 
 > **Rationale**: Distinguishes transient failures from logic errors and enables resilience patterns
