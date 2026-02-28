@@ -276,26 +276,7 @@ $mailer->expects($this->once())->method('send');
 
 ## 3. Code style and automation
 
-### 3.1 PSR-12 compliance
-
-3.1.1. **MUST** follow PSR-12 (or PER Coding Style).
-
-> **Rationale**: Consistent style reduces cognitive load, facilitates code reviews, and enables
-> automated enforcement via tooling rather than manual policing.
-
-3.1.2. **MUST** enforce via automation: PHP-CS-Fixer or PHP_CodeSniffer.
-
-3.1.3. **MUST** use 4-space indentation; soft line limit 120 characters; hard limit none.
-
-### 3.2 Static analysis
-
-3.2.1. **SHOULD** use PHPStan (level 8+) or Psalm with `phpstan/phpstan-phpunit` extension.
-
-3.2.2. **MUST** not suppress warnings without inline justification.
-
-3.2.3. **SHOULD** maintain type safety; avoid `mixed` where better types exist.
-
-### 3.3 Tooling stack
+### 3.1 Tooling stack
 
 3.3.1. **MUST** define standard scripts in `composer.json`:
 
@@ -318,7 +299,7 @@ $mailer->expects($this->once())->method('send');
 
 3.3.4. **MAY** use architecture testing (`deptrac`) for enforcing bounded contexts.
 
-### 3.4 Configuration standards
+### 3.2 Configuration standards
 
 3.4.1. **MUST** configure `phpunit.xml` (or `phpunit.xml.dist`):
 

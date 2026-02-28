@@ -74,14 +74,6 @@ unacceptable.
   > **Rationale**: Automated enforcement eliminates human error in code reviews, ensures consistent
   > application of standards across all contributors, and reduces cognitive load during development.
 
-#### 1.3 PSR compliance
-
-1.3.1. You **MUST** comply with PSR-1 (Basic Coding Standard), PSR-12 (Extended Coding Style /
-PER-CS), and PSR-4 (Autoloading).
-
-> **Rationale**: PSR compliance ensures interoperability with third-party libraries, consistent code
-> formatting across the PHP ecosystem, and compatibility with industry-standard tooling.
-
 ### 2. Architecture and project structure
 
 #### 2.1 Directory layout
