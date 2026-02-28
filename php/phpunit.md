@@ -283,12 +283,18 @@ $mailer->expects($this->once())->method('send');
 ```json
 {
   "scripts": {
-    "test:unit": "phpunit --testsuite Unit",
-    "test:integration": "phpunit --testsuite Integration",
-    "cs": "php-cs-fixer fix --dry-run --diff",
-    "cs:fix": "php-cs-fixer fix",
-    "stan": "phpstan analyse",
-    "test:coverage": "phpunit --coverage-html build/coverage"
+    "test": [
+      "phpunit"
+    ],
+    "test:unit": [
+      "phpunit --testsuite=Unit"
+    ],
+    "test:integration": [
+      "phpunit --testsuite=Integration"
+    ],
+    "qa": [
+      "@test"
+    ]
   }
 }
 ```
