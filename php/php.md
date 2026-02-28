@@ -81,8 +81,8 @@ or direct I/O operations.
 > **Rationale**: Domain purity enables deterministic unit testing and prevents hidden environmental
 > dependencies that cause flaky tests.
 
-1.1.3. Dependencies **MUST** be injected via constructor injection; service location and `new`
-instantiation inside business logic is prohibited.
+1.1.3. Dependency Injection (DI) **SHOULD** be used when you want to decouple components, simplify
+testing, and enable flexibility in choosing implementations at runtime.
 
 > **Rationale**: Explicit dependencies reveal coupling, enable mocking for tests, and prevent hidden
 > global state.
