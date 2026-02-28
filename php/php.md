@@ -391,7 +391,6 @@ Critical **MUST** items for quick validation:
 - [ ] All functions/methods have explicit parameter and return type declarations
 - [ ] PSR-12 compliance enforced via `phpcs` or `php-cs-fixer` automation
 - [ ] PSR-4 autoloading configured in `composer.json` with `src/` mapping
-- [ ] No use of `@` error suppression operators
 - [ ] Database queries use prepared statements with parameter binding exclusively
 - [ ] No hard-coded secrets; environment variables used for configuration
 - [ ] Password hashing uses `password_hash()` with modern algorithms
