@@ -116,10 +116,6 @@ tests/
 > **Rationale**: Descriptive names serve as executable documentation, clarifying intent and failure
 > context without reading test bodies.
 
-1.2.4. **MUST** begin all test files with `declare(strict_types=1);`.
-
-1.2.5. **MUST** omit closing `?>` tag; use Unix LF line endings only.
-
 ### 1.3 Test structure and isolation
 
 1.3.1. **MUST** follow Arrange–Act–Assert (AAA) with explicit section comments or whitespace

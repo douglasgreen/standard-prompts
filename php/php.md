@@ -136,24 +136,18 @@ middleware, decorators, or interceptors—not scattered through business logic.
 
 #### 2.2 Modern PHP usage
 
-2.2.1. All new PHP files (except template views) **MUST** begin with `declare(strict_types=1);`
-immediately following the opening tag.
-
-> **Rationale**: Prevents implicit type coercion that creates subtle bugs and hard-to-debug failures
-> at runtime.
-
-2.2.2. All parameters, return types, and properties **MUST** include explicit type declarations; use
+2.2.1. All parameters, return types, and properties **MUST** include explicit type declarations; use
 `mixed` only when truly unavoidable.
 
 > **Rationale**: Enables static analysis, self-documenting code, and early detection of type errors.
 
-2.2.3. Classes intended as value objects or immutable data carriers **SHOULD** use `readonly`
+2.2.2. Classes intended as value objects or immutable data carriers **SHOULD** use `readonly`
 properties or declare the class as `readonly` (PHP 8.2+).
 
 > **Rationale**: Enforces immutability at the language level, preventing accidental state mutation
 > and race conditions.
 
-2.2.4. Control flow **SHOULD** prefer `match` expressions over `switch` when returning values;
+2.2.3. Control flow **SHOULD** prefer `match` expressions over `switch` when returning values;
 nullsafe operator `?->` **SHOULD** replace null checks where appropriate.
 
 > **Rationale**: `match` provides strict comparison and exhaustiveness; nullsafe reduces boilerplate
@@ -381,8 +375,7 @@ viewport meta tags.
 
 ### A.2 For reviewing existing code
 
-1. Scan for **MUST** violations first (security risks, missing `strict_types`, SQL injection,
-   exposed secrets).
+1. Scan for **MUST** violations first (security risks, SQL injection, exposed secrets).
 2. Output findings as a structured checklist with severity (Critical/High/Medium/Low).
 3. Provide unified diff format (`---`/`+++`) for suggested fixes.
 4. Calculate compliance percentage based on **MUST** items from Appendix B.

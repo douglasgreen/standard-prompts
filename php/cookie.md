@@ -309,10 +309,6 @@ setcookie('name', 'value', [
 **Rationale**: Legacy positional parameters do not support `SameSite`, leading to security gaps and
 framework dependency.
 
-8.1.2 **MUST** use `declare(strict_types=1);` for all cookie handling code.  
-**Rationale**: Prevents type confusion in security-critical paths where string/integer coercion
-could affect domain validation or expiration calculations.
-
 #### 8.2 JavaScript/TypeScript
 
 8.2.1 **MUST** validate and sanitize cookie values read from `document.cookie` before use in DOM

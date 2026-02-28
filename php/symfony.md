@@ -155,23 +155,18 @@ coupling between components.
 
 #### 3.1 Strict typing
 
-3.1.1. Every PHP file **MUST** begin with `<?php declare(strict_types=1);`.
-
-> **Rationale**: Strict typing prevents implicit type coercion that leads to subtle bugs and enables
-> static analysis tools to verify type safety at build time.
-
-3.1.2. You **MUST** declare types on all method parameters, return values, and class properties
+3.1.1. You **MUST** declare types on all method parameters, return values, and class properties
 (including `void`).
 
 > **Rationale**: Explicit type declarations serve as executable documentation, prevent invalid
 > state, and enable IDE autocomplete and refactoring tools.
 
-3.1.3. You **SHOULD** use union types and intersection types where appropriate (PHP 8.1+).
+3.1.2. You **SHOULD** use union types and intersection types where appropriate (PHP 8.1+).
 
 > **Rationale**: Modern type features express complex constraints more precisely than docblock
 > annotations, improving static analysis accuracy.
 
-3.1.4. You **SHOULD** avoid `mixed` unless genuinely necessary.
+3.1.3. You **SHOULD** avoid `mixed` unless genuinely necessary.
 
 > **Rationale**: The `mixed` type eliminates type safety guarantees; its use should be restricted to
 > genuine polymorphic scenarios (e.g., serialization layers).

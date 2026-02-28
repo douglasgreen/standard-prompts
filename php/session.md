@@ -262,20 +262,14 @@ should not yield active session identifiers.
 
 #### 6.1 Type safety and syntax
 
-6.1.1 **MUST** use `declare(strict_types=1);` for all session management code.  
-**Rationale**: Prevents type confusion vulnerabilities in security-critical code paths where
-string/integer coercion could bypass checks.
-
-6.1.2 **MUST** use modern `session_start([options])` array syntax for configuration; avoid global
+6.1.1 **MUST** use modern `session_start([options])` array syntax for configuration; avoid global
 `ini_set()` where possible.  
 **Rationale**: Localized configuration prevents global state pollution and makes dependencies
 explicit.
 
-6.1.3 **MUST** implement `SessionHandlerInterface` for custom backends rather than overriding
+6.1.2 **MUST** implement `SessionHandlerInterface` for custom backends rather than overriding
 `session_set_save_handler()` with procedural callbacks.  
 **Rationale**: Object-oriented handlers are type-safe, testable, and align with PSR standards.
-
-6.1.4 **SHOULD** follow PSR-12 formatting and use automated tools (PHP_CodeSniffer, PHP-CS-Fixer).
 
 ### 7. Testing and validation
 
