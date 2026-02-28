@@ -166,11 +166,6 @@ shapes `array<string, int>`, or complex `@throws` documentation).
 > **Rationale**: Enables advanced static analysis and IDE autocompletion beyond PHP's native
 > capabilities.
 
-3.3. PHPDoc **MUST NOT** duplicate information already expressed in native type hints.
-
-> **Rationale**: Duplication creates maintenance burden and drift between documentation and
-> implementation.
-
 ### 4. Error handling and reliability
 
 #### 4.1 Exceptions and control flow
@@ -396,7 +391,6 @@ Critical **MUST** items for quick validation:
 - [ ] Password hashing uses `password_hash()` with modern algorithms
 - [ ] HTML output escaped via `htmlspecialchars()` or framework auto-escaping
 - [ ] Input validation occurs at controller/CLI boundaries before domain logic
-- [ ] Dependencies injected via constructor; no service location or hidden globals
 - [ ] Static analysis passes at high strictness (PHPStan 8+ / Psalm 1)
 - [ ] PSR-3 logging used with no secrets in log context arrays
 - [ ] OPcache enabled in production configuration
