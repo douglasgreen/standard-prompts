@@ -109,9 +109,9 @@ tests/
 > **Rationale**: Namespace parity ensures logical organization, PSR-4 autoloading compatibility, and
 > reduces cognitive overhead when locating corresponding tests.
 
-1.2.3. **MUST** use descriptive `snake_case` test method names following
-`test_{action}_{scenario}_{expected_result}` (e.g.,
-`test_it_throws_exception_when_email_is_invalid`).
+1.2.3. **MUST** use descriptive `camelCase` test method names following
+`test{action}{scenario}{expected result}` (e.g.,
+`testItThrowsExceptionWhenEmailIsInvalid`).
 
 > **Rationale**: Descriptive names serve as executable documentation, clarifying intent and failure
 > context without reading test bodies.
@@ -401,7 +401,7 @@ semantic regressions.
 1. Analyze the System Under Test (SUT) for public API, edge cases, and error states.
 2. Output full PHP code with proper header, namespace, and imports.
 3. **Include**: `declare(strict_types=1)`, `#[CoversClass]`, `#[Small]`, AAA structure.
-4. **Generate** descriptive `snake_case` test names explaining scenario and outcome.
+4. **Generate** descriptive `camelCase` test names explaining scenario and outcome.
 5. **Mock** external dependencies via constructor injection.
 6. **Include** data providers for parameterized scenarios.
 
@@ -434,7 +434,7 @@ Produce a compliance report:
 
 ```diff
 - public function testAdd() {
-+ public function test_it_calculates_sum_of_positive_integers(): void {
++ public function testItCalculatesSumOfPositiveIntegers(): void {
 ```
 ````
 
@@ -453,7 +453,7 @@ Critical **MUST** items for quick validation:
 - [ ] **Architecture**: Tests verify observable behavior, not implementation details
 - [ ] **Determinism**: No real time, randomness, network, or global state in unit tests
 - [ ] **Classification**: Clear Unit/Integration/Functional directory structure
-- [ ] **Naming**: Test classes use `{ClassUnderTest}Test`; methods use `snake_case`
+- [ ] **Naming**: Test classes use `{ClassUnderTest}Test`; methods use `camelCase`
 - [ ] **Structure**: AAA pattern with explicit sections; no control structures in test methods
 - [ ] **Isolation**: No `depends` between tests; independent execution
 - [ ] **Attributes**: Use PHP 8 attributes (`#[CoversClass]`, `#[DataProvider]`) not PHPDoc
@@ -535,7 +535,7 @@ final class OrderCalculatorTest extends TestCase
     }
 
     #[DataProvider('lineItemProvider')]
-    public function test_it_calculates_total_with_applied_tax(
+    public function testItCalculatesTotalWithAppliedTax(
         array $items,
         float $taxRate,
         string $expectedTotal
@@ -564,7 +564,7 @@ final class OrderCalculatorTest extends TestCase
         ];
     }
 
-    public function test_it_throws_exception_for_negative_quantities(): void
+    public function testItThrowsExceptionForNegativeQuantities(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Quantity must be positive');
