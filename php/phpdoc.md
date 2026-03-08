@@ -73,7 +73,6 @@ This document **does not** define:
 **Classes, interfaces, traits, and enums** **MUST** include:
 
 - Short description (summary line)
-- `@package` namespace organization
 - `@since` version tag
 - `@api` or `@internal` visibility marker
 
@@ -219,14 +218,6 @@ capabilities, and ensures uniform outputs across different LLM tools.
 
 - **MUST**: Document the return structure of configuration files using `@return` or a Markdown
   description of the array shape.
-- **SHOULD**: Use `@author` and `@package` tags to establish ownership and module grouping for files
-  that fall outside standard PSR-4 autoloading paths.
-
-  2.4 **Syntax & Parsing**
-
-- **MUST**: Ensure the file-level DocBlock contains the `@package` tag if the file is part of a
-  larger distribution, to prevent it from being treated as a "loose" file by documentation
-  generators.
 - **RATIONALE**: Standalone scripts are often the entry points of an application. Documenting their
   inputs (arguments) and outputs (exit codes/side effects) is critical for automated DevOps
   pipelines and chatbots analyzing system capabilities.
@@ -636,7 +627,6 @@ Critical **MUST** items for quick validation:
  * ## Environment Variables
  * - `DB_CONNECTION`: Required. The database DSN string.
  *
- * @package DevOps\Maintenance
  * @author Engineering Team <eng@example.com>
  * @license MIT
  *
@@ -685,7 +675,6 @@ class UserManager {
  * This class should be instantiated via the UserManagerFactory to ensure
  * proper database connection injection.
  *
- * @package App\Services
  * @api
  * @since 1.0.0
  * @see UserManagerFactory For proper instantiation
