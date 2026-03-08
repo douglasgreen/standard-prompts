@@ -278,7 +278,6 @@ The following requirement levels are defined per RFC 2119:
   - Parameters (`@param`) and return values (`@return`)
   - Exceptions thrown (`@throws`)
   - Thread safety guarantees
-  - `@since` version tags
   - **Rationale**: Public APIs are contracts; undocumented behavior becomes tribal knowledge and
     complicates upgrades.
 

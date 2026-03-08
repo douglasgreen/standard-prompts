@@ -72,7 +72,6 @@ This document **does not** define:
 **Classes, interfaces, traits, and enums** **MUST** include:
 
 - Short description (summary line)
-- `@since` version tag
 - `@api` or `@internal` visibility marker
 
 **Methods and functions** **MUST** include:
@@ -374,7 +373,7 @@ responsibilities in the public contract.
 
 #### 5.1 Version tracking
 
-Public API elements **MUST** include `@since <version>` using semantic versioning
+Public API elements **SHOULD** include `@since <version>` using semantic versioning
 (major.minor.patch), with the version number indicating when the element was introduced.
 
 Behavior changes to existing methods **SHOULD** add additional `@since` entries describing the
@@ -598,7 +597,6 @@ Critical **MUST** items for quick validation:
       conditions
 - [ ] Complex arrays use typed generics (`list<T>`, `array<K,V>`, `array{key: T}`) not bare `array`
 - [ ] PHPDoc types never contradict native PHP type hints
-- [ ] `@since` tags use semantic versioning for all public API elements
 - [ ] Deprecated APIs include `@deprecated` with version, replacement, and `@see` reference
 - [ ] No public API element lacks documentation (missing docblocks fail compliance)
 - [ ] File-level DocBlocks precede namespace declarations in standalone scripts and procedural
@@ -675,7 +673,6 @@ class UserManager {
  * proper database connection injection.
  *
  * @api
- * @since 1.0.0
  * @see UserManagerFactory For proper instantiation
  */
 class UserManager
@@ -740,8 +737,6 @@ public function findUsers(array $filters): array { }
  * @deprecated 2.4.0 Use UserRepository::findByCriteria() instead.
  *             This method will be removed in 3.0.0.
  * @see UserRepository::findByCriteria()
- *
- * @since 1.0.0
  */
 public function findUsers(array $filters): array { }
 ```

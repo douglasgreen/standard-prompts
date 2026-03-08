@@ -573,8 +573,6 @@ import org.slf4j.LoggerFactory;
  *
  * <p>This application demonstrates a standalone Java application structure following modern Java
  * practices and engineering standards.
- *
- * @since 0.1.0
  */
 public final class Application {
   private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -709,8 +707,6 @@ import java.util.UUID;
  * Generates identifiers for external-facing resources.
  *
  * <p>Thread safety: Implementations MUST be thread-safe.
- *
- * @since 0.1.0
  */
 public interface IdGenerator {
 
@@ -718,7 +714,6 @@ public interface IdGenerator {
    * Generate a new identifier.
    *
    * @return a new identifier (never {@code null})
-   * @since 0.1.0
    */
   UUID newId();
 }
@@ -733,8 +728,6 @@ import java.util.UUID;
 
 /**
  * UUID-based identifier generator.
- *
- * @since 0.1.0
  */
 public final class UuidGenerator implements IdGenerator {
 
@@ -868,8 +861,6 @@ package com.example.domain;
 
 /**
  * Domain service that creates greeting messages.
- *
- * @since 0.1.0
  */
 public interface Greeter {
   String greet(String name);
@@ -882,8 +873,6 @@ package com.example.domain;
 
 /**
  * Default greeter implementation.
- *
- * @since 0.1.0
  */
 public final class DefaultGreeter implements Greeter {
 
@@ -908,8 +897,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * HTTP API for greetings.
- *
- * @since 0.1.0
  */
 @RestController
 public final class GreetingController {
@@ -962,8 +949,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Spring Boot entry point.
- *
- * @since 0.1.0
  */
 @SpringBootApplication
 public class Application {
@@ -1224,8 +1209,6 @@ import picocli.CommandLine.Parameters;
 
 /**
  * CLI entry point using Picocli.
- *
- * @since 0.1.0
  */
 @Command(
     name = "mycli",
