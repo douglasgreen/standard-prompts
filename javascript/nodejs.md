@@ -1,7 +1,6 @@
 ---
 name: Node.js
 description: Standards document for Node.js development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

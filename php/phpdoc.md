@@ -1,8 +1,7 @@
 ---
 name: PHPDoc
 description: Standards document for PHPDoc documentation
-version: 1.0.0
-modified: 2026-02-20
+modified: 2026-03-08
 ---
 
 # PHPDoc standards for comprehensive code documentation and automated Markdown generation

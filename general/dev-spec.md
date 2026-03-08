@@ -1,7 +1,6 @@
 ---
 name: Dev Spec
 description: Standards document for developer specifications
-version: 1.0.0
 modified: 2026-02-20
 ---
 

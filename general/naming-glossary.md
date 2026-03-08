@@ -1,7 +1,6 @@
 ---
 name: Naming Glossary
 description: Standards document for naming program objects
-version: 1.0.0
 modified: 2026-02-20
 ---
 

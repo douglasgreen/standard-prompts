@@ -1,7 +1,6 @@
 ---
 name: Poetry and Song
 description: Unified standards document for poetry and song lyric writing
-version: 1.0.0
 modified: 2026-02-21
 ---
 

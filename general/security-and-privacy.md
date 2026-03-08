@@ -1,7 +1,6 @@
 ---
 name: Security And Privacy
 description: Standards document for security and privacy
-version: 1.0.0
 modified: 2026-02-20
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: SQL Query
 description: Standards document for SQL query development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

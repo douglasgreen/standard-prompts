@@ -1,7 +1,6 @@
 ---
 name: SQL Schema
 description: Standards document for SQL schema development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

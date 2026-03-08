@@ -1,7 +1,6 @@
 ---
 name: Session
 description: Standards document for session development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

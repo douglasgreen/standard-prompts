@@ -1,7 +1,6 @@
 ---
 name: PHPUnit
 description: Standards document for PHPUnit testing
-version: 1.0.0
 modified: 2026-02-20
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: Java Project Setup
 description: Guidelines document for Java project setup
-version: 1.0.0
 modified: 2026-02-20
 ---
 

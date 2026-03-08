@@ -1,7 +1,6 @@
 ---
 name: Symfony
 description: Standards document for Symfony development
-version: 1.0.1
 modified: 2026-02-22
 ---
 

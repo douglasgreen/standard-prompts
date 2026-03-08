@@ -1,7 +1,6 @@
 ---
 name: Upgrade
 description: Standards document for software upgrade management
-version: 1.0.1
 modified: 2026-02-22
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: Bash Scripting
 description: Standards document for Bash scripting
-version: 1.0.0
 modified: 2026-02-20
 ---
 

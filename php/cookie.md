@@ -1,7 +1,6 @@
 ---
 name: Cookie
 description: Standards document for cookie development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

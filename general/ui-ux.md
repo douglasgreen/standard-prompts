@@ -1,7 +1,6 @@
 ---
 name: UI/UX
 description: Standards document for user interface and user experience design
-version: 1.0.0
 modified: 2026-02-20
 ---
 

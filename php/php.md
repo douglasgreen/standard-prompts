@@ -1,7 +1,6 @@
 ---
 name: PHP
 description: Standards document for PHP programming
-version: 1.0.1
 modified: 2026-02-22
 ---
 

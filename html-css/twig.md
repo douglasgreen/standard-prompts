@@ -1,7 +1,6 @@
 ---
 name: Twig
 description: Standards document for Twig development
-version: 1.0.0
 modified: 2026-02-20
 ---
 

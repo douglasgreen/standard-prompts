@@ -1,7 +1,6 @@
 ---
 name: PHP Project Setup
 description: Guidelines document for PHP project setup
-version: 1.0.1
 modified: 2026-02-22
 ---
 

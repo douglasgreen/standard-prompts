@@ -1,7 +1,6 @@
 ---
 name: I18n And L10n
 description: Standards document for internationalization and localization
-version: 1.0.0
 modified: 2026-02-20
 ---
 

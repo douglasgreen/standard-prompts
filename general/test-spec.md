@@ -1,7 +1,6 @@
 ---
 name: Test Spec
 description: Standards document for software testing specifications
-version: 1.0.0
 modified: 2026-02-20
 ---
 
